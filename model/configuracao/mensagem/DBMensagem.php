@@ -80,7 +80,7 @@ class DBMensagem {
   public static function getMensagem($sMensagem, $aOpcoes = null) {
 
   	if ( !is_null($aOpcoes) && !is_object($aOpcoes)) {
-  		throw new ParameterException('Parametro $aOpcoes deve ser um objeto.');
+  		throw new \Exception('Parametro $aOpcoes deve ser um objeto.');
   	}
 
     $oJson                 = Services_JSON::create();

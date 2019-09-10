@@ -92,7 +92,6 @@ class TraceLog {
    * @return void
    */
   public function write( $sMessage ) {
-
     $rsFile    = fopen($this->sDiretorio.$this->sFilePath, 'a');
     fputs($rsFile,$sMessage);
     fclose($rsFile);
@@ -260,6 +259,7 @@ class TraceLog {
         $sMensagem .= "] ";
         $sMensagem .= trim($sSql . ';');
         $sMensagem .= "\n";
+
         $this->write($sMensagem);
       }
     }

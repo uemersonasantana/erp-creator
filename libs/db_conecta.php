@@ -80,8 +80,11 @@ class db_conecta extends db_stdlib
 
     $UsuarioSistema->getUsuarioByLogin('dbseller');
 
-    $_SESSION['DB_ip']                   = '127.0.0.1';
-    $_SESSION['DB_coddepto']             = 1;
+    $_SESSION['DB_traceLog']              = false;
+    $_SESSION['DB_uol_hora']              = 1568122924;
+
+    $_SESSION['DB_ip']                    = '127.0.0.1';
+    $_SESSION['DB_coddepto']              = 1;
 
     $_SESSION['DB_nome_modulo']           = 1;
     $_SESSION['DB_datausu']               = 1568119054;
@@ -126,66 +129,19 @@ class db_conecta extends db_stdlib
       $DB_SERVIDOR = $_SESSION["DB_servidor"];
     }
 
-    if ( !( $conn = @pg_connect("host=".DB_SERVIDOR." dbname=".DB_BASE." port=".DB_PORTA." user=".DB_USUARIO." password=".DB_SENHA) ) ) {
-
-      echo "Contate com Administrador do Sistema! (Conexão Inválida.)   <br>Sessão terminada, feche seu navegador!\n";
-      session_destroy();
-      exit;
-    }
-
-    /**
-     * Verifica configuracoes customizadas do PostgreSQL para o sProgramaAtual
-     */
-    $sPgVersion = pg_result(pg_query($conn, "select substr(current_setting('server_version_num'),1,3)"), 0, 0);
-
-    if (isset($DB_CUSTOM_PG_CONF[$sPgVersion][$sProgramaAtual])) {
-
-      $sSqlSetConfig = "";
-      foreach ($DB_CUSTOM_PG_CONF[$sPgVersion][$sProgramaAtual] as $sSetting => $sValue) {
-
-        if (substr($sSetting, 0, 3) <> "SQL") {
-          $sSqlSetConfig .= "SET $sSetting TO $sValue;";
-        } else {
-          $sSqlSetConfig .= $sValue;
-        }
-      }
-
-      pg_query($conn, $sSqlSetConfig);
-    }
-
-    /**
-     * Salva sessao php, variavel $_SESSION, na base de dados
-     */
-    $db_libsession  = new db_libsession();
-    $db_libsession->db_savesession($conn, $_SESSION);
 
     db_stdlib::db_logs();
 
-    /**
-     * Registra application_name para ser utilizado no controle de transações
-     */
-    if (isset($conn)) {
-
-      $sIdUsuario  = $_SESSION["DB_id_usuario"];
-      $iPidConexao = pg_result(db_stdlib::db_query("select pg_backend_pid()"),0,0);
-      $sMenu       = 0;
-
-      if (!empty($_SESSION["DB_itemmenu_acessado"])) {
-        $sMenu = $_SESSION["DB_itemmenu_acessado"];
-      }
-
-      $sNomeApp      = "ecidade_{$sIdUsuario}_{$sMenu}_{$iPidConexao}";
-      $sSqlSetConfig = "SET application_name={$sNomeApp};";
-
-      pg_query($conn, $sSqlSetConfig);
-    }
 
     if (db_stdlib::db_getsession("DB_id_usuario") != 1 && db_stdlib::db_getsession("DB_administrador") != 1){
 
-      $result1 = pg_exec($conn, "select db21_ativo from db_config where prefeitura = true")
-                 or die("Erro ao verificar se sistema está liberado! Contate suporte!");
+      $result1 = db_stdlib::db_query("select db21_ativo from db_config where prefeitura = true");
 
-      $ativo   = pg_result($result1,0,0);
+      if (!$result1) {
+        print_r("Erro ao verificar se sistema está liberado! Contate suporte!! Erro: ". $result->errorInfo());
+      }
+
+      $ativo   = $result1->fetch()->db21_ativo;
 
       if ($ativo == 3) {
 
@@ -193,6 +149,26 @@ class db_conecta extends db_stdlib
         session_destroy();
         exit;
       }
+    }
+  }
+
+  //  Valida sessôes
+  static function val_sessao() {
+    $sess = 0;
+    if(!$_SESSION["DB_modulo"])
+      $sess = 1;
+    if(!$_SESSION["DB_nome_modulo"])
+      $sess = 1;
+    if(!$_SESSION["DB_anousu"])
+      $sess = 1;
+    if(!$_SESSION["DB_instit"])
+      $sess = 1;
+    if(!$_SESSION["DB_uol_hora"])
+      $sess = 1;
+    if($sess == 1) {
+      session_destroy();
+      echo "Sessão Inválida!(14)<br>Feche seu navegador e faça login novamente.<Br>\n";
+      exit;
     }
   }
   

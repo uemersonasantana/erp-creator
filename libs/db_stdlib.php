@@ -13,21 +13,10 @@ use libs\db_conecta;
 use model\TraceLog;
 use model\PreMenus;
 use model\DBMensagem;
-use model\DBReleaseNote;
-use model\DBTooltipAvisoEsocial;
-use model\DBTooltipAvisoQuestionario;
 
 use std\DBMenu;
 
 set_time_limit(0);
-
-if (isset($HTTP_POST_VARS)) {
-  db_verfPostGet($HTTP_POST_VARS);
-}
-
-if (isset($HTTP_GET_VARS)) {
-  db_verfPostGet($HTTP_GET_VARS);
-}
 
 /**
  * db_stdlib
@@ -41,7 +30,7 @@ class db_stdlib
  * nas chamadas de funções e métodos
  *
  */
-function db_debug_backtrace() {
+static function db_debug_backtrace() {
   $aBacktrace = debug_backtrace();
   $iCount     = count($aBacktrace);
   $sBacktrace = "";
@@ -57,7 +46,7 @@ function db_debug_backtrace() {
   }
 
   if($sBacktrace <> "") {
-    $sBacktrace = "\n/***\n * e-cidade backtrace\n{$sBacktrace} */\n";
+    $sBacktrace = "\n/***\n * UAS backtrace\n{$sBacktrace} */\n";
   }
 
   return $sBacktrace;
@@ -104,12 +93,6 @@ static function db_query($param1, $param2=null, $param3="SQL"){
 
     $dbresult = db_conecta::prepare($dbsql);
     $dbresult->execute();
-    if (!$dbresult) {
-      $temp = $dbresult->errorInfo();
-        print_r($temp);
-    }
-    //$dbresult = $dbresult->fetch();
-    
   }else{
 
     $dbsql    = $sBackTrace . $param2;
@@ -143,26 +126,6 @@ function db_dias_mes($ano,$mes,$ret_data = false){
     return $data["mday"];
   }else{
     return date('Y-m-d',mktime(0,0,0,$mes,$data["mday"],$ano));
-  }
-}
-
-/*
- * Função para validar PIS
- */
-function checkPIS($pis){
-  $pis = str_pad(ereg_replace('[^0-9]', '', $pis), 11, '0', STR_PAD_LEFT);
-
-  if (strlen($pis) != 11 || intval($pis) == 0) {
-    return false;
-  } else {
-    for ($d = 0, $p = 3, $c = 0; $c < 10; $c++) {
-      $d += $pis{$c} * $p;
-      $p  = ($p < 3) ? 9 : --$p;
-    }
-
-    $d = ((10 * $d) % 11) % 10;
-
-    return ($pis{$c} == $d) ? true : false;
   }
 }
 
@@ -294,7 +257,7 @@ function db_verifica_ip_banco() {
             or  ( db46_dtinicio = '".date('Y-m-d')."' and db46_horaini   <= '".date("G:i")."' )
             or  ( db46_datafinal = '".date('Y-m-d')."' and db46_horafinal >= '".date("G:i")."' ))
             ";
-  $result = db_stdlib::db_query($sql);
+  $result = self::db_query($sql);
   $numrows = pg_numrows($result);
   for ($i = 0; $i < $numrows; $i ++) {
     db_fieldsmemory($result,$i);
@@ -330,7 +293,7 @@ function db_verifica_ip_banco() {
             or  ( db46_dtinicio = '".date('Y-m-d')."' and db46_horaini   <= '".date("H:i")."' )
             or  ( db46_datafinal = '".date('Y-m-d')."' and db46_horafinal >= '".date("H:i")."' ))"
   ;
-  $result = db_stdlib::db_query($sql);
+  $result = self::db_query($sql);
   $numrows = pg_numrows($result);
   for ($i = 0; $i < $numrows; $i ++) {
     db_fieldsmemory($result,$i);
@@ -923,7 +886,7 @@ function db_sel_instit($instit=null,$campos=" * "){
   if(trim($campos) == ""){
     $campos = " * ";
   }
-  $record_config = db_stdlib::db_query("select ".$campos."
+  $record_config = self::db_query("select ".$campos."
                             from db_config
                                  left join db_tipoinstit on db21_codtipo = db21_tipoinstit
                             where codigo = ".$instit);
@@ -953,7 +916,7 @@ function db_sel_usuario($usuario=null,$campos=" * "){
   if(trim($campos) == ""){
     $campos = " * ";
   }
-  $record_usuarios = db_stdlib::db_query("select ".$campos."
+  $record_usuarios = self::db_query("select ".$campos."
                             from db_usuarios
                             where id_usuario = ".$usuario);
   if($record_usuarios == false){
@@ -1405,9 +1368,9 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
       }
 
       reset($totalizacao);
-      $tot = db_stdlib::db_query("select count(*),$total_campos from ($query) as temp");
+      $tot = self::db_query("select count(*),$total_campos from ($query) as temp");
     } else {
-      $tot = db_stdlib::db_query("select count(*) from ($query) as temp");
+      $tot = self::db_query("select count(*) from ($query) as temp");
     }
 
     db_stdlib::db_putsession("dblov_query_inicial",$query);
@@ -1505,7 +1468,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
           $sWhere            = "nomecam = '{$_POST['campo_filtrado']}'";
           $oDaoDbSysCampo    = new cl_db_syscampo();
           $sSqlDaoDbSysCampo = $oDaoDbSysCampo->sql_query_file( null, 'conteudo', null, $sWhere );
-          $rsDaoDbSysCampo   = db_stdlib::db_query( $sSqlDaoDbSysCampo );
+          $rsDaoDbSysCampo   = self::db_query( $sSqlDaoDbSysCampo );
 
           if( $rsDaoDbSysCampo && pg_num_rows( $rsDaoDbSysCampo ) > 0 ) {
 
@@ -1553,7 +1516,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   }
 
   $query  .= " limit $numlinhas offset ".$$offset;
-  $result  = db_stdlib::db_query($query);
+  $result  = self::db_query($query);
   $NumRows = pg_numrows($result);
 
   if( $NumRows == 0 ) {
@@ -1581,15 +1544,15 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
         }
 
         reset($totalizacao);
-        $tot = db_stdlib::db_query( "select count(*),{$total_campos} from ({$query_anterior}) as temp" );
+        $tot = self::db_query( "select count(*),{$total_campos} from ({$query_anterior}) as temp" );
       } else {
-        $tot = db_stdlib::db_query("select count(*) from ({$query_anterior}) as temp");
+        $tot = self::db_query("select count(*) from ({$query_anterior}) as temp");
       }
 
       $$tot_registros = pg_result($tot, 0, 0);
 
       $query       = $query_anterior . " limit $numlinhas offset " . $$offset;
-      $result      = db_stdlib::db_query($query);
+      $result      = self::db_query($query);
       $NumRows     = pg_numrows($result);
       $filtroquery = $query_anterior;
     }
@@ -1618,9 +1581,9 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
         }
 
         reset($totalizacao);
-        $tot = db_stdlib::db_query("select count(*),{$total_campos} from ({$query_novo_filtro}) as temp");
+        $tot = self::db_query("select count(*),{$total_campos} from ({$query_novo_filtro}) as temp");
       } else {
-        $tot = db_stdlib::db_query("select count(*) from ({$query_novo_filtro}) as temp");
+        $tot = self::db_query("select count(*) from ({$query_novo_filtro}) as temp");
       }
 
       $$tot_registros = pg_result($tot, 0, 0);
@@ -2196,7 +2159,7 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
   // se for a primeira vez que é rodado, pega o total de registros e guarda no campo hidden
   if (empty ($$tot_registros)) {
     $Dd1 = "disabled";
-    $tot = db_stdlib::db_query("select count(*) from ($query) as temp");
+    $tot = self::db_query("select count(*) from ($query) as temp");
     $$tot_registros = pg_result($tot, 0, 0);
   }
   // testa qual botao foi pressionado
@@ -2226,7 +2189,7 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
         }
   // executa a query e cria a tabela
   $query .= " limit $numlinhas offset ".$$offset;
-  $result = db_stdlib::db_query($query);
+  $result = self::db_query($query);
   $NumRows = pg_numrows($result);
   $NumFields = pg_numfields($result);
   if ($NumRows < $numlinhas)
@@ -2288,13 +2251,13 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
                   where trim(funcao) = '".trim(addslashes( basename( $_SERVER["REQUEST_URI"] ) ))."'
             $wheremod limit 1 ";
 
-  $result = db_stdlib::db_query($sql);
+  $result = self::db_query($sql);
 
   if ($result != false && $result->rowCount() > 0) {
     $item = $result->fetch()->id_item;
 
     $sql        = "select nextval('db_logsacessa_codsequen_seq')";
-    $result     = db_stdlib::db_query($sql);
+    $result     = self::db_query($sql);
     $codsequen  = db_conecta::lastInsertId();
 
     // grava codigo na sessao
@@ -2315,7 +2278,7 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
 
                                               ".db_stdlib::db_getsession("DB_instit").")";
 
-    $rs = db_stdlib::db_query($sql);
+    $rs = self::db_query($sql);
     if (!$rs) {
       die("Houve um problema ao realizar a auditoria do sistema.");
     }
@@ -2324,7 +2287,7 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
 
 function db_logsmanual($string = '', $modulo = 0, $item = 0, $codcam = 0, $chave = 0) {
   $sql = "INSERT INTO db_logsacessa VALUES (nextval('db_logsacessa_codsequen_seq'),'".db_stdlib::db_getsession("DB_ip")."','".date("Y-m-d")."','".date("H:i:s")."','".$_SERVER["REQUEST_URI"]."','$string',".db_stdlib::db_getsession("DB_id_usuario").",".$modulo.",".$item.",".db_stdlib::db_getsession("DB_coddepto").",".db_stdlib::db_getsession("DB_instit").")";
-  $rs = db_stdlib::db_query($sql);
+  $rs = self::db_query($sql);
   if (!$rs) {
     die("Houve um problema ao realizar a auditoria do sistema.");
   }
@@ -2345,7 +2308,7 @@ function db_logsmanual_demais($string = '', $id_usuario=0, $modulo = 0, $item = 
   }
 
   $sql = "INSERT INTO db_logsacessa VALUES (nextval('db_logsacessa_codsequen_seq'),'$db_ip','".date("Y-m-d")."','".date("H:i:s")."','".$_SERVER["REQUEST_URI"]."','$string',$id_usuario,$modulo,$item,$coddepto,$instit)";
-  $rs = db_stdlib::db_query($sql);
+  $rs = self::db_query($sql);
   if (!$rs) {
     die("Houve um problema ao realizar a auditoria do sistema.");
   }
@@ -2363,9 +2326,6 @@ function db_logsmanual_demais($string = '', $id_usuario=0, $modulo = 0, $item = 
  */
 function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null) {
   
-  global $HTTP_SERVER_VARS, $HTTP_SESSION_VARS;
-  global $conn, $DB_SELLER;
-
   $usuario = !empty($usuario) ? $usuario : db_stdlib::db_getsession("DB_id_usuario");
   $modulo  = !empty($modulo)  ? $modulo  : db_stdlib::db_getsession("DB_modulo");
   $anousu  = !empty($anousu)  ? $anousu  : db_stdlib::db_getsession("DB_anousu");
@@ -2373,37 +2333,10 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
 
   $idItem = db_stdlib::db_getsession('DB_itemmenu_acessado');
 
-  /*$sHtmlReleaseNote       =  DBReleaseNote::createInstance(DBReleaseNote::buscarTipo($idItem), $usuario, $idItem)->render();
-  $sHtmlReleaseNotePrevia =  DBReleaseNote::createInstance(DBReleaseNote::TIPO_PREVIA, $usuario, $idItem)->render();
-
-  $sHtmlTooltipAviso = '';
-  // Variavel de controle do elemento para os questionarios internos
-  $iTop = 0;
-
-  if($idItem != 0 && $modulo != 10216) {
-    $sHtmlTooltipAviso = DBTooltipAvisoEsocial::getInstance('e-Social', 'modalPreenchimentoEsocial()')->render();
-  }
-
-  if(!empty($sHtmlTooltipAviso)){
-
-    $iTop = 1;
-  }
-
-  //$sHtmlTooltipAviso2 = DBTooltipAvisoQuestionario::getInstanceQuestionario('Questionário', 'modalPreenchimentoQuestionario()', $idItem, $modulo)->renderQuestionario($idItem, $modulo, $iTop);
-
-  $sHtmlAvisos  = '<div id="db-tooltip" class="db-tooltip">' ;
-  $sHtmlAvisos .= $sHtmlReleaseNote;
-  $sHtmlAvisos .= $sHtmlReleaseNotePrevia;
-  $sHtmlAvisos .= $sHtmlTooltipAviso;
-  $sHtmlAvisos .= $sHtmlTooltipAviso2;
-  $sHtmlAvisos .= '</div>';
-*/
-  //$sHtmlHelp = DBHelpInline::render();
-  //$sHtmlTutorial  = TutorialRepository::render();
-
   /**
    * Busca as preferênias do usuário
    */
+  
   $oPreferencias = unserialize(base64_decode(db_stdlib::db_getsession('DB_preferencias_usuario')));
   //$sOrdenacao    = DBMenu::getCampoOrdenacao();
   $DBMenu        = new DBMenu($modulo, $usuario, $anousu, $instit);
@@ -2417,9 +2350,6 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
   $sMenu = $DBMenu->montaMenu($modulo);
 
   echo $sMenu;
-  //echo $sHtmlAvisos;
-  //echo $sHtmlHelp;
-  //echo $sHtmlTutorial;
 
   if (!empty($sMenu)) {
 
@@ -2428,7 +2358,7 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
     if (isset ($_SESSION["DB_coddepto"])) {
 
       $iCodigoDepartamento = db_stdlib::db_getsession("DB_coddepto");
-      $result = @ db_stdlib::db_query("select descrdepto from db_depart where coddepto = ".db_stdlib::db_getsession("DB_coddepto"));
+      $result = @ self::db_query("select descrdepto from db_depart where coddepto = ".db_stdlib::db_getsession("DB_coddepto"));
 
       if ($result != false && pg_numrows($result) > 0) {
         $descrdep = "[<strong>".db_stdlib::db_getsession("DB_coddepto")."-".substr(pg_result($result, 0, 'descrdepto'), 0, 40)."</strong>]";
@@ -2484,7 +2414,7 @@ function db_acessamenu($item_menu, $descr, $acao) {
                   from db_permissao p
                        inner join db_itensmenu m on m.id_item = p .id_item
                   where p.anousu = ".db_stdlib::db_getsession("DB_anousu")." and p.id_item = $item_menu and id_usuario = ".db_stdlib::db_getsession("DB_id_usuario");
-  $res = db_stdlib::db_query($sql);
+  $res = self::db_query($sql);
   if (pg_numrows($res) > 0) {
     $descri = pg_result($res, 0, 'descricao');
     echo " <input name='db_acessa_menu_".$item_menu."' value='".$descr."' type='button' onclick=\"document.getElementById('DBmenu_".$item_menu."').click();\" title='$descri'>  ";
@@ -2573,7 +2503,7 @@ function db_permissaomenu($ano, $modulo, $item) {
 
 
     //echo $sql;exit;
-    $res = db_stdlib::db_query($sql);
+    $res = self::db_query($sql);
     if (pg_numrows($res) == 0) {
       return "false";
     } else {
@@ -2702,107 +2632,6 @@ function db_atutermometro($dblinha,$dbrows,$dbnametermo,$dbquantperc=1,$dbtexto=
   }
 }
 
-function db_criacarne($arretipo,$ip,$datahj,$instit,$tipomod){
-
-  global $k47_sequencial;
-  global $k47_descr;
-  global $k47_obs;
-  global $k47_altura;
-  global $k47_largura;
-  global $k47_orientacao;
-
-  global $k47_tipoconvenio; // 1 se for arrecadacao ou 2 se for cobranca
-  global $k22_cadban;       // codigo do banco no caso de ser cobranca
-
-  $intnumexe   = 0;
-  $intnumtipo  = 0;
-  $intnumgeral = 0;
-  $achou       = 0;
-
-  //  die($arretipo." -- ".$ip." -- ".$datahj." -- ".$instit." -- ".$tipomod);
-  $sqlexe = "  select * from cadmodcarne
-                       inner join modcarnepadrao         on cadmodcarne.k47_sequencial                = modcarnepadrao.k48_cadmodcarne
-                       left  join modcarnepadraocobranca on modcarnepadraocobranca.k22_modcarnepadrao = modcarnepadrao.k48_sequencial
-                       inner join modcarnepadraotipo     on modcarnepadrao.k48_sequencial             = modcarnepadraotipo.k49_modcarnepadrao
-                       inner join modcarneexcessao       on modcarneexcessao.k36_modcarnepadraotipo   = modcarnepadraotipo.k49_sequencial
-                 where k36_ip         = '".$ip."'
-                   and k49_tipo       = $arretipo
-                   and k48_dataini    <='".$datahj."'
-                   and k48_datafim    >='".$datahj."'
-                   and k48_instit     = $instit
-                   and k48_cadtipomod = $tipomod  ";
-  //  die($sqlexe);
-  $rsModexe   = db_stdlib::db_query($sqlexe);
-  $intnumexe  = pg_numrows($rsModexe);
-  if(isset($intnumexe) && $intnumexe > 0 ){
-    db_fieldsmemory($rsModexe,0);
-    //    db_msgbox("achou excessao");
-    $achou = 1;
-  }
-  if($achou == 0){
-    $sqltipo = " select * from cadmodcarne
-                        inner join modcarnepadrao         on cadmodcarne.k47_sequencial                = modcarnepadrao.k48_cadmodcarne
-                        left  join modcarnepadraocobranca on modcarnepadraocobranca.k22_modcarnepadrao = modcarnepadrao.k48_sequencial
-                        inner join modcarnepadraotipo     on modcarnepadrao.k48_sequencial             = modcarnepadraotipo.k49_modcarnepadrao
-                        left  join modcarneexcessao       on modcarneexcessao.k36_modcarnepadraotipo   = modcarnepadraotipo.k49_sequencial
-           where k49_tipo = $arretipo
-             and k48_dataini    <='".$datahj."'
-             and k48_datafim    >='".$datahj."'
-             and k48_instit     = $instit
-             and k48_cadtipomod = $tipomod
-             and modcarneexcessao.k36_modcarnepadraotipo is null
-             ";
-    //     die($sqltipo);
-    $rsModtipo  = db_stdlib::db_query($sqltipo);
-    $intnumtipo = pg_numrows($rsModtipo);
-    if(isset($intnumtipo) && $intnumtipo > 0){
-      //        db_msgbox("achou tipo");
-      db_fieldsmemory($rsModtipo,0);
-      $achou = 1;
-    }
-  }
-  if($achou == 0){
-    $sqlgeral = " select * from cadmodcarne
-                     inner join modcarnepadrao         on cadmodcarne.k47_sequencial                = modcarnepadrao.k48_cadmodcarne
-                     left  join modcarnepadraocobranca on modcarnepadraocobranca.k22_modcarnepadrao = modcarnepadrao.k48_sequencial
-                     left  join modcarnepadraotipo     on modcarnepadrao.k48_sequencial             = modcarnepadraotipo.k49_modcarnepadrao
-                     left  join modcarneexcessao       on modcarneexcessao.k36_modcarnepadraotipo   = modcarnepadraotipo.k49_sequencial
-            where k48_dataini    <= '".$datahj."'
-              and k48_datafim    >= '".$datahj."'
-              and k48_instit     = $instit
-              and k48_cadtipomod = $tipomod
-              and modcarnepadraotipo.k49_modcarnepadrao   is null
-              and modcarneexcessao.k36_modcarnepadraotipo is null
-            ";
-    //    die($sqlgeral);
-    $rsModgeral  = db_stdlib::db_query($sqlgeral);
-    $intnumgeral = pg_numrows($rsModgeral);
-    if($intnumgeral > 0){
-      //        db_msgbox("achou padrao");
-      db_fieldsmemory($rsModgeral,0);
-      $achou = 1;
-    }else{
-      db_redireciona('db_erros.php?fechar=true&db_erro=Modelo de carne não encontrado, contate o suporte !');
-    }
-  }
-
-  //die($k47_sequencial."--".$k47_altura."--".$k47_largura."-".$k47_orientacao."-".$k22_cadban);
-
-  unset($spdf);
-  unset($pdf);
-
-  if (isset($k47_altura) && $k47_altura != 0 && isset($k47_largura) && $k47_largura != 0 && isset($k47_orientacao) && $k47_orientacao != ""){
-    $medidas = array ($k47_altura,$k47_largura);
-    $spdf    = new scpdf($k47_orientacao, "mm",$medidas);
-  }else{
-    $spdf    = new scpdf();
-  }
-  $spdf->Open();
-  $pdf    = new db_impcarne($spdf,$k47_sequencial);
-  return $pdf;
-}
-
-
 function db_tracelog($descricao, $sql, $lErro){
 
   if( !TraceLog::getInstance()->isActive() ) {
@@ -2825,7 +2654,7 @@ function db_tracelogsaida($tipo, $descricao, $sql) {
 function db_preparageratxt($lista, $k00_tipo =null) {
 
   global $k03_numpre, $fc_numbco, $aNumpres;
-  $result = db_stdlib::db_query("select nextval('numpref_k03_numpre_seq') as k03_numpre");
+  $result = self::db_query("select nextval('numpref_k03_numpre_seq') as k03_numpre");
   db_fieldsmemory($result,0);
 
   $aNumpres = array();
@@ -2834,7 +2663,7 @@ function db_preparageratxt($lista, $k00_tipo =null) {
 
   if ($k00_tipo == null) {
 
-    $resultnumbco = db_stdlib::db_query("select distinct k00_codbco,k00_codage,k00_descr,k00_hist1,k00_hist2,k00_hist3,k00_hist4,k00_hist5,k00_hist6,k00_hist7,k00_hist8,k03_tipo,k00_tipoagrup from arretipo
+    $resultnumbco = self::db_query("select distinct k00_codbco,k00_codage,k00_descr,k00_hist1,k00_hist2,k00_hist3,k00_hist4,k00_hist5,k00_hist6,k00_hist7,k00_hist8,k03_tipo,k00_tipoagrup from arretipo
                         inner join listatipos on k62_tipodeb = k00_tipo where k62_lista = $lista");
 
     if(pg_numrows($resultnumbco)==0){
@@ -2846,7 +2675,7 @@ function db_preparageratxt($lista, $k00_tipo =null) {
     $sqlnumbco = "select distinct k00_codbco,k00_codage,k00_descr,k00_hist1,k00_hist2,k00_hist3,k00_hist4,k00_hist5,k00_hist6,k00_hist7,k00_hist8,k03_tipo,k00_tipoagrup
                                                                                 from arretipo
                                                                                 where k00_tipo = $k00_tipo";
-    $resultnumbco = db_stdlib::db_query($sqlnumbco) or die($sqlnumbco);
+    $resultnumbco = self::db_query($sqlnumbco) or die($sqlnumbco);
 
     if(pg_numrows($resultnumbco)==0){
       echo "O código do banco não esta cadastrado no arquivo arretipo para este tipo!";
@@ -2855,7 +2684,7 @@ function db_preparageratxt($lista, $k00_tipo =null) {
   }
   db_fieldsmemory($resultnumbco, 0);
 
-  $resultfc = db_stdlib::db_query("select fc_numbco($k00_codbco,'$k00_codage')") or die("erro ao executar fc_numbco");
+  $resultfc = self::db_query("select fc_numbco($k00_codbco,'$k00_codage')") or die("erro ao executar fc_numbco");
   db_fieldsmemory($resultfc, 0);
 
 }
@@ -3039,7 +2868,7 @@ function monta_menu($item_modulo,$id_modulo,$espacos,$lista, $iUsuario = false){
     $sql .= "    and i.itemativo = '1'                                                                 ";
   }
 
-  $res = db_stdlib::db_query($sql);
+  $res = self::db_query($sql);
   if(pg_numrows($res)>0){
 
     for($i=0;$i<pg_numrows($res);$i++){
@@ -3075,7 +2904,7 @@ function db_strtotime($strData){
 
 function db_getnomelogo(){
 
-  $rsLogo = db_stdlib::db_query("select logo
+  $rsLogo = self::db_query("select logo
                             from db_config
                                  left join db_tipoinstit on db21_codtipo = db21_tipoinstit
                                                          where codigo = ".db_stdlib::db_getsession("DB_instit"));
@@ -3109,7 +2938,7 @@ function db_dataextenso( $timestamp=null, $sMunic=null ){
 
   if ( $sMunic == null and  $sMunic <> "" ) {
     $sSqlMunic = "select munic from db_config where codigo = ".db_stdlib::db_getsession('DB_instit')." limit 1";
-    $sMunic    = pg_result( db_stdlib::db_query( $sSqlMunic ),0,'munic' );
+    $sMunic    = pg_result( self::db_query( $sSqlMunic ),0,'munic' );
   }
 
   $sData = ($sMunic == ""?"":ucfirst(strtolower( $sMunic ) ).", ").date('d',$timestamp)." de ".$aMeses[date('m',$timestamp)]." de ".date('Y',$timestamp).".";
@@ -3187,7 +3016,7 @@ function db_buscaImagemBanco($cadban,$conn){
    */
 
   $sqlcodban = "select k15_codbco from cadban where k15_codigo = $cadban";
-  $resultcadban = db_stdlib::db_query($sqlcodban);
+  $resultcadban = self::db_query($sqlcodban);
   $linhascadban = pg_num_rows($resultcadban);
   if($linhascadban >0){
     //db_fieldsmemory($resultcadban,0);
@@ -3195,7 +3024,7 @@ function db_buscaImagemBanco($cadban,$conn){
     $banco = str_pad($k15_codbco, 3, "0", STR_PAD_LEFT);
     // busca os dados do banco..logo etc
     $sqlBanco = "select  * from db_bancos where db90_codban = '".$banco."'";
-    $resultBanco = db_stdlib::db_query($sqlBanco);
+    $resultBanco = self::db_query($sqlBanco);
     $linhasBanco = pg_num_rows($resultBanco);
     if($linhasBanco > 0 ){
       //db_fieldsmemory($resultBanco,0);
@@ -3208,10 +3037,10 @@ function db_buscaImagemBanco($cadban,$conn){
 //      db_redireciona('db_erros.php?fechar=true&db_erro=Configure os dados(Digito verificador, Nome abreviado do banco e o Arquivo do logo) do Banco: '.$banco.'-'.$db90_descr.', no Cadastro de Bancos');
       }
       // seta os dados para o boleto passando as informações do logo
-      db_stdlib::db_query ($conn, "begin");
+      self::db_query ($conn, "begin");
       $caminho = "tmp/".$banco.".jpg";
       pg_lo_export  ( "$db90_logo",$caminho ,$conn);
-      db_stdlib::db_query ($conn, "commit");
+      self::db_query ($conn, "commit");
 
       $arr = array("numbanco"  =>$banco."-".$db90_digban,
                    "banco"     =>$db90_abrev ,
@@ -3285,7 +3114,7 @@ function verifica_ultimo_dia_mes($data){
  */
 function conta_meses($dataini, $datafim) {
 
-  $res_meses = db_stdlib::db_query("select fc_conta_meses('$dataini','$datafim') as totalmeses");
+  $res_meses = self::db_query("select fc_conta_meses('$dataini','$datafim') as totalmeses");
   $oMeses    = db_utils::fieldsMemory($res_meses, 0);
   return $oMeses->totalmeses;
 
@@ -3336,15 +3165,15 @@ function db_buscaImagemInstituicao($instit,$tipo){
   $sSqlConfigArquivos .= "  from db_configarquivos ";
   $sSqlConfigArquivos .= " where db38_instit = $instit ";
   $sSqlConfigArquivos .= "   and db38_tipo   = $tipo ";
-  $rsSqlConfigArquivos = db_stdlib::db_query($sSqlConfigArquivos);
+  $rsSqlConfigArquivos = self::db_query($sSqlConfigArquivos);
   $iNumRows            = pg_numrows($rsSqlConfigArquivos);
   if ($iNumRows > 0) {
 
     $arquivo = pg_result($rsSqlConfigArquivos,0,"db38_arquivo");
     $caminho = "tmp/".$arquivo.".jpg";
-    db_stdlib::db_query($conn,"begin");
+    self::db_query($conn,"begin");
     pg_lo_export($conn,$arquivo,$caminho);
-    db_stdlib::db_query($conn,"commit");
+    self::db_query($conn,"commit");
     return $caminho;
   }else{
     return null;
@@ -3574,43 +3403,6 @@ function dbround_php_52($nValor, $iCasas = 0) {
 
   // return sprintf("%.{$iCasas}f", round($nValor, $iCasas));
 }
-/**
- * Função que valida o uso do PCASP e direciona o usuário caso precise
- * @param  integer $iCodigoMenu
- * @return boolean
- */
-function db_validarMenuPCASP($iCodigoMenu = null) {
-
-  if (USE_PCASP && !empty($iCodigoMenu)) {
-
-    $aCodigosMenusBloqueados = array(3973,  // Caixa > Procedimentos > Planilha de Lançamento > Inclusão
-                                     3974,  // Caixa > Procedimentos > Planilha de Lançamento > Alteração,
-                                     3975,  // Caixa > Procedimentos > Planilha de Lançamento > Exclusão
-                                     3985,  // Caixa > Procedimentos > Planilha de Lançamento > Autentica Planilha
-                                     4541,  // Caixa > Procedimentos > Planilha de Lançamento > Estorna Planilha
-                                     94,    // Caixa > Procedimentos > Slip > Inclusão de Transferência
-                                     95,    // Caixa > Procedimentos > Slip > Alteração de Transferência
-                                     110,   // Caixa > Procedimentos > Slip > Autentica
-                                     7652,  // Caixa > Procedimentos > Slip > Anula
-                                     3364,  // Contabilidade > Cadastros > Plano de Contas > Inclusão
-                                     3365,  // Contabilidade > Cadastros > Plano de Contas > Alteração
-                                     3366,  // Contabilidade > Cadastros > Plano de Contas > Exclusão
-                                     331366,// Contabilidade > Cadastros > Plano de Contas > Alterar Estrutural
-                                     3743,  // Contabilidade > Cadastros > Cadastro de Transações > Inclusão
-                                     3744,  // Contabilidade > Cadastros > Cadastro de Transações > Alteração
-                                     3745); // Contabilidade > Cadastros > Cadastro de Transações > Exclusão
-
-    if ( in_array($iCodigoMenu, $aCodigosMenusBloqueados) ) {
-
-      $sMensagem  = "Esta rotina encontra-se desabilitada para instituições que utilizam o PCASP.\\n\\n";
-      $sMensagem .= "Para mais informações, contate o suporte.";
-      db_msgbox($sMensagem);
-      db_redireciona("corpo.php");
-      return false;
-    }
-  }
-  return true;
-}
 
 
 /**
@@ -3645,24 +3437,6 @@ function utf8_encode_all($entrada) {
 
 function urlencode_all($entrada) {
   return DBString::urlencode_all($entrada);
-}
-
-/**
- * Retorna true se módulo acessado é o módulo Escola
- * @return boolean
- */
-function isModuloEscola() {
-
-  return db_stdlib::db_getsession('DB_modulo') == 1100747;
-}
-
-/**
- * Retorna true se módulo acessado é o módulo a Secretaria da Eduacacao
- * @return boolean
- */
-function isModuloSecretariaEducacao() {
-
-  return db_stdlib::db_getsession('DB_modulo') == 7159;
 }
 
  

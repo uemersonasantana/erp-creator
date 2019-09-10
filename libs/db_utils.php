@@ -59,7 +59,7 @@ class db_utils {
   static function getDao( $sClasse, $lInstanciaClasse = true ){
 
      if (!class_exists("db_{$sClasse}")){
-        require_once("class/db_{$sClasse}.php");
+        require_once($_SERVER['DOCUMENT_ROOT']."/class/db_{$sClasse}.php");
      }
 
      if ( $lInstanciaClasse ) {
