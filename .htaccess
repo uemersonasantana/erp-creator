@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteCond %{REQUEST_URI} !=/server-status
+  RewriteCond %{REQUEST_URI} !=/server-status-php-fpm
+</IfModule>
+
+<filesMatch "\.(htaccess|htpasswd|ini|sh)$">
+ Order Allow,Deny
+ Deny from all
+</filesMatch>
+
+<filesMatch "\.yml">
+ Order Allow,Deny
+ Deny from all
+</filesMatch>

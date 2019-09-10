@@ -1,0 +1,34 @@
+{
+    "name": "root/uas",
+    "description": "ERP Creator",
+    "authors": [
+        {
+            "name": "Uemerson A. Santana",
+            "email": "uemerson@icloud.com"
+        }
+    ],
+    "require": {}
+    ,"autoload": {
+        "psr-4": { 
+            "libs\\": [  
+                            "libs/"
+                            ,"libs/class/"
+                            ,"libs/exceptions/"
+                        ]
+            ,"classes\\": "class/"
+            ,"dbforms\\": "dbforms/"
+            ,"std\\": "std/"
+            ,"model\\": [  
+                            "model/"
+                            ,"model/configuracao/"
+                            ,"model/configuracao/avaliacao/"
+                            ,"model/configuracao/consulta_dados/"
+                            ,"model/configuracao/endereco/"
+                            ,"model/configuracao/inconsistencia/"
+                            ,"model/configuracao/mensagem/"
+                            ,"model/configuracao/notificacao/"
+                            ,"model/configuracao/webservice/"
+                        ] 
+        }
+    }
+}
