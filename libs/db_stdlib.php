@@ -27,7 +27,7 @@ class db_stdlib
 /***
  *
  * Funcao para montar uma string com o backtrace do PHP **SEM PARAMETROS***
- * nas chamadas de funÁıes e mÈtodos
+ * nas chamadas de fun√ß√µes e m√©todos
  *
  */
 static function db_debug_backtrace() {
@@ -102,7 +102,7 @@ static function db_query($param1, $param2=null, $param3="SQL"){
   }
 
   /*
-   * Trecho comentado devido a um problema na execuÁ„o do Duplos CGM executado via crontab.
+   * Trecho comentado devido a um problema na execu√ß√£o do Duplos CGM executado via crontab.
    */
   if( db_stdlib::db_getsession("DB_traceLog", false) != null ) {
 
@@ -119,7 +119,7 @@ static function db_query($param1, $param2=null, $param3="SQL"){
   return $dbresult;
 }
 
-// Retorna a quantidade de dias do mÍs no ano informadoo
+// Retorna a quantidade de dias do m√™s no ano informadoo
 function db_dias_mes($ano,$mes,$ret_data = false){
   $data = getdate(mktime(0,0,0,$mes+1,0,$ano));
   if($ret_data == false){
@@ -157,7 +157,7 @@ function db_diasemana($dia,$opcao="s"){
   }
 }
 // Se opcao == "d" retorna o dia da data
-//          == "m" retorna o mÍs da data
+//          == "m" retorna o m√™s da data
 //          == "a" retorna o ano da data
 // formatar == "b" default - Data no formato do banco YYYY-mm-dd
 //          == "f" data formatada dd/mm/YYYY
@@ -188,7 +188,7 @@ function db_hora($id_timestamp = 0, $formato = "H:i") {
   //#20#//$id_timestamp =        Data e hora no formato timestamp
   //#20#//$formato      = Formato do retorno da hora ou data
   //#20#//                Padrao: H:i - Hora e minuto com :.
-  //#99#//Os tipos de formato de retorno s„o:
+  //#99#//Os tipos de formato de retorno s√£o:
   //#99#//a        Meridiano da Hora no formato am ou pm
   //#99#//A        Meridiano da Hora no formato AM or PM
   //#99#//B        Hora na internet de 000 a 999
@@ -206,13 +206,13 @@ function db_hora($id_timestamp = 0, $formato = "H:i") {
   //#99#//m        Mes numericpo com dois digitos  01 a 12
   //#99#//M        3 primeiras letras do nome do mes Jan through Dec
   //#99#//n        Mes numerico sem zero a esquerda 1 a 12
-  //#99#//O        DiferenÁa para hora Greenwich (GMT) em horas        Example: +0200
+  //#99#//O        Diferen√ßa para hora Greenwich (GMT) em horas        Example: +0200
   //#99#//r        Data no formato RFC 2822 Exemplo: Thu, 21 Dec 2000 16:01:07 +0200
   //#99#//s        Segundos com zeros a esquerda 00 through 59
   //#99#//S        Ordinal sufixo em Ingles do mes, 2 caracteres st, nd, rd or th.
   //#99#//t        Numero de dias do mes 28 a 31
-  //#99#//T        Zona da hora setada na m·quina        Exemplo: EST, MDT ...
-  //#99#//U        Segundos em relaÁ„o a 1/1/1970  timestamp.
+  //#99#//T        Zona da hora setada na m√°quina        Exemplo: EST, MDT ...
+  //#99#//U        Segundos em rela√ß√£o a 1/1/1970  timestamp.
   //#99#//w        Nnumero do dia da semana 0 a 6
   //#99#//W        Numero da semana do ano conforme ISO-8601
   //#99#//Y        Ano com 4 digitos Exemplo: 1999 or 2003
@@ -227,16 +227,16 @@ function db_hora($id_timestamp = 0, $formato = "H:i") {
 }
 function db_verifica_ip_banco() {
   //#00#//db_verifica_ip_anco
-  //#10#//Verifica se o IP que esta acessando poder· abrir o dbportal, pesquisando o arquivo db_acessa
-  //#10#//e verificando as permissıes
+  //#10#//Verifica se o IP que esta acessando poder√° abrir o dbportal, pesquisando o arquivo db_acessa
+  //#10#//e verificando as permiss√µes
   //#15#//db_verifica_ip();
-  //#40#//"1" para acesso permitido e "0" para n„o permitido
-  //#99#//O arquido db_acessa possue a matriz com os IPs que poder„o efetuar o acesso
+  //#40#//"1" para acesso permitido e "0" para n√£o permitido
+  //#99#//O arquido db_acessa possue a matriz com os IPs que poder√£o efetuar o acesso
   //#99#//Nome da matriz: db_acessa
-  //#99#//db_acessa[1][1] = M·scara do IP que pode acessar, quando colocado um astesrisco(*) no final, o sistema
-  //#99#//                  testa o tamanho do IP atÈ o asterisco e desconsidera a partir dele.
-  //#99#//db_acessa[1][2] = Campo LÛgico, quando verdadeiro, poder· acessar, o IP ou m·scara do IP e quando
-  //#99#//                  falso nao poder· acessar o db_portal
+  //#99#//db_acessa[1][1] = M√°scara do IP que pode acessar, quando colocado um astesrisco(*) no final, o sistema
+  //#99#//                  testa o tamanho do IP at√© o asterisco e desconsidera a partir dele.
+  //#99#//db_acessa[1][2] = Campo L√≥gico, quando verdadeiro, poder√° acessar, o IP ou m√°scara do IP e quando
+  //#99#//                  falso nao poder√° acessar o db_portal
   global $SERVER, $HTTP_SERVER_VARS, $db48_ip, $db47_id_usuario;
   if (isset ($_SERVER["HTTP_X_FORWARDED_FOR"])) {
     $db_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
@@ -245,7 +245,7 @@ function db_verifica_ip_banco() {
   }
 
   $usuario_liberado = '0';
-  // verifica pelo codigo do usu·rio
+  // verifica pelo codigo do usu√°rio
   $sql = "select db47_id_usuario, db48_ip
           from db_sysregrasacesso
                inner join db_sysregrasacessousu  on db46_idacesso = db47_idacesso
@@ -318,16 +318,16 @@ function db_verifica_ip_banco() {
 
 function db_verifica_ip() {
   //#00#//db_verifica_ip
-  //#10#//Verifica se o IP que esta acessando poder· abrir o dbportal, pesquisando o arquivo db_acessa
-  //#10#//e verificando as permissıes
+  //#10#//Verifica se o IP que esta acessando poder√° abrir o dbportal, pesquisando o arquivo db_acessa
+  //#10#//e verificando as permiss√µes
   //#15#//db_verifica_ip();
-  //#40#//"1" para acesso permitido e "0" para n„o permitido
-  //#99#//O arquido db_acessa possue a matriz com os IPs que poder„o efetuar o acesso
+  //#40#//"1" para acesso permitido e "0" para n√£o permitido
+  //#99#//O arquido db_acessa possue a matriz com os IPs que poder√£o efetuar o acesso
   //#99#//Nome da matriz: db_acessa
-  //#99#//db_acessa[1][1] = M·scara do IP que pode acessar, quando colocado um astesrisco(*) no final, o sistema
-  //#99#//                  testa o tamanho do IP atÈ o asterisco e desconsidera a partir dele.
-  //#99#//db_acessa[1][2] = Campo LÛgico, quando verdadeiro, poder· acessar, o IP ou m·scara do IP e quando
-  //#99#//                  falso nao poder· acessar o db_portal
+  //#99#//db_acessa[1][1] = M√°scara do IP que pode acessar, quando colocado um astesrisco(*) no final, o sistema
+  //#99#//                  testa o tamanho do IP at√© o asterisco e desconsidera a partir dele.
+  //#99#//db_acessa[1][2] = Campo L√≥gico, quando verdadeiro, poder√° acessar, o IP ou m√°scara do IP e quando
+  //#99#//                  falso nao poder√° acessar o db_portal
   global $SERVER, $HTTP_SERVER_VARS;
   if (isset ($_SERVER["HTTP_X_FORWARDED_FOR"])) {
     $db_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
@@ -365,8 +365,8 @@ function db_mes($xmes,$tipo=0) {
   //#00#//db_mes
   //#10#//Retorna o nome do mes por extenso
   //#15#//db_mes($mes);
-  //#20#//mes : N˙mero do mes 01,02,03,04,05,06,07,08,09,10,11,12 como string
-  //#20#//      N˙mero do mes 1,2,3,4,5,6,7,8,9,10,11,12 como numero
+  //#20#//mes : N√∫mero do mes 01,02,03,04,05,06,07,08,09,10,11,12 como string
+  //#20#//      N√∫mero do mes 1,2,3,4,5,6,7,8,9,10,11,12 como numero
   //#20#//Tipo : 0 - minusculo  1 - MAIUSCULO  2 - Primeira Maiusculo
   //#40#//Nome do mes por extenso
   $Mes = "";
@@ -377,7 +377,7 @@ function db_mes($xmes,$tipo=0) {
       $Mes = 'fevereiro';
     } else
       if ($xmes == '03 '|| $xmes == 3 ) {
-        $Mes = 'marÁo';
+        $Mes = 'mar√ßo';
       } else
         if ($xmes == '04' ||$xmes == 4) {
           $Mes = 'abril';
@@ -409,7 +409,7 @@ function db_mes($xmes,$tipo=0) {
   if($tipo==0){
     return $Mes;
   }elseif ($tipo==1){
-    return strtoupper(str_replace("Á","«",$Mes));
+    return strtoupper(str_replace("√ß","√á",$Mes));
   }else{
     return ucfirst($Mes);
   }
@@ -453,7 +453,7 @@ function db_verfPostGet($post) {
     }
     if (findword(strtoupper($dbarraypost), "INSERT") || findword(strtoupper($dbarraypost), "UPDATE") || findword(strtoupper($dbarraypost), "DELETE") || db_indexOf(strtoupper($dbarraypost), "EXEC(") > 0 || db_indexOf(strtoupper($dbarraypost), "SYSTEM(") > 0 || db_indexOf(strtoupper($dbarraypost), "<SCRIPT>") > 0 || db_indexOf(strtoupper($dbarraypost), "PASSTHRU(") > 0) {
       if(defined("TAREFA")==false) {
-        echo "<script>alert('Voce est· passando parametros inv·lidos e sera redirecionado. Verifique INSERT/UPDATE e ... nos campos enviados.');(window.CurrentWindow || parent.CurrentWindow).corpo.location.href='instit.php'</script>\n";
+        echo "<script>alert('Voce est√° passando parametros inv√°lidos e sera redirecionado. Verifique INSERT/UPDATE e ... nos campos enviados.');(window.CurrentWindow || parent.CurrentWindow).corpo.location.href='instit.php'</script>\n";
         exit;
       }
     }
@@ -512,8 +512,8 @@ function db_getMaxSizeField($recordset, $campo = 0) {
   //#00#//db_getMaxSizeField
   //#10#//Esta funcao retorna o maior valor do size de um determinado campo de um record set
   //#15#//db_getMaxSizeField($recordset,$campo = 0);
-  //#20#//recordset : Record que ser· pesquisado
-  //#20#//campo     : N˙mero do campo do record set que ser· pesquisado
+  //#20#//recordset : Record que ser√° pesquisado
+  //#20#//campo     : N√∫mero do campo do record set que ser√° pesquisado
 
   $numrows = pg_numrows($recordset);
   $val = strlen(trim(pg_result($recordset, 0, $campo)));
@@ -528,13 +528,13 @@ function db_getMaxSizeField($recordset, $campo = 0) {
 //atualiza a classe dos arquivos
 function db_postmemory($vetor, $verNomeIndices = 0) {
   //#00#//db_postmemory
-  //#10#//Esta funcao cria as veri·veis que s„o passadas por POST no array $HTTP_POST_VARS do apache
+  //#10#//Esta funcao cria as veri√°veis que s√£o passadas por POST no array $HTTP_POST_VARS do apache
   //#15#//db_postmemory($vetor,$verNomeIndices = 0);
-  //#20#//vetor         : Array que ser· pesquisado
-  //#20#//verNomeIndice : 1 - para gerar as vari·veis
-  //#20#//                2 - para gerar as vari·veis e mostrar no formul·rio com o nome e conte˙do
+  //#20#//vetor         : Array que ser√° pesquisado
+  //#20#//verNomeIndice : 1 - para gerar as vari√°veis
+  //#20#//                2 - para gerar as vari√°veis e mostrar no formul√°rio com o nome e conte√∫do
   if (!is_array($vetor)) {
-    echo "Erro na funÁ„o postmemory: Parametro n„o È um array v·lido.<Br>\n";
+    echo "Erro na fun√ß√£o postmemory: Parametro n√£o √© um array v√°lido.<Br>\n";
     return false;
   }
   $tam_vetor = sizeof($vetor);
@@ -557,18 +557,18 @@ function db_postmemory($vetor, $verNomeIndices = 0) {
 }
 function db_numpre_sp($qn, $qnp = "x", $qnt = "x", $qnd = "x") {
   //#00#//db_numpre_sp
-  //#10#//Esta funcao coloca a mascara no numpre SEM os pontos entre os n˙mero
+  //#10#//Esta funcao coloca a mascara no numpre SEM os pontos entre os n√∫mero
   //#15#//db_numpre_sp($qn,$qnp="x",$qnt="x",$qnd="x");
-  //#20#//qn  : N˙mero do numpre, normalmento k00_numpre
-  //#20#//qnp : N˙mero da parcela do numpre
-  //#20#//qnt : N˙mero da quantidade de parcelas do numpre
-  //#20#//qnd : DÌgito verificador do numpre
-  //#40#//CÛdigo de arrecadaÁ„o formatado SEM os pontos
+  //#20#//qn  : N√∫mero do numpre, normalmento k00_numpre
+  //#20#//qnp : N√∫mero da parcela do numpre
+  //#20#//qnt : N√∫mero da quantidade de parcelas do numpre
+  //#20#//qnd : D√≠gito verificador do numpre
+  //#40#//C√≥digo de arrecada√ß√£o formatado SEM os pontos
   //#99#//Exemplo:
   //#99#//db_numpre_sp(123456,1,12,0); // numpre 123456 - parcela 1 - total de parcelas 12 - digito 0
-  //#99#//Retorno ser· : 001234560010120
+  //#99#//Retorno ser√° : 001234560010120
   //#99#//
-  //#99#//Para formatar os n˙meros o sistema utiliza a funÁ„o |db_formatar|
+  //#99#//Para formatar os n√∫meros o sistema utiliza a fun√ß√£o |db_formatar|
   $retorno = db_formatar($qn, 's', "0", 8, "e");
   if ($qnp != "x") {
     // $retorno .= ".000";
@@ -585,18 +585,18 @@ function db_numpre_sp($qn, $qnp = "x", $qnt = "x", $qnd = "x") {
 
 function db_numpre($qn, $qnp = "x", $qnt = "x", $qnd = "x") {
   //#00#//db_numpre
-  //#10#//Esta funcao coloca a mascara no numpre COM os pontos entre os n˙mero
+  //#10#//Esta funcao coloca a mascara no numpre COM os pontos entre os n√∫mero
   //#15#//db_numpre_sp($qn,$qnp="x",$qnt="x",$qnd="x");
-  //#20#//qn  : N˙mero do numpre, normalmento k00_numpre
-  //#20#//qnp : N˙mero da parcela do numpre
-  //#20#//qnt : N˙mero da quantidade de parcelas do numpre
-  //#20#//qnd : DÌgito verificador do numpre
-  //#40#//CÛdigo de arrecadaÁ„o formatado COM os pontos
+  //#20#//qn  : N√∫mero do numpre, normalmento k00_numpre
+  //#20#//qnp : N√∫mero da parcela do numpre
+  //#20#//qnt : N√∫mero da quantidade de parcelas do numpre
+  //#20#//qnd : D√≠gito verificador do numpre
+  //#40#//C√≥digo de arrecada√ß√£o formatado COM os pontos
   //#99#//Exemplo:
   //#99#//db_numpre_sp(123456,1,12,0); // numpre 123456 - parcela 1 - total de parcelas 12 - digito 0
-  //#99#//Retorno ser· : 00123456.001.012.0
+  //#99#//Retorno ser√° : 00123456.001.012.0
   //#99#//
-  //#99#//Para formatar os n˙meros o sistema utiliza a funÁ„o |db_formatar|
+  //#99#//Para formatar os n√∫meros o sistema utiliza a fun√ß√£o |db_formatar|
   $retorno = db_formatar($qn, 's', "0", 8, "e");
   if ($qnp != "x") {
     // $retorno .= ".000";
@@ -612,32 +612,32 @@ function db_numpre($qn, $qnp = "x", $qnt = "x", $qnd = "x") {
 }
 function db_translate($db_transforma = null,$expresAdicional = "",$stringAdicional = ""){
 
-  // Array com expressıes regulares
+  // Array com express√µes regulares
   $arr_regexp = Array(
-    "/∫/",
-    "/Á/",
-    "/«/",
-    "/·|‡|„|‚|‰/",
-    "/¡|¿|√|¬|ƒ/",
-    "/È|Ë|Í|Î/",
-    "/…|»| |À|&/",
-    "/Ì|Ï|Ó|Ô/",
-    "/Õ|Ã|Œ|œ/",
-    "/Û|Ú|ı|Ù|ˆ/",
-    "/”|“|’|‘|÷/",
-    "/˙|˘|˚|¸/",
-    "/⁄|Ÿ|€|‹/",
+    "/¬∫/",
+    "/√ß/",
+    "/√á/",
+    "/√°|√†|√£|√¢|√§/",
+    "/√Å|√Ä|√É|√Ç|√Ñ/",
+    "/√©|√®|√™|√´/",
+    "/√â|√à|√ä|√ã|&/",
+    "/√≠|√¨|√Æ|√Ø/",
+    "/√ç|√å|√é|√è/",
+    "/√≥|√≤|√µ|√¥|√∂/",
+    "/√ì|√í|√ï|√î|√ñ/",
+    "/√∫|√π|√ª|√º/",
+    "/√ö|√ô|√õ|√ú/",
     "/'|;|:/",
     "/$expresAdicional/"
   );
   // Array com substitutos
   $arr_replac = Array("o","c","C","a","A","e","E","i","I","o","O","u","U"," ","$stringAdicional");
 
-  // $arr_regexp[0] substituÌdo por $arr_replac[0], ou seja, Á por c
-  // $arr_regexp[1] substituÌdo por $arr_replac[1], ou seja, « por C
-  // $arr_regexp[2] substituÌdo por $arr_replac[2], ou seja, · ou ‡ ou „ ou ‚ ou ‰ por a
-  // $arr_regexp[3] substituÌdo por $arr_replac[3], ou seja, ¡ ou ¿ ou √ ou ¬ ou ƒ por A
-  // $arr_regexp[n] substituÌdo por $arr_replac[n]
+  // $arr_regexp[0] substitu√≠do por $arr_replac[0], ou seja, √ß por c
+  // $arr_regexp[1] substitu√≠do por $arr_replac[1], ou seja, √á por C
+  // $arr_regexp[2] substitu√≠do por $arr_replac[2], ou seja, √° ou √† ou √£ ou √¢ ou √§ por a
+  // $arr_regexp[3] substitu√≠do por $arr_replac[3], ou seja, √Å ou √Ä ou √É ou √Ç ou √Ñ por A
+  // $arr_regexp[n] substitu√≠do por $arr_replac[n]
   // ...
   $db_transforma = preg_replace($arr_regexp,$arr_replac,$db_transforma);
 
@@ -645,18 +645,18 @@ function db_translate($db_transforma = null,$expresAdicional = "",$stringAdicion
 
 }
 
-// retorna uma string formatada, retorna false se alguma opÁ„o estiver errada
+// retorna uma string formatada, retorna false se alguma op√ß√£o estiver errada
 // $tipo pode ser:
 // "b" formata boolean s / n
 // "f" formata a string pra float
 // "d" formata a string pra data
-// "v" tira a formataÁ„o
+// "v" tira a formata√ß√£o
 // "cpf" formata cpf
 // "cnpj" formata cnpj
 // "s"  Preenche uma string para um certo tamanho com outra string
 // se for "s":
-//   $caracter             caracter ou espaÁo pra acrecentar a esquerda, direita ou meio
-//   $quantidade           tamanho que ficar· a string com os espaÁos ou caracteres
+//   $caracter             caracter ou espa√ßo pra acrecentar a esquerda, direita ou meio
+//   $quantidade           tamanho que ficar√° a string com os espa√ßos ou caracteres
 //   $TipoDePreenchimento  informa se vai aplicar a string a:
 //                         esquerda       "e"
 //                         direita        "d"
@@ -664,10 +664,10 @@ function db_translate($db_transforma = null,$expresAdicional = "",$stringAdicion
 
 function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreenchimento = "e", $casasdecimais = 2) {
   //#00#//db_formatar
-  //#10#//Esta funcao coloca a mascara no numpre SEM os pontos entre os n˙mero
+  //#10#//Esta funcao coloca a mascara no numpre SEM os pontos entre os n√∫mero
   //#15#//db_formatar($str,$tipo,$caracter=" ",$quantidade=0,$TipoDePreenchimento="e",$casasdecimais=2) {
-  //#20#//Str                   : String que ser· formatada
-  //#20#//Tipo                  : Tipo de formataÁ„o que ser· executada
+  //#20#//Str                   : String que ser√° formatada
+  //#20#//Tipo                  : Tipo de formata√ß√£o que ser√° executada
   //#20#//                        cpf  =  Formata para CPF
   //#20#//                        cnpj =  Formata para CNPJ
   //#20#//                        b    =  Formata falso ou verdadeiro (S = Verdadeiro N = Falso )
@@ -676,20 +676,20 @@ function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreen
   //#20#//                        d    =  Formata data
   //#20#//                        s    =  Formata uma string alinhando conforme Tipo de Preenchimento
   //#20#//                        v    =  Variavel, ou seja, imprime quantas casas decimais o valor tiver, combustivel por exemplo, valor de 1,359
-  //#20#//Caracter              : Caracter que ser· colocado para formatar
-  //#20#//Quantidade            : Tamanho da string que ser· gerada
+  //#20#//Caracter              : Caracter que ser√° colocado para formatar
+  //#20#//Quantidade            : Tamanho da string que ser√° gerada
   //#20#//Tipo de Preenchimento : Se preenche a esquerda, direito ou centro
   //#20#//                        e = Esquerda   d = Direita  a = Centro
-  //#20#//Casas Decimais        : N˙mero de casas decimais, para valores flutuantes, que ser· gerada
-  //#40#//String formatada conforme os par‚metros
+  //#20#//Casas Decimais        : N√∫mero de casas decimais, para valores flutuantes, que ser√° gerada
+  //#40#//String formatada conforme os par√¢metros
   //#99#//Exemplo:
   //#99#//db_formatar(100.55,'f','0',15,'e',2)
-  //#99#//Retorno ser· : 000000000100,55
-  //#99#//db_formatar(100.55,'f') // formataÁ„o padr„o de n˙meros
-  //#99#//Retorno ser· : "         100,55"
+  //#99#//Retorno ser√° : 000000000100,55
+  //#99#//db_formatar(100.55,'f') // formata√ß√£o padr√£o de n√∫meros
+  //#99#//Retorno ser√° : "         100,55"
   //#99#//
   //#99#//db_formatar(100.55,'p','0',15,'e',2)
-  //#99#//Retorno ser· : 000000000100.55
+  //#99#//Retorno ser√° : 000000000100.55
 
   switch ($tipo) {
     case "sistema" :
@@ -876,9 +876,9 @@ function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreen
 }
 
 
-//Cria variaveis globais para a instituiÁ„o passada
-//Se instituiÁ„o n„o for passada, buscar· dados da instituiÁ„o do db_stdlib::db_getsession
-//Retorna false se tiver problemas na execuÁ„o do sql e numrows caso sql esteja correto (0 se n„o encontrar instituiÁ„o e 1 caso encontre)
+//Cria variaveis globais para a institui√ß√£o passada
+//Se institui√ß√£o n√£o for passada, buscar√° dados da institui√ß√£o do db_stdlib::db_getsession
+//Retorna false se tiver problemas na execu√ß√£o do sql e numrows caso sql esteja correto (0 se n√£o encontrar institui√ß√£o e 1 caso encontre)
 function db_sel_instit($instit=null,$campos=" * "){
   if($instit == null || trim($instit) == ""){
     $instit = db_stdlib::db_getsession("DB_instit");
@@ -906,9 +906,9 @@ function db_sel_instit($instit=null,$campos=" * "){
   return $num_rows;
 }
 
-//Cria variaveis globais para usu·rio passado
-//Se o usu·rio n„o for passado, buscar· dados do usu·rio do db_stdlib::db_getsession
-//Retorna false se tiver problemas na execuÁ„o do sql e numrows caso sql esteja correto (0 se n„o encontrar o usu·rio e 1 caso encontre)
+//Cria variaveis globais para usu√°rio passado
+//Se o usu√°rio n√£o for passado, buscar√° dados do usu√°rio do db_stdlib::db_getsession
+//Retorna false se tiver problemas na execu√ß√£o do sql e numrows caso sql esteja correto (0 se n√£o encontrar o usu√°rio e 1 caso encontre)
 function db_sel_usuario($usuario=null,$campos=" * "){
   if($usuario == null || trim($usuario) == ""){
     $usuario = db_stdlib::db_getsession("DB_id_usuario");
@@ -938,18 +938,18 @@ function db_sel_usuario($usuario=null,$campos=" * "){
 //Cria veriaveis globais de todos os campos do recordset no indice $indice
 function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false) {
   //#00#//db_fieldsmemory
-  //#10#//Esta funcao cria as vari·veis de uma determinada linha de um record set, sendo o nome da vari·vel
-  //#10#//o nome do campo no record set e seu conte˙do o conte˙do da vari·vel
+  //#10#//Esta funcao cria as vari√°veis de uma determinada linha de um record set, sendo o nome da vari√°vel
+  //#10#//o nome do campo no record set e seu conte√∫do o conte√∫do da vari√°vel
   //#15#//db_fieldsmemory($recordset,$indice,$formatar="",$mostravar=false);
-  //#20#//Record Set        : Record set que ser· pesquisado
-  //#20#//Indice            : N˙mero da linha (Ìndice) que ser· caregada as funÁıes
-  //#20#//Formatar          : Se formata as vari·veis conforme o tipo no banco de dados
-  //#20#//                    true = Formatar      false = N„o Formatar (Padr„o = false)
-  //#20#//Mostrar Vari·veis : Mostrar na tela as vari·veis que est„o sendo geradas
-  //#99#//Esta funÁ„o È bastante utilizada quando se faz um for para percorrer um record set.
+  //#20#//Record Set        : Record set que ser√° pesquisado
+  //#20#//Indice            : N√∫mero da linha (√≠ndice) que ser√° caregada as fun√ß√µes
+  //#20#//Formatar          : Se formata as vari√°veis conforme o tipo no banco de dados
+  //#20#//                    true = Formatar      false = N√£o Formatar (Padr√£o = false)
+  //#20#//Mostrar Vari√°veis : Mostrar na tela as vari√°veis que est√£o sendo geradas
+  //#99#//Esta fun√ß√£o √© bastante utilizada quando se faz um for para percorrer um record set.
   //#99#//Exemplo:
   //#99#//db_fieldsmemory($result,0);
-  //#99#//Cria todas as vari·veis com o conte˙do de cada uma sendo o valor do campo
+  //#99#//Cria todas as vari√°veis com o conte√∫do de cada uma sendo o valor do campo
   $fm_numfields = pg_numfields($recordset);
   $fm_numrows = pg_numrows($recordset);
   //if(pg_numrows($recordset)==0){
@@ -1077,13 +1077,13 @@ function db_cgccpf($str) {
 
 function verifica_data($dia, $mes, $ano) {
   //#00#//db_verifica_data
-  //#10#//Esta funcao verifica se uma data È v·lida ou n„o
+  //#10#//Esta funcao verifica se uma data √© v√°lida ou n√£o
   //#15#//db_verifica_data($dia,$mes,$ano);
-  //#20#//Dia : Dia que ser· testado na data
-  //#20#//Mes : MÍs que ser· testado na data
-  //#20#//Ano : Ano que ser· testado na data
+  //#20#//Dia : Dia que ser√° testado na data
+  //#20#//Mes : M√™s que ser√° testado na data
+  //#20#//Ano : Ano que ser√° testado na data
   //#40#//Data correta
-  //#99#//Caso n„o exista a data que foi enviada como par‚metro o sistema soma o dia, mes e ano atÈ encontrar uma data
+  //#99#//Caso n√£o exista a data que foi enviada como par√¢metro o sistema soma o dia, mes e ano at√© encontrar uma data
 
   while ((checkdate($mes, $dia, $ano) == false) or ((date("w", mktime(0, 0, 0, $mes, $dia, $ano)) == "0") or (date("w", mktime(0, 0, 0, $mes, $dia, $ano)) == "6"))) {
     if ($dia > 31) {
@@ -1105,7 +1105,7 @@ function db_vencimento($dt = "") {
   //#10#//Esta funcao coloca a data no formato ano-mes-dia para o postgres
   //#15#//db_vencimento($dt);
   //#20#//Dt : Data a ser convertida para o formato
-  //#20#//     Caso a data em branco ou n„o informada, o sistema carrega a data da funÁ„o |db_stdlib::db_getsession|
+  //#20#//     Caso a data em branco ou n√£o informada, o sistema carrega a data da fun√ß√£o |db_stdlib::db_getsession|
   //#40#//Data formatada para postgres
 
   if (empty ($dt))
@@ -1140,19 +1140,19 @@ static function db_msgbox($sMensagem) {
 //redireciona para uma url
 function db_redireciona($url = "0") {
   //#00#//db_redireciona
-  //#10#//Esta funcao executa um redrecionamento de p·gina utilizando o javascript
+  //#10#//Esta funcao executa um redrecionamento de p√°gina utilizando o javascript
   //#15#//db_redireciona($url="0")
-  //#20#//Url : Nome completo da p·gina a ser acessada pelo redirecionamento
+  //#20#//Url : Nome completo da p√°gina a ser acessada pelo redirecionamento
   //#99#//Exemplo:
   //#99#//db_redireciona("index.php");
-  //#99#//Ir· abrir a p·gina index.php
+  //#99#//Ir√° abrir a p√°gina index.php
   if ($url == "0")
     $url = $GLOBALS["PHP_SELF"];
   echo "<script>location.href='$url'</script>\n";
   exit;
 }
 
-//retorna uma vari·vel de sess„o
+//retorna uma vari√°vel de sess√£o
 /*
  function db_stdlib::db_getsession($var) {
  global $HTTP_SESSION_VARS;
@@ -1165,31 +1165,31 @@ function db_redireciona($url = "0") {
  }
  */
 
-//retorna uma vari·vel de sess„o
+//retorna uma vari√°vel de sess√£o
 static function db_getsession($var = "0", $alertarExistencia = true) {
   //#00#//db_stdlib::db_getsession
-  //#10#//Esta funcao recupera da sess„o do php uma determinada vari·vel, ou todas as vari·veis l· registradas
+  //#10#//Esta funcao recupera da sess√£o do php uma determinada vari√°vel, ou todas as vari√°veis l√° registradas
   //#15#//db_stdlib::db_getsession($var="0", $alertarExistencia = true)
-  //#20#//Var : Nome da vari·vel que ser· recuperada
-  //#20#//alertarExistencia : Se deseja alertar que v·riavel de sess„o n„o existe (conforme o caso).
-  //#99#//Variaveis disponÌveis na sess„o
+  //#20#//Var : Nome da vari√°vel que ser√° recuperada
+  //#20#//alertarExistencia : Se deseja alertar que v√°riavel de sess√£o n√£o existe (conforme o caso).
+  //#99#//Variaveis dispon√≠veis na sess√£o
   //#99#//DB_acessado     Utilizado para Log
-  //#99#//DB_login        Login do usu·rio
-  //#99#//DB_id_usuario   N˙medo do id do usu·rio na taela |db_usuarios|
-  //#99#//DB_ip           N˙mero do IP que esta acessando
-  //#99#//DB_uol_hora     Hora de acesso do usu·rio
+  //#99#//DB_login        Login do usu√°rio
+  //#99#//DB_id_usuario   N√∫medo do id do usu√°rio na taela |db_usuarios|
+  //#99#//DB_ip           N√∫mero do IP que esta acessando
+  //#99#//DB_uol_hora     Hora de acesso do usu√°rio
   //#99#//DB_SELLER       Variavel de controle
   //#99#//DB_NBASE        Nome da base de dados que esta sendo acessada
-  //#99#//DB_modulo       N˙mero do mÛdulo que esta acessado
-  //#99#//DB_nome_modulo  Nome do mÛdulo que esta acessado
-  //#99#//DB_anousu       ExercÌcio que esta sendo acessado
+  //#99#//DB_modulo       N√∫mero do m√≥dulo que esta acessado
+  //#99#//DB_nome_modulo  Nome do m√≥dulo que esta acessado
+  //#99#//DB_anousu       Exerc√≠cio que esta sendo acessado
   //#99#//DB_datausu      Data do servidor
-  //#99#//DB_coddepto     CÛdigo do departamento do usu·rio
-  //#99#//DB_instit       CÛdigo da instituiÁ„o
+  //#99#//DB_coddepto     C√≥digo do departamento do usu√°rio
+  //#99#//DB_instit       C√≥digo da institui√ß√£o
   //#99#//
   //#99#//Exemplo:
   //#99#//db_stdlib::db_getsession("DB_datausu");
-  //#99#//Ir· abrir a p·gina index.php
+  //#99#//Ir√° abrir a p√°gina index.php
   if ($var == "0") {
     reset($_SESSION);
     $str = "";
@@ -1205,28 +1205,28 @@ static function db_getsession($var = "0", $alertarExistencia = true) {
       return $_SESSION[$var];
     } else {
       if($alertarExistencia == true){
-        db_stdlib::db_msgbox('Variavel de sess„o nao encontrada: '.$var);
+        db_stdlib::db_msgbox('Variavel de sess√£o nao encontrada: '.$var);
       }
       return null;
     }
   }
 }
 
-//atualiza uma vari·vel de sessao
+//atualiza uma vari√°vel de sessao
 static function db_putsession($var, $valor) {
   //#00#//db_stdlib::db_putsession
-  //#10#//Esta funcao inclui na sess„o do php uma determinada vari·vel
+  //#10#//Esta funcao inclui na sess√£o do php uma determinada vari√°vel
   //#15#//db_stdlib::db_putsession($var,$valor)
-  //#20#//Var   : Nome da vari·vel que ser· incluida na sess„o
-  //#20#//valor : Valor da vari·vel incluÌda
+  //#20#//Var   : Nome da vari√°vel que ser√° incluida na sess√£o
+  //#20#//valor : Valor da vari√°vel inclu√≠da
   $_SESSION[$var] = $valor;
 }
 
 function db_destroysession($var){
   //#00#//db_destroysession
-  //#10#//Esta funcao desregistra uma vari·vel de sess„o do php
+  //#10#//Esta funcao desregistra uma vari√°vel de sess√£o do php
   //#15#//db_destroysession($var)
-  //#20#//Var   : Nome da vari·vel que ser· desregistrada na sess„o
+  //#20#//Var   : Nome da vari√°vel que ser√° desregistrada na sess√£o
   unset($_SESSION[$var]);
 }
 
@@ -1239,12 +1239,12 @@ function db_sqlformatar($campo, $quant, $qual) {
 
 }
 
-//retorna uma string do inicio de $str, atÈ primeiro caractere da ocorrencia em $pos
+//retorna uma string do inicio de $str, at√© primeiro caractere da ocorrencia em $pos
 function db_strpos($str, $pos) {
   return substr($str, 0, (strpos($str, $pos) == "" ? strlen($str) : strpos($str, $pos)));
 }
 
-//imprime uma mensagem de erro, com um link pra voltar pra p·gina anterior
+//imprime uma mensagem de erro, com um link pra voltar pra p√°gina anterior
 function db_erro($msg, $voltar = 1) {
   $uri = $GLOBALS["PHP_SELF"];
   echo "$msg<br>\n";
@@ -1279,30 +1279,30 @@ function db_indexOf($str, $proc) {
  * Obs.:
  * <ul>
  *   <li>Quando utilizar o parametro automatico, coloque no parametro NomeForm o seguinte "NoMe" e em variaveis_repassa array().</li>
- *   <li>O cabeÁalho da tabela o sistema pega pelo nome do campo e busca na documentaÁ„o, colcando o label</li>
- *   <li>Quando n„o desejar colocar o label da documentacao, o nome do campo dever· ser iniciado com dl_ e o sistema retirar·
- *       estes caracteres e colocar· o primeiro caracter em maiusculo
+ *   <li>O cabe√ßalho da tabela o sistema pega pelo nome do campo e busca na documenta√ß√£o, colcando o label</li>
+ *   <li>Quando n√£o desejar colocar o label da documentacao, o nome do campo dever√° ser iniciado com dl_ e o sistema retirar√°
+ *       estes caracteres e colocar√° o primeiro caracter em maiusculo
  *   </li>
  *   <li>Para omitir uma coluna, coloque um alias com 'db_' como prefixo usando o nome do campo que desejar omitir.</li>
  * <ul>
  *
- * @param  string  $query             Select que ser· executado
- * @param  integer $numlinhas         N˙mero de linhas a serem mostradas
- * @param  string  $arquivo           Arquivo que ser· executado quando der um click em uma linha
- *                                    Na vers„o com iframe dever· ser colocado "()"
- * @param  string  $filtro            Filtro que ser· gerado, normalmente ""
- * @param  string  $aonde             Nome da funÁ„o que ser· executada quando der um click
- * @param  string  $campos_layer      Campos que ser„o colocados na layer quando passar o mouse ( n„o esta implementado )
- * @param  string  $NomeForm          Nome do formul·rio para colocar vari·veis complementares Padr„o = "NoMe"
- * @param  array   $variaveis_repassa Array com as vari·veis a serem reoassadas para o programa
+ * @param  string  $query             Select que ser√° executado
+ * @param  integer $numlinhas         N√∫mero de linhas a serem mostradas
+ * @param  string  $arquivo           Arquivo que ser√° executado quando der um click em uma linha
+ *                                    Na vers√£o com iframe dever√° ser colocado "()"
+ * @param  string  $filtro            Filtro que ser√° gerado, normalmente ""
+ * @param  string  $aonde             Nome da fun√ß√£o que ser√° executada quando der um click
+ * @param  string  $campos_layer      Campos que ser√£o colocados na layer quando passar o mouse ( n√£o esta implementado )
+ * @param  string  $NomeForm          Nome do formul√°rio para colocar vari√°veis complementares Padr√£o = "NoMe"
+ * @param  array   $variaveis_repassa Array com as vari√°veis a serem reoassadas para o programa
  * @param  boolean $automatico
- * @param  array   $totalizacao       Dever· fornecer os campos que desejar fazer somatorio, conforme exemplo abaixo: <br>
+ * @param  array   $totalizacao       Dever√° fornecer os campos que desejar fazer somatorio, conforme exemplo abaixo: <br>
  *                                    <pre>
  *                                      $totalizacao["e60_vlremp"] = "e60_vlremp"; totaliza o campo <br>
  *                                      $totalizacao["e60_vlranu"] = "e60_vlranu"; totaliza o campo <br>
  *                                      $totalizacao["e60_vlrpag"] = "e60_vlrpag"; totaliza o campo <br>
  *                                      $totalizacao["e60_vlrliq"] = "e60_vlrliq"; totaliza o campo <br>
- *                                      $totalizacao["dl_saldo"] = "dl_saldo";     totaliza o campo ( neste caso, o campo È um alias no sql) <br>
+ *                                      $totalizacao["dl_saldo"] = "dl_saldo";     totaliza o campo ( neste caso, o campo √© um alias no sql) <br>
  *                                      $totalizacao["totalgeral"] = "z01_nome";   indica qual o campo sera colocado o total
  *                                    </pre>
  * @return mixed                      HTML com a estrutura do datagrid
@@ -1340,7 +1340,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     $recomecar = $_POST["recomecar"];
   }
 
-  // se for a primeira vez que È rodado, pega o total de registros e guarda no campo hidden
+  // se for a primeira vez que √© rodado, pega o total de registros e guarda no campo hidden
   if( ( empty ($$tot_registros) && !empty ($query) ) || isset($recomecar)) {
 
     if( isset( $recomecar ) ) {
@@ -1462,7 +1462,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
         if( $_POST["codigo_pesquisa"] != '' ) {
 
           /**
-           * Query para buscar o tipo do campo clicado no cabeÁalho
+           * Query para buscar o tipo do campo clicado no cabe√ßalho
            */
           $sValorPesquisa    = $_POST["codigo_pesquisa"];
           $sWhere            = "nomecam = '{$_POST['campo_filtrado']}'";
@@ -1475,7 +1475,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
             $sConteudo = db_utils::fieldsMemory( $rsDaoDbSysCampo, 0 )->conteudo;
 
             /**
-             * Caso seja um tipo 'date', trata para inverter o valor passado, transformando num valor v·lido para o banco
+             * Caso seja um tipo 'date', trata para inverter o valor passado, transformando num valor v√°lido para o banco
              */
             if( $sConteudo == 'date' ) {
 
@@ -1523,7 +1523,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
     if( isset( $query_anterior ) ) {
 
-      echo "<script>alert('N„o existem dados para este filtro');</script>";
+      echo "<script>alert('N√£o existem dados para este filtro');</script>";
 
       if( count( $totalizacao ) > 0 || isset( $totalizacao_rep ) ) {
 
@@ -1642,7 +1642,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
                   if( !valor_recebe ) {
 
-                    alert( 'Valor Inv·lido!' );
+                    alert( 'Valor Inv√°lido!' );
                     document.navega_lov" . $NomeForm . ".nova_quantidade_linhas.value = '';
                     document.getElementById('quant_lista').value                      = '';
                   } else {
@@ -1664,10 +1664,10 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   $sHtml .= "  <tr>";
   $sHtml .= "    <td colspan=\"". ($NumFields +1)."\">";
   $sHtml .= "      <form name=\"navega_lov".$NomeForm."\" method=\"post\">";
-  $sHtml .= "        <input type=\"submit\" name=\"pri".$NomeForm."\"    value=\"InÌcio\" ".@ $Dd1.">     ";
+  $sHtml .= "        <input type=\"submit\" name=\"pri".$NomeForm."\"    value=\"In√≠cio\" ".@ $Dd1.">     ";
   $sHtml .= "        <input type=\"submit\" name=\"ant".$NomeForm."\"    value=\"Anterior\" ".@ $Dd1.">   ";
-  $sHtml .= "        <input type=\"submit\" name=\"prox".$NomeForm."\"   value=\"PrÛximo\" ".@ $Dd2.">    ";
-  $sHtml .= "        <input type=\"submit\" name=\"ult".$NomeForm."\"    value=\"⁄ltimo\" ".@ $Dd2.">     ";
+  $sHtml .= "        <input type=\"submit\" name=\"prox".$NomeForm."\"   value=\"Pr√≥ximo\" ".@ $Dd2.">    ";
+  $sHtml .= "        <input type=\"submit\" name=\"ult".$NomeForm."\"    value=\"√öltimo\" ".@ $Dd2.">     ";
   $sHtml .= "        <input type=\"hidden\" name=\"offset".$NomeForm."\" value=\"".@ $$offset."\">        ";
   $sHtml .= "        <input type=\"hidden\" name=\"totreg".$NomeForm."\" value=\"".@ $$tot_registros."\"> ";
   $sHtml .= "        <input type=\"hidden\" name=\"codigo_pesquisa\"     value=\"\">                      ";
@@ -1748,7 +1748,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   if( $NumRows > 0 ) {
 
     $sHtml .= "Foram retornados <label class='DBLovrotNumeroRegistros'> ". $$tot_registros . "</label> registros.";
-    $sHtml .= " Mostrando de <label class='DBLovrotNumeroRegistros'>" . (@$$offset +1)." </label> atÈ";
+    $sHtml .= " Mostrando de <label class='DBLovrotNumeroRegistros'>" . (@$$offset +1)." </label> at√©";
     $sHtml .= "<label class='DBLovrotNumeroRegistros'> ";
     $sHtml .= ($$tot_registros < (@ $$offset + $numlinhas) ? ($NumRows <= $numlinhas ? $$tot_registros : $NumRows) : ($$offset + $numlinhas));
     $sHtml .= "</label>.";
@@ -1772,7 +1772,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     if ( $campos_layer != "" ) {
 
       $campo_layerexe = split( "\|", $campos_layer );
-      $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"Executa Procedimento EspecÌfico.\" class='DBLovrotClique'>";
+      $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"Executa Procedimento Espec√≠fico.\" class='DBLovrotClique'>";
       $sHtml .= "  Clique";
       $sHtml .= "</td>";
     }
@@ -1894,7 +1894,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
         } else if( pg_fieldtype( $result, $j ) == "float8" || pg_fieldtype( $result, $j ) == "float4" || pg_fieldtype( $result, $j ) == "numeric" ) {
           $var_data = db_formatar( pg_result( $result, $i, $j ), 'f', ' ');
         } else if( pg_fieldtype( $result, $j ) == "bool" ) {
-          $var_data  = ( pg_result( $result, $i, $j ) == 'f' || pg_result( $result, $i, $j ) == '' ? 'N„o' : 'Sim' );
+          $var_data  = ( pg_result( $result, $i, $j ) == 'f' || pg_result( $result, $i, $j ) == '' ? 'N√£o' : 'Sim' );
         } else if( pg_fieldtype( $result, $j ) == "text" ) {
 
           $lCampoTipoTexto = true;
@@ -1911,49 +1911,49 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
             case 'j01_matric':
 
-              $sTitulo = "InformaÁıes ImÛvel";
+              $sTitulo = "Informa√ß√µes Im√≥vel";
               $sLabel  = "iptubase";
               break;
 
             case 'm80_codigo':
 
-              $sTitulo = "InformaÁıes LanÁamento";
+              $sTitulo = "Informa√ß√µes Lan√ßamento";
               $sLabel  = "matestoqueini";
               break;
 
             case 'm40_codigo':
 
-              $sTitulo = "InformaÁıes RequisiÁ„o";
+              $sTitulo = "Informa√ß√µes Requisi√ß√£o";
               $sLabel  = "matrequi";
               break;
 
             case 'm42_codigo':
 
-              $sTitulo = "InformaÁıes Atendimento";
+              $sTitulo = "Informa√ß√µes Atendimento";
               $sLabel  = "atendrequi";
               break;
 
             case 'm45_codigo':
 
-              $sTitulo = "InformaÁıes DevoluÁ„o";
+              $sTitulo = "Informa√ß√µes Devolu√ß√£o";
               $sLabel  = "matestoquedev";
               break;
 
             case 't52_bem':
 
-              $sTitulo = "InformaÁıes Bem";
+              $sTitulo = "Informa√ß√µes Bem";
               $sLabel  = "bem";
               break;
 
             case 'q02_inscr':
 
-              $sTitulo = "InformaÁıes Issqn";
+              $sTitulo = "Informa√ß√µes Issqn";
               $sLabel  = "issbase";
               break;
 
             case 'z01_numcgm':
 
-              $sTitulo = "InformaÁıes Contribuinte/Empresa";
+              $sTitulo = "Informa√ß√µes Contribuinte/Empresa";
               $sLabel  = "cgm";
               break;
 
@@ -1961,7 +1961,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
             case 'e61_numemp':
             case 'e62_numemp':
 
-              $sTitulo = "InformaÁıes do Empenho";
+              $sTitulo = "Informa√ß√µes do Empenho";
               $sLabel  = "empempenho";
               break;
 
@@ -1969,13 +1969,13 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
             case 'e55_autori':
             case 'e56_autori':
 
-              $sTitulo = "InformaÁıes da AutorizaÁ„o de Empenho";
+              $sTitulo = "Informa√ß√µes da Autoriza√ß√£o de Empenho";
               $sLabel  = "empautoriza";
               break;
 
             case 'pc10_numero':
 
-              $sTitulo = "InformaÁıes da SolicitaÁ„o";
+              $sTitulo = "Informa√ß√µes da Solicita√ß√£o";
               $sLabel  = "empsolicita";
               break;
 
@@ -2075,10 +2075,10 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     $sHtml .= "  <td colspan=$NumFields>";
     $sHtml .= "    <input name='recomecar' ";
     $sHtml .= "           type='button' ";
-    $sHtml .= "           value='RecomeÁar' ";
+    $sHtml .= "           value='Recome√ßar' ";
     $sHtml .= "           onclick=\"js_troca_ordem( 'navega_lov" . $NomeForm . "', 'recomecar', '0' );\">";
-    $sHtml .= "    <label class='DBLovrotBold'>Indique o Conte˙do:</label> ";
-    $sHtml .= "    <input title='Digite o valor a pesquisar e clique sobre o campo (cabeÁalho) a pesquisar' ";
+    $sHtml .= "    <label class='DBLovrotBold'>Indique o Conte√∫do:</label> ";
+    $sHtml .= "    <input title='Digite o valor a pesquisar e clique sobre o campo (cabe√ßalho) a pesquisar' ";
     $sHtml .= "           name=indica_codigo ";
     $sHtml .= "           type=text ";
     $sHtml .= "           onchange='js_lanca_codigo_pesquisa( this.value )'";
@@ -2092,7 +2092,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     $sHtml .= "           value='$numlinhas' ";
     $sHtml .= "           size='5'>";
     $sHtml .= "    <label class='DBLovrotBold'>Mostra Diferentes:</label>";
-    $sHtml .= "    <input title='Mostra os valores diferentes clicando no cabeÁalho a pesquisar' ";
+    $sHtml .= "    <input title='Mostra os valores diferentes clicando no cabe√ßalho a pesquisar' ";
     $sHtml .= "           name=mostra_diferentes ";
     $sHtml .= "           type=checkbox ";
     $sHtml .= "           onchange='js_lanca_distinct_pesquisa()' ";
@@ -2156,7 +2156,7 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
   //recebe os valores do campo hidden
   $$tot_registros = @ $HTTP_POST_VARS["totreg".$NomeForm];
   $$offset = @ $HTTP_POST_VARS["offset".$NomeForm];
-  // se for a primeira vez que È rodado, pega o total de registros e guarda no campo hidden
+  // se for a primeira vez que √© rodado, pega o total de registros e guarda no campo hidden
   if (empty ($$tot_registros)) {
     $Dd1 = "disabled";
     $tot = self::db_query("select count(*) from ($query) as temp");
@@ -2207,7 +2207,7 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
                 <input type=\"hidden\" name=\"filtro\" value=\"$filtro\">
           </form>". ($NumRows > 0 ? "
           Foram retornados <font color=\"red\"><strong>".$$tot_registros."</strong></font> registros.
-          Mostrando de <font color=\"red\"><strong>". ($$offset +1)."</strong></font> atÈ
+          Mostrando de <font color=\"red\"><strong>". ($$offset +1)."</strong></font> at√©
           <font color=\"red\"><strong>". ($$tot_registros < ($$offset + $numlinhas) ? $NumRows : ($$offset + $numlinhas))."</strong></font>." : "Nenhum Registro
           Retornado")."
           </td></tr>\n";
@@ -2319,10 +2319,10 @@ function db_logsmanual_demais($string = '', $id_usuario=0, $modulo = 0, $item = 
  * Menu do sistema
  *
  * @example db_menu
- * @param integer $usuario - Id do usu·rio
- * @param integer $modulo  - CÛdigo do MÛdulo
- * @param integer $anousu  - ExercÌcio de Acesso
- * @param integer $instit  - N˙mero da instituiÁ„o
+ * @param integer $usuario - Id do usu√°rio
+ * @param integer $modulo  - C√≥digo do M√≥dulo
+ * @param integer $anousu  - Exerc√≠cio de Acesso
+ * @param integer $instit  - N√∫mero da institui√ß√£o
  */
 function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null) {
   
@@ -2334,18 +2334,18 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
   $idItem = db_stdlib::db_getsession('DB_itemmenu_acessado');
 
   /**
-   * Busca as preferÍnias do usu·rio
+   * Busca as prefer√™nias do usu√°rio
    */
   
   $oPreferencias = unserialize(base64_decode(db_stdlib::db_getsession('DB_preferencias_usuario')));
-  //$sOrdenacao    = DBMenu::getCampoOrdenacao();
+  $sOrdenacao    = DBMenu::getCampoOrdenacao();
   $DBMenu        = new DBMenu($modulo, $usuario, $anousu, $instit);
   $DBMenu->setAdministrador( (db_stdlib::db_getsession("DB_administrador") == 1) );
   $DBMenu->setDBSeller( isset($DB_SELLER) );
-  //$DBMenu->setExibeBuscaMenus( ($oPreferencias->getExibeBusca() == '1') );
+  $DBMenu->setExibeBuscaMenus( ($oPreferencias->getExibeBusca() == '1') );
   $DBMenu->setDataUsu( (isset($_SESSION["DB_datausu"]) ? date("Y", db_stdlib::db_getsession("DB_datausu")) : date("Y")) );
   $DBMenu->setFuncao( strtolower(basename($_SERVER["PHP_SELF"])) );
-  //$DBMenu->setOrdenacao($sOrdenacao);
+  $DBMenu->setOrdenacao($sOrdenacao);
 
   $sMenu = $DBMenu->montaMenu($modulo);
 
@@ -2404,12 +2404,12 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
 // acessa menu
 function db_acessamenu($item_menu, $descr, $acao) {
   //#00#//db_acessamenu
-  //#10#//Esta funcao acessa o menu de permissıes do usu·rio
+  //#10#//Esta funcao acessa o menu de permiss√µes do usu√°rio
   //#15#//db_acessamenu($item_menu,$acao);
-  //#20#//Item menu : Item de menu que ser· acessado
-  //#20#//AÁ„o      : AÁ„o a executar quando clicado no menu
+  //#20#//Item menu : Item de menu que ser√° acessado
+  //#20#//A√ß√£o      : A√ß√£o a executar quando clicado no menu
   //#20#//            1 - Abrir Janela de Iframe
-  //#20#//            2 - Redirecionar para o Ìtem
+  //#20#//            2 - Redirecionar para o √≠tem
   $sql = "select m.descricao
                   from db_permissao p
                        inner join db_itensmenu m on m.id_item = p .id_item
@@ -2424,19 +2424,19 @@ function db_acessamenu($item_menu, $descr, $acao) {
 // emite o valor por extenso ( em moeda )
 function db_extenso($valor = 0, $maiusculas = false) {
   //#00#//db_extenso
-  //#10#//Esta funcao retorna um valor por extenso em maiusculo ou n„o
+  //#10#//Esta funcao retorna um valor por extenso em maiusculo ou n√£o
   //#15#//db_extenso($valor,$maiusculo);
   //#20#//Valor    : Valor a ser gerado
-  //#20#//Maiusculo: Se retorna a string gerada em maiusculo ou n„o
+  //#20#//Maiusculo: Se retorna a string gerada em maiusculo ou n√£o
 
   $rt = '';
-  $singular = array ("centavo", "real", "mil", "milh„o", "bilh„o", "trilh„o", "quatrilh„o");
-  $plural = array ("centavos", "reais", "mil", "milhıes", "bilhıes", "trilhıes", "quatrilhıes");
+  $singular = array ("centavo", "real", "mil", "milh√£o", "bilh√£o", "trilh√£o", "quatrilh√£o");
+  $plural = array ("centavos", "reais", "mil", "milh√µes", "bilh√µes", "trilh√µes", "quatrilh√µes");
 
   $c = array ("", "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
   $d = array ("", "dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa");
   $d10 = array ("dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezesete", "dezoito", "dezenove");
-  $u = array ("", "um", "dois", "trÍs", "quatro", "cinco", "seis", "sete", "oito", "nove");
+  $u = array ("", "um", "dois", "tr√™s", "quatro", "cinco", "seis", "sete", "oito", "nove");
 
   $z = 0;
 
@@ -2469,7 +2469,7 @@ function db_extenso($valor = 0, $maiusculas = false) {
   if (!$maiusculas) {
     return ($rt ? $rt : "zero");
   } else { /*
-                  Trocando o " E " por " e ", fica muito + apresent·vel!
+                  Trocando o " E " por " e ", fica muito + apresent√°vel!
                   Rodrigo Cerqueira, rodrigobc@fte.com.br
                   */
     if ($rt)
@@ -2485,7 +2485,7 @@ function db_permissaomenu($ano, $modulo, $item) {
   //#20#//Ano: ano que deseja utilizar para verificar o acesso
   //#20#//Modulo: codigo do modulo que deseja utilizar para verificar o acesso
   //#20#//Item: codigo do item que deseja utilizar para verificar o acesso
-  //#20#//Sempre ser· utilizado o usuario atual para a verificacao
+  //#20#//Sempre ser√° utilizado o usuario atual para a verificacao
   if (db_stdlib::db_getsession("DB_id_usuario") == 1 || db_stdlib::db_getsession("DB_administrador") == 1) {
     return "true";
   } else {
@@ -2546,17 +2546,17 @@ function db_base_ativa() {
   }
 }
 
-function db_criatermometro($dbnametermo='termometro',$dbtexto='ConcluÌdo',$dbcor='blue',$dbborda=1,$dbacao='Aguarde Processando...'){
+function db_criatermometro($dbnametermo='termometro',$dbtexto='Conclu√≠do',$dbcor='blue',$dbborda=1,$dbacao='Aguarde Processando...'){
 
   //#00#//db_criatermometro
   //#10#//Cria uma barra de progresso no ponto do programa que for chamado
-  //#15#//db_criatermometro('termometro','ConcluÌdo','blue',1);
+  //#15#//db_criatermometro('termometro','Conclu√≠do','blue',1);
   //#20#//dbnametermo = Nome do termometro e da funcao js que atualiza o termometro
   //#20#//dbtexto     = Texto mostrado no lado da porcentagem concluida
   //#20#//dbcor       = Cor do termometro
   //#20#//dbborda     = Borda, 1 com borda ou 2 sem borda
   //#20#//dbacao      = Texto para acao executada ex: Aguarde Processando...
-  //#99#//Essa funÁ„o apenas cria o termometro, para atualizar o valor do termometro deve usar a funcao db_atutermometro
+  //#99#//Essa fun√ß√£o apenas cria o termometro, para atualizar o valor do termometro deve usar a funcao db_atutermometro
 
   if($dbborda !=1 && $dbborda !=0){
     $dbborda=1;
@@ -2667,7 +2667,7 @@ function db_preparageratxt($lista, $k00_tipo =null) {
                         inner join listatipos on k62_tipodeb = k00_tipo where k62_lista = $lista");
 
     if(pg_numrows($resultnumbco)==0){
-      echo "O cÛdigo do banco n„o esta cadastrado no arquivo arretipo para este tipo!";
+      echo "O c√≥digo do banco n√£o esta cadastrado no arquivo arretipo para este tipo!";
       exit;
     }
   } else {
@@ -2678,7 +2678,7 @@ function db_preparageratxt($lista, $k00_tipo =null) {
     $resultnumbco = self::db_query($sqlnumbco) or die($sqlnumbco);
 
     if(pg_numrows($resultnumbco)==0){
-      echo "O cÛdigo do banco n„o esta cadastrado no arquivo arretipo para este tipo!";
+      echo "O c√≥digo do banco n√£o esta cadastrado no arquivo arretipo para este tipo!";
       exit;
     }
   }
@@ -2921,7 +2921,7 @@ function db_dataextenso( $timestamp=null, $sMunic=null ){
 
   $aMeses = array("01" => "Janeiro",
                   "02" => "Fevereiro",
-                  "03" => "MarÁo",
+                  "03" => "Mar√ßo",
                   "04" => "Abril",
                   "05" => "Maio",
                   "06" => "Junho",
@@ -2950,10 +2950,10 @@ function db_geraArquivoOid ($arquivo,$arquivoAlt=null,$opcao=1,$conn){
   /*
    * $arquivo    => o arquivo do type "file", o arquivo a ser gravado
    * $arquivoAlt => o arquivo ja existente no banco,
-   *                a opÁ„o alterar a funÁ„o altera do $arquivoAlt para o $arquivo
-   *                na opÁ„o excluir a funÁ„o exclui este arquivo
+   *                a op√ß√£o alterar a fun√ß√£o altera do $arquivoAlt para o $arquivo
+   *                na op√ß√£o excluir a fun√ß√£o exclui este arquivo
    * $opcao      => 1 = incluir, 2= alterar, 3 = excluir
-   * $conn       => conex„o com banco
+   * $conn       => conex√£o com banco
    */
 
   if($opcao==2){
@@ -2999,8 +2999,8 @@ function db_geraArquivoOid ($arquivo,$arquivoAlt=null,$opcao=1,$conn){
       }
       pg_lo_close($objeto);
     } else {
-      throw new Exception("OperaÁ„o Cancelada! ");
-      //$erro_msg ("OperaÁ„o Cancelada!!");
+      throw new Exception("Opera√ß√£o Cancelada! ");
+      //$erro_msg ("Opera√ß√£o Cancelada!!");
       //$sqlerro = true;
     }
 
@@ -3012,7 +3012,7 @@ function db_geraArquivoOid ($arquivo,$arquivoAlt=null,$opcao=1,$conn){
 function db_buscaImagemBanco($cadban,$conn){
   /*
    * $cadban = codigo k15_codigo da cadban
-   * $conn   =  conex„o
+   * $conn   =  conex√£o
    */
 
   $sqlcodban = "select k15_codbco from cadban where k15_codigo = $cadban";
@@ -3031,12 +3031,12 @@ function db_buscaImagemBanco($cadban,$conn){
       $db90_digban = pg_result($resultBanco,0,"db90_digban");
       $db90_abrev  = pg_result($resultBanco,0,"db90_abrev");
       $db90_logo   = pg_result($resultBanco,0,"db90_logo");
-      // se n„o tiver os dados do banco na db_bancos n„o deve emitir o recibo.
+      // se n√£o tiver os dados do banco na db_bancos n√£o deve emitir o recibo.
       if($db90_digban=="" || $db90_abrev=="" || $db90_logo==""){
         return false;
 //      db_redireciona('db_erros.php?fechar=true&db_erro=Configure os dados(Digito verificador, Nome abreviado do banco e o Arquivo do logo) do Banco: '.$banco.'-'.$db90_descr.', no Cadastro de Bancos');
       }
-      // seta os dados para o boleto passando as informaÁıes do logo
+      // seta os dados para o boleto passando as informa√ß√µes do logo
       self::db_query ($conn, "begin");
       $caminho = "tmp/".$banco.".jpg";
       pg_lo_export  ( "$db90_logo",$caminho ,$conn);
@@ -3049,8 +3049,8 @@ function db_buscaImagemBanco($cadban,$conn){
       return $arr;
 
     }else{
-      // se n„o tiver o banco na db_bancos
-      db_redireciona('db_erros.php?fechar=true&db_erro=N„o existe Banco cadastrado para o cÛdigo'.$banco.' no Cadastro de Bancos'.$sqlBanco);
+      // se n√£o tiver o banco na db_bancos
+      db_redireciona('db_erros.php?fechar=true&db_erro=N√£o existe Banco cadastrado para o c√≥digo'.$banco.' no Cadastro de Bancos'.$sqlBanco);
     }
   }
 }
@@ -3124,7 +3124,7 @@ function conta_meses($dataini, $datafim) {
  *
  * @param array()      $aArquivosCompactar   array com o nome dos arquivos a serem compactados
  * @param string       $sNomeAbsoluto        nome do arquivo a ser gerado
- * @param string       $sTipoCompactacao     string identificando o tipo de compactaÁ„o ('zip') implementado apenas zip
+ * @param string       $sTipoCompactacao     string identificando o tipo de compacta√ß√£o ('zip') implementado apenas zip
  */
 function compactaArquivos($aArquivosCompactar=array(),$sNomeAbsoluto="",$sTipoCompactacao="zip") {
 
@@ -3156,7 +3156,7 @@ function db_round($valor, $decimais=0) {
 
 function db_buscaImagemInstituicao($instit,$tipo){
   /**
-   * $instit cÛdigo da instituiÁ„o {db_stdlib::db_getsession("DB_instit")}
+   * $instit c√≥digo da institui√ß√£o {db_stdlib::db_getsession("DB_instit")}
    * $tipo 1 - para logo 2 - para figura
    * $conn conexao com o banco
    */
@@ -3181,7 +3181,7 @@ function db_buscaImagemInstituicao($instit,$tipo){
 }
 
 /**
- * RemoveÁ„o acentuÁ„o da string informada como par‚metro .
+ * Remove√ß√£o acentu√ß√£o da string informada como par√¢metro .
  *
  * @param string $sRemover
  * @return string
@@ -3190,24 +3190,24 @@ function db_removeAcentuacao($sRemover){
 
   $var = $sRemover;
 
-  $var = ereg_replace("[¡¿¬√]","A",$var);
-  $var = ereg_replace("[·‡‚„™]","a",$var);
-  $var = ereg_replace("[…» ]","E",$var);
-  $var = ereg_replace("[ÈËÍ]","e",$var);
-  $var = ereg_replace("[ÌÏ]","i",$var);
-  $var = ereg_replace("[ÕÃ]","I",$var);
-  $var = ereg_replace("[”“‘’]","O",$var);
-  $var = ereg_replace("[ÛÚÙı∫]","o",$var);
-  $var = ereg_replace("[⁄Ÿ€]","U",$var);
-  $var = ereg_replace("[˙˘˚]","u",$var);
-  $var = str_replace("«","C",$var);
-  $var = str_replace("Á","c",$var);
+  $var = ereg_replace("[√Å√Ä√Ç√É]","A",$var);
+  $var = ereg_replace("[√°√†√¢√£¬™]","a",$var);
+  $var = ereg_replace("[√â√à√ä]","E",$var);
+  $var = ereg_replace("[√©√®√™]","e",$var);
+  $var = ereg_replace("[√≠√¨]","i",$var);
+  $var = ereg_replace("[√ç√å]","I",$var);
+  $var = ereg_replace("[√ì√í√î√ï]","O",$var);
+  $var = ereg_replace("[√≥√≤√¥√µ¬∫]","o",$var);
+  $var = ereg_replace("[√ö√ô√õ]","U",$var);
+  $var = ereg_replace("[√∫√π√ª]","u",$var);
+  $var = str_replace("√á","C",$var);
+  $var = str_replace("√ß","c",$var);
 
   return $var;
 }
 
 /**
- * @name funÁ„o db_tempodecorrido
+ * @name fun√ß√£o db_tempodecorrido
  * @desc retorna o tempo gasto formatado entre duas datas
  * @param timestamp do primeiro tempo
  * @param timestamp do segundo tempo
@@ -3217,7 +3217,7 @@ function db_formatatempodecorrido($timestampAntes, $timestampDepois){
   //string de retorno
   $sRetorno = '';
 
-  //diferenÁa entre as datas em segundos
+  //diferen√ßa entre as datas em segundos
   $iRestaSegundos = $timestampDepois-$timestampAntes;
 
   //quantidade de anos
@@ -3234,7 +3234,7 @@ function db_formatatempodecorrido($timestampAntes, $timestampDepois){
     $iRestaSegundos = $iRestaSegundos-($iAnos*31536000);
   }
 
-  //quantidade de meses (anos/12 e n„o dias*30)
+  //quantidade de meses (anos/12 e n√£o dias*30)
   $ises = $iRestaSegundos/2628000;
 
   //se houver meses
@@ -3242,7 +3242,7 @@ function db_formatatempodecorrido($timestampAntes, $timestampDepois){
   if ($iMeses >= 1) {
 
     //mostra quantos meses passaram
-    $sRetorno .= ($iMeses == 1) ? $iMeses.' mÍs, ' : $iMeses.' meses, ';
+    $sRetorno .= ($iMeses == 1) ? $iMeses.' m√™s, ' : $iMeses.' meses, ';
 
     //retira do total, o tempo em segundos dos meses passados
     $iRestaSegundos = $iRestaSegundos-($iMeses*2628000);
@@ -3351,7 +3351,7 @@ function db_mesAbreviado ($iMes){
 }
 
 /**
- * FunÁ„o que analisa se o plano de contas PCASP esta ativado e ent„o altera o nome das tabelas envolvido
+ * Fun√ß√£o que analisa se o plano de contas PCASP esta ativado e ent√£o altera o nome das tabelas envolvido
  * @param string $sQuery
  * @throws Exception
  */
@@ -3379,9 +3379,9 @@ function analiseQueryPlanoOrcamento($sQuery, $iAnoUsu = null)  {
                       "fc_conplanoorcamento_grupo"
   );
   /**
-   * incluido um or no if da constante use pecasp, para verificar tambem a variavel de seÁ„o
+   * incluido um or no if da constante use pecasp, para verificar tambem a variavel de se√ß√£o
    * para fazer o parse das tabelas migradas
-   * ajuste provisorio para que seja possivel a visualizaÁ„o dos relatorios e quadros de
+   * ajuste provisorio para que seja possivel a visualiza√ß√£o dos relatorios e quadros de
    * estimativas de receitas para o ano de 2012.
    * ativamos para 't' no RPC que chama o metodo getQuadroEstimativa
    * @todo remover || $_SESSION["DB_use_pcasp"] == 't'  do if abaixo
@@ -3395,7 +3395,7 @@ function analiseQueryPlanoOrcamento($sQuery, $iAnoUsu = null)  {
 
 /**
  *  funcao para corrigir o erro do php 2, relacionado a arredondamento
- *  mais informaÁıes sobre o bug: https://bugs.php.net/bug.php?id=44223
+ *  mais informa√ß√µes sobre o bug: https://bugs.php.net/bug.php?id=44223
  */
 function dbround_php_52($nValor, $iCasas = 0) {
 

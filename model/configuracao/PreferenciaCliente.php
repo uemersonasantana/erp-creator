@@ -11,7 +11,7 @@ namespace model;
 class PreferenciaCliente extends Preferencia {
 
   /**
-   * Número de tentativas para fazer login
+   * NÃºmero de tentativas para fazer login
    * @var integer
    */
   protected $iTentativasLogin = 99;
@@ -23,7 +23,7 @@ class PreferenciaCliente extends Preferencia {
   }
 
   /**
-   * Método para retornar o número das tentivas de login configurada
+   * MÃ©todo para retornar o nÃºmero das tentivas de login configurada
    * @return integer
    */
   public function getTentativasLogin() {
@@ -32,7 +32,7 @@ class PreferenciaCliente extends Preferencia {
   }
 
   /**
-   * Configura o número de tentativas de login
+   * Configura o nÃºmero de tentativas de login
    * @param void
    */
   public function setTentativasLogin($iTentativasLogin) {
@@ -50,7 +50,7 @@ class PreferenciaCliente extends Preferencia {
     $this->iDiasExpiraToken = $iDiasExpiraToken;
   }
   /**
-   * Salva as preferencias no arquivo de configuração
+   * Salva as preferencias no arquivo de configuraÃ§Ã£o
    * @return void
    */
   public function salvarPreferencias() {

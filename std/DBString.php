@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe de manipulaÁ„o de String
+ * Classe de manipula√ß√£o de String
  *
  * @package std
  * @author  Rafael Serpa Nery <rafael.nery@dbseller.com.br>
@@ -12,15 +12,15 @@ namespace std;
 abstract class DBString {
 
   /**
-   * Verica se o tamanho total do nome È no minimo de 2 caracteres
+   * Verica se o tamanho total do nome √© no minimo de 2 caracteres
    */
   const NOME_REGRA_1 = 1;
   /**
-   * Verifica se a string de nome È composta por nome e sobrenome e cada um deles tem no minimo 2 caracteres
+   * Verifica se a string de nome √© composta por nome e sobrenome e cada um deles tem no minimo 2 caracteres
    */
   const NOME_REGRA_2 = 2;
   /**
-   * Verifica se a string nome È composta por nome e sobrenome
+   * Verifica se a string nome √© composta por nome e sobrenome
    * @var unknown_type
    */
   const NOME_REGRA_3 = 3;
@@ -29,12 +29,12 @@ abstract class DBString {
    */
   const NOME_REGRA_4 = 4;
   /**
-   * Verifica se nome esta ascentuado, possui n˙meros ou caractÈres especiais
+   * Verifica se nome esta ascentuado, possui n√∫meros ou caract√©res especiais
    */
   const NOME_REGRA_5 = 5;
 
   /**
-   * Quebra uma string passando por par‚metro o n˙mero m·ximo de caracteres retornando um array
+   * Quebra uma string passando por par√¢metro o n√∫mero m√°ximo de caracteres retornando um array
    *
    * @param string  $sString
    * @param integer $iNroMaxCaract
@@ -88,7 +88,7 @@ abstract class DBString {
   }
 
   /**
-   * Recebe um PIS e v·lido.
+   * Recebe um PIS e v√°lido.
    *
    * @example DBString::isPIS("20097809998");
    * @param   String  $sPis
@@ -112,14 +112,14 @@ abstract class DBString {
     }
 
     /**
-     * Verifica se o pis possui valores v·lidos
+     * Verifica se o pis possui valores v√°lidos
      */
     if ($sPIS == "00000000000"){
       return false;
     }
 
     /**
-     * Verifica se o valor informado È inteiro
+     * Verifica se o valor informado √© inteiro
      */
     if(!(DBNumber::isInteger($sPIS))){
       return false;
@@ -127,7 +127,7 @@ abstract class DBString {
 
     /**
      * Multiplica os 10 primeiros algarismos do PIS pelos respectivos pesos [3,2,9,8,7,6,5,4,3,2],
-     * somando o produto obtido a partir da multiplicaÁ„o na variavel $iSoma.
+     * somando o produto obtido a partir da multiplica√ß√£o na variavel $iSoma.
      */
     $iSoma  = $sPIS[0] * 3;
     $iSoma += $sPIS[1] * 2;
@@ -141,16 +141,16 @@ abstract class DBString {
     $iSoma += $sPIS[9] * 2;
 
     /**
-     * Verifica o resto da divis„o da Soma a cima por 11.
-     * Subtrai o Total do respo da divis„o.
+     * Verifica o resto da divis√£o da Soma a cima por 11.
+     * Subtrai o Total do respo da divis√£o.
      */
     $iResto = $iSoma % 11;
     $iTotal = 11 - $iResto;
 
 
     /**
-     * Se $iTotal for igual a 10 ou 11 o digito verificador ser· 11,
-     * caso contratio o digito verificador ser· o valor de $iTotal
+     * Se $iTotal for igual a 10 ou 11 o digito verificador ser√° 11,
+     * caso contratio o digito verificador ser√° o valor de $iTotal
      */
     if ($iTotal == 10 || $iTotal == 11){
       $iDigito = 0;
@@ -159,7 +159,7 @@ abstract class DBString {
     }
 
     /**
-     * Verifica se o digito verificador È v·lido.
+     * Verifica se o digito verificador √© v√°lido.
      */
     if ($sPIS[10] == $iDigito) {
       return true;
@@ -169,7 +169,7 @@ abstract class DBString {
   }
 
   /**
-   * Valida se a String passada È v·lida como CPF
+   * Valida se a String passada √© v√°lida como CPF
    * @param String $sCpf
    * @return Boolean
    */
@@ -210,8 +210,8 @@ abstract class DBString {
     }
 
     /**
-     * A Base para O primeiro digito do CPF È formado pelo resto da divisao soma efetuada a cima
-     * Se o resto for maior que 2 o digito sera 0, caso contrario o digito ser· 11 menos o resto
+     * A Base para O primeiro digito do CPF √© formado pelo resto da divisao soma efetuada a cima
+     * Se o resto for maior que 2 o digito sera 0, caso contrario o digito ser√° 11 menos o resto
      */
     $iResto1   = $nTotalCalculoDigito1 % 11;
     $iDigito1 = ($iResto1 < 2) ? 0 : (11 - $iResto1);
@@ -230,8 +230,8 @@ abstract class DBString {
     }
 
     /**
-     * A base para o segundo digito do cpf È formado pelo resto da divisao da soma efetuada a cima
-     * se o resto for maior que2 o digito ser· 0, caso contrario o digito sera 11 menos o resto
+     * A base para o segundo digito do cpf √© formado pelo resto da divisao da soma efetuada a cima
+     * se o resto for maior que2 o digito ser√° 0, caso contrario o digito sera 11 menos o resto
      *
      */
     $iResto2  = $nTotalCalculoDigito2 % 11;
@@ -242,7 +242,7 @@ abstract class DBString {
   }
 
   /**
-   * VErifica se a String passada È vallida como CNPJ
+   * VErifica se a String passada √© vallida como CNPJ
    * @param string $sCNPJ
    * @return boolean
    */
@@ -284,8 +284,8 @@ abstract class DBString {
     }
 
     /**
-     * A Base para O primeiro digito do CNPJ È formado pelo resto da divisao soma efetuada a cima
-     * Se o resto for maior que 2 o digito sera 0, caso contrario o digito ser· 11 menos o resto
+     * A Base para O primeiro digito do CNPJ √© formado pelo resto da divisao soma efetuada a cima
+     * Se o resto for maior que 2 o digito sera 0, caso contrario o digito ser√° 11 menos o resto
      */
     $iResto1  = $nTotalBase1 % 11;
     $iDigito1 = ($iResto1 < 2) ? 0 : (11 - $iResto1);
@@ -301,8 +301,8 @@ abstract class DBString {
     }
 
     /**
-     * A Base para o segundo digito do CNPJ È formado pelo resto da divisao soma efetuada a cima
-     * Se o resto for maior que 2 o digito sera 0, caso contrario o digito ser· 11 menos o resto
+     * A Base para o segundo digito do CNPJ √© formado pelo resto da divisao soma efetuada a cima
+     * Se o resto for maior que 2 o digito sera 0, caso contrario o digito ser√° 11 menos o resto
      */
     $iResto2  = $nTotalBase2 % 11;
     $iDigito2 = ($iResto2 < 2) ? 0 : (11 - $iResto2);
@@ -316,7 +316,7 @@ abstract class DBString {
   }
 
   /**
-   * Verifica se a string È v·lida como email
+   * Verifica se a string √© v√°lida como email
    * @param boolean $sEmail
    */
   public static function isEmail($sEmail){
@@ -342,7 +342,7 @@ abstract class DBString {
       break;
 
       /**
-       *  Verifica se o nome È composto pelo menos por 1 espaco, ou seja, nome e sobrenome
+       *  Verifica se o nome √© composto pelo menos por 1 espaco, ou seja, nome e sobrenome
        */
     case DBString::NOME_REGRA_2:
 
@@ -356,7 +356,7 @@ abstract class DBString {
       break;
 
       /**
-       *  Verifica se o nome È composto(nome e sobrenome)
+       *  Verifica se o nome √© composto(nome e sobrenome)
        */
     case DBString::NOME_REGRA_3:
 
@@ -373,25 +373,25 @@ abstract class DBString {
        */
     case DBString::NOME_REGRA_4:
 
-      $sExpressao = '/([a-zA-Z¿-ˇ\s])\1{3}/';
+      $sExpressao = '/([a-zA-Z√Ä-√ø\s])\1{3}/';
       return preg_match( $sExpressao, $sNome ) ? false : true;
 
       break;
 
       /**
-       *  Verifica se nome esta ascentuado, possui n˙meros ou caractÈres especiais
+       *  Verifica se nome esta ascentuado, possui n√∫meros ou caract√©res especiais
        */
     case DBString::NOME_REGRA_5:
 
       // $sExpressao = '/^([a-zA-Z\s]+)$/';
-      $sExpressao = '/[¿-ˇ0-9.]/';
+      $sExpressao = '/[√Ä-√ø0-9.]/';
       return preg_match($sExpressao, $sNome) ? false : true;
 
       break;
 
       /**
-       * Verifica nome e sobrenome, se possui ao menos 2 caractÈres em cada nome, se possui quatro letras repetidas
-       * em sequencia e se possui caractÈres especiais
+       * Verifica nome e sobrenome, se possui ao menos 2 caract√©res em cada nome, se possui quatro letras repetidas
+       * em sequencia e se possui caract√©res especiais
        */
     case DBString::NOME_REGRA_6:
 
@@ -399,7 +399,7 @@ abstract class DBString {
       break;
 
     default:
-      throw new Exception("Regra Inv·lida");
+      throw new Exception("Regra Inv√°lida");
       break;
     }
 
@@ -418,7 +418,7 @@ abstract class DBString {
   }
 
   /**
-   * Verifica se a string n„o ultrapassa o tamanho m·ximo solicitado.
+   * Verifica se a string n√£o ultrapassa o tamanho m√°ximo solicitado.
    *
    * @access public
    * @param String $sString
@@ -431,7 +431,7 @@ abstract class DBString {
   }
 
   /**
-   * Verifica se a string possui somente n˙meros.
+   * Verifica se a string possui somente n√∫meros.
    *
    * @access public
    * @param String $sPalavra
@@ -447,13 +447,13 @@ abstract class DBString {
 
     $sRegex = '/^[a-zA-Z\s]+$/';
     if ($lLetrasAcentuadas ) {
-      $sRegex = '/^[a-zA-Z¿-ˇ\s]+$/';
+      $sRegex = '/^[a-zA-Z√Ä-√ø\s]+$/';
     }
     return preg_match($sRegex, $sPalavra) ? true : false;
   }
 
   /**
-   * Valida se a string È somente alfanumerica
+   * Valida se a string √© somente alfanumerica
    * @param string $sPalavra
    * @param boolean $lAceitaBarra
    * @param boolean $lAceitaHifen
@@ -483,7 +483,7 @@ abstract class DBString {
   }
 
   /**
-   * Remove acentuaÁ„o na string passada
+   * Remove acentua√ß√£o na string passada
    *
    * @param String $sString - String acentuada
    * @static
@@ -492,23 +492,23 @@ abstract class DBString {
    */
   public static function removerAcentuacao($sString) {
 
-    $sString = preg_replace("/[¡¿¬√]/", "A", $sString);
-    $sString = preg_replace("/[·‡‚„™]/","a", $sString);
+    $sString = preg_replace("/[√Å√Ä√Ç√É]/", "A", $sString);
+    $sString = preg_replace("/[√°√†√¢√£¬™]/","a", $sString);
 
-    $sString = preg_replace("/[…» ]/",  "E", $sString);
-    $sString = preg_replace("/[ÈËÍ]/",  "e", $sString);
+    $sString = preg_replace("/[√â√à√ä]/",  "E", $sString);
+    $sString = preg_replace("/[√©√®√™]/",  "e", $sString);
 
-    $sString = preg_replace("/[”“‘’]/", "O", $sString);
-    $sString = preg_replace("/[ÛÚÙı∫]/","o", $sString);
+    $sString = preg_replace("/[√ì√í√î√ï]/", "O", $sString);
+    $sString = preg_replace("/[√≥√≤√¥√µ¬∫]/","o", $sString);
 
-    $sString = preg_replace("/[⁄Ÿ€]/",  "U", $sString);
-    $sString = preg_replace("/[˙˘˚]/",  "u", $sString);
+    $sString = preg_replace("/[√ö√ô√õ]/",  "U", $sString);
+    $sString = preg_replace("/[√∫√π√ª]/",  "u", $sString);
 
-    $sString = preg_replace("/[ÕÃŒ]/",  "I", $sString);
-    $sString = preg_replace("/[ÌÏÓ]/",  "i", $sString);
+    $sString = preg_replace("/[√ç√å√é]/",  "I", $sString);
+    $sString = preg_replace("/[√≠√¨√Æ]/",  "i", $sString);
 
-    $sString = preg_replace("/«/", "C", $sString);
-    $sString = preg_replace("/Á/", "c", $sString);
+    $sString = preg_replace("/√á/", "C", $sString);
+    $sString = preg_replace("/√ß/", "c", $sString);
 
     return $sString;
   }
@@ -522,7 +522,7 @@ abstract class DBString {
    * @return String - Retorna a string sem caracteres especiais
    */
   public static function removerCaracteresEspeciais($sString) {
-    preg_match_all("/[a-zA-Z¿-ˇ0-9\s]/i", $sString, $aOcorrencias);
+    preg_match_all("/[a-zA-Z√Ä-√ø0-9\s]/i", $sString, $aOcorrencias);
     return implode("", $aOcorrencias[0]);
   }
 
@@ -565,8 +565,8 @@ abstract class DBString {
 
   /**
    * Abrevia somente o(s) nome(s) do meio
-   * @param  string  $sNome               Nome que ser· abreviado
-   * @param  boolean $lRemoverPreposicoes Se deve remover as preposiÁıes
+   * @param  string  $sNome               Nome que ser√° abreviado
+   * @param  boolean $lRemoverPreposicoes Se deve remover as preposi√ß√µes
    * @return string                       Nome abreviado
    */
   public static function abreviaSobrenome($sNome, $lRemoverPreposicoes = true) {
@@ -600,9 +600,9 @@ abstract class DBString {
   }
 
   /**
-   * Adiciona mascara de telefone em uma string numÈrica
-   * @param  string $sNumero N˙mero sem formataÁ„o
-   * @return string          N˙mero com mascara
+   * Adiciona mascara de telefone em uma string num√©rica
+   * @param  string $sNumero N√∫mero sem formata√ß√£o
+   * @return string          N√∫mero com mascara
    */
   public static function formatarTelefone($sNumero) {
 
@@ -616,10 +616,10 @@ abstract class DBString {
 
 
   /**
-   * Alterada funÁ„o de tracrever valores do agata para transcrever um n˙mero
-   * @param  integer $iNumero    N˙mero a ser transcrito
+   * Alterada fun√ß√£o de tracrever valores do agata para transcrever um n√∫mero
+   * @param  integer $iNumero    N√∫mero a ser transcrito
    * @param  boolean $lMaiusculo se deve retornar em maiusculo
-   * @return string              n˙mero transcrito
+   * @return string              n√∫mero transcrito
    */
   static public function numeroPorExtenso($iNumero, $lMaiusculo = false) {
 
@@ -630,7 +630,7 @@ abstract class DBString {
     $nValor = substr($zeros,0,strlen($zeros)-strlen($nValor)) . $nValor;
 
     $sMilhao  = self::transcreveNumero(substr($nValor,0,3));
-    $sMilhao .= ( (substr($nValor,0,3) > 1) ? 'milhıes' : '' );
+    $sMilhao .= ( (substr($nValor,0,3) > 1) ? 'milh√µes' : '' );
     $sMilhar  = self::transcreveNumero(substr($nValor,4,3));
 
     if (trim($sMilhar) == "um") {
@@ -671,7 +671,7 @@ abstract class DBString {
 
   static private function transcreveNumero($nValor) {
 
-    $aUnidade  = array('','um ','dois ','trÍs ','quatro ','cinco ','seis ','sete ','oito ','nove ');
+    $aUnidade  = array('','um ','dois ','tr√™s ','quatro ','cinco ','seis ','sete ','oito ','nove ');
     $aDezenas  = array('',' ','vinte ','trinta ','quarenta ', 'cinquenta ', 'sessenta ', 'setenta ','oitenta ','noventa ');
     $aCentenas = array('','cento ','duzentos ','trezentos ','quatrocentos ','quinhentos ','seiscentos ','setecentos ','oitocentos ','novecentos ');
     $aExcessao = array('dez ', 'onze ', 'doze ', 'treze ', 'quatorze ', 'quinze ', 'desesseis ', 'desessete ', 'dezoito ', 'desenove ');
@@ -746,7 +746,7 @@ abstract class DBString {
   }
 
   /**
-   * Codifica o objeto passado recursivamente(*se necess·rio)
+   * Codifica o objeto passado recursivamente(*se necess√°rio)
    *
    * @param string mixed $entrada
    */
@@ -762,7 +762,7 @@ abstract class DBString {
   }
 
   /**
-   * Codifica o objeto passado recursivamente(*se necess·rio)
+   * Codifica o objeto passado recursivamente(*se necess√°rio)
    *
    * @param string mixed $entrada
    */
@@ -794,9 +794,9 @@ abstract class DBString {
   }
 
   /**
-   * Formata os bytes em um formato humanamente legÌvel
+   * Formata os bytes em um formato humanamente leg√≠vel
    *
-   * @param  integer $bytes Quantiade em Bytes inseridas para convers„o
+   * @param  integer $bytes Quantiade em Bytes inseridas para convers√£o
    * @return String  Valor Formatado.
    *
    */

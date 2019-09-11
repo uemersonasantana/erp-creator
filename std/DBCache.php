@@ -2,7 +2,7 @@
 /**
  * Classe que realiza cache de conteudo.
  * 
- * @author MaurÌcio Costa
+ * @author Maur√≠cio Costa
  * @author Vitor Rocha
  */
 
@@ -102,7 +102,7 @@ class DBCache {
   }
 
   /**
-   * Escaneia o cache em busca dos arquivos que baterem com a express„o passada
+   * Escaneia o cache em busca dos arquivos que baterem com a express√£o passada
    * @param  String $sPath
    * @param  String $sPattern
    * @return mixed - Retorna um array com os arquivos encontrados ou um array vazio, ou false em caso de erro

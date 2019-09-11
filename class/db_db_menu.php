@@ -31,10 +31,10 @@ class db_db_menu {
    var $modulo = 0; 
    // cria propriedade com as variaveis do arquivo 
    var $campos = "
-                 id_item = int4 = CÛdigo do Ìtem 
+                 id_item = int4 = C√≥digo do √≠tem 
                  id_item_filho = int4 = Item filho 
-                 menusequencia = int4 = Seq¸Íncia 
-                 modulo = int4 = MÛdulo 
+                 menusequencia = int4 = Seq√º√™ncia 
+                 modulo = int4 = M√≥dulo 
                  ";
    //funcao construtor da classe 
    function cl_db_menu() { 
@@ -65,10 +65,10 @@ class db_db_menu {
    function incluir (){ 
       $this->atualizacampos();
      if($this->id_item == null ){ 
-       $this->erro_sql = " Campo CÛdigo do Ìtem nao Informado.";
+       $this->erro_sql = " Campo C√≥digo do √≠tem nao Informado.";
        $this->erro_campo = "id_item";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
@@ -77,25 +77,25 @@ class db_db_menu {
        $this->erro_sql = " Campo Item filho nao Informado.";
        $this->erro_campo = "id_item_filho";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
      if($this->menusequencia == null ){ 
-       $this->erro_sql = " Campo Seq¸Íncia nao Informado.";
+       $this->erro_sql = " Campo Seq√º√™ncia nao Informado.";
        $this->erro_campo = "menusequencia";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
      if($this->modulo == null ){ 
-       $this->erro_sql = " Campo MÛdulo nao Informado.";
+       $this->erro_sql = " Campo M√≥dulo nao Informado.";
        $this->erro_campo = "modulo";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
@@ -116,13 +116,13 @@ class db_db_menu {
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
        if( strpos(strtolower($this->erro_banco),"duplicate key") != 0 ){
-         $this->erro_sql   = "Menu () nao IncluÌdo. Inclusao Abortada.";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
-         $this->erro_banco = "Menu j· Cadastrado";
+         $this->erro_sql   = "Menu () nao Inclu√≠do. Inclusao Abortada.";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_banco = "Menu j√° Cadastrado";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        }else{
-         $this->erro_sql   = "Menu () nao IncluÌdo. Inclusao Abortada.";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_sql   = "Menu () nao Inclu√≠do. Inclusao Abortada.";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        }
        $this->erro_status = "0";
@@ -131,10 +131,10 @@ class db_db_menu {
      }
      $this->erro_banco = "";
      $this->erro_sql = "Inclusao efetuada com Sucesso\\n";
-     $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+     $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
      $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
      $this->erro_status = "1";
-     $this->numrows_incluir= pg_affected_rows($result);
+     $this->numrows_incluir= $result->rowCount();
      return true;
    } 
    // funcao para alteracao
@@ -146,10 +146,10 @@ class db_db_menu {
        $sql  .= $virgula." id_item = $this->id_item ";
        $virgula = ",";
        if(trim($this->id_item) == null ){ 
-         $this->erro_sql = " Campo CÛdigo do Ìtem nao Informado.";
+         $this->erro_sql = " Campo C√≥digo do √≠tem nao Informado.";
          $this->erro_campo = "id_item";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -162,7 +162,7 @@ class db_db_menu {
          $this->erro_sql = " Campo Item filho nao Informado.";
          $this->erro_campo = "id_item_filho";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -172,10 +172,10 @@ class db_db_menu {
        $sql  .= $virgula." menusequencia = $this->menusequencia ";
        $virgula = ",";
        if(trim($this->menusequencia) == null ){ 
-         $this->erro_sql = " Campo Seq¸Íncia nao Informado.";
+         $this->erro_sql = " Campo Seq√º√™ncia nao Informado.";
          $this->erro_campo = "menusequencia";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -185,41 +185,45 @@ class db_db_menu {
        $sql  .= $virgula." modulo = $this->modulo ";
        $virgula = ",";
        if(trim($this->modulo) == null ){ 
-         $this->erro_sql = " Campo MÛdulo nao Informado.";
+         $this->erro_sql = " Campo M√≥dulo nao Informado.";
          $this->erro_campo = "modulo";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
        }
      }
-     $sql .= " where ";
-$sql .= "oid = '$oid'";     $result = db_stdlib::db_query($sql);
+      
+      $sql .= " where ";
+      $sql .= "oid = '$oid'";     
+
+      $result = db_stdlib::db_query($sql);
+     
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
        $this->erro_sql   = "Menu nao Alterado. Alteracao Abortada.\\n";
-       $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        $this->numrows_alterar = 0;
        return false;
      }else{
-       if(pg_affected_rows($result)==0){
+       if( $result->rowCount() == 0 ){
          $this->erro_banco = "";
          $this->erro_sql = "Menu nao foi Alterado. Alteracao Executada.\\n";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
          $this->numrows_alterar = 0;
          return true;
        }else{
          $this->erro_banco = "";
-         $this->erro_sql = "AlteraÁ„o efetuada com Sucesso\\n";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_sql = "Altera√ß√£o efetuada com Sucesso\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_alterar = pg_affected_rows($result);
+         $this->numrows_alterar = $result->rowCount();
          return true;
        } 
      } 
@@ -237,28 +241,28 @@ $sql .= "oid = '$oid'";     $result = db_stdlib::db_query($sql);
      $result = db_stdlib::db_query($sql.$sql2);
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
-       $this->erro_sql   = "Menu nao ExcluÌdo. Exclus„o Abortada.\\n";
-       $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_sql   = "Menu nao Exclu√≠do. Exclus√£o Abortada.\\n";
+       $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        $this->numrows_excluir = 0;
        return false;
      }else{
-       if(pg_affected_rows($result)==0){
+       if($result->rowCount()==0){
          $this->erro_banco = "";
-         $this->erro_sql = "Menu nao Encontrado. Exclus„o n„o Efetuada.\\n";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_sql = "Menu nao Encontrado. Exclus√£o n√£o Efetuada.\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
          $this->numrows_excluir = 0;
          return true;
        }else{
          $this->erro_banco = "";
-         $this->erro_sql = "Exclus„o efetuada com Sucesso\\n";
-         $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_sql = "Exclus√£o efetuada com Sucesso\\n";
+         $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_excluir = pg_affected_rows($result);
+         $this->numrows_excluir = $result->rowCount();
          return true;
        } 
      } 
@@ -270,7 +274,7 @@ $sql .= "oid = '$oid'";     $result = db_stdlib::db_query($sql);
        $this->numrows    = 0;
        $this->erro_banco = str_replace("\n","",@pg_last_error());
        $this->erro_sql   = "Erro ao selecionar os registros.";
-       $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
@@ -279,7 +283,7 @@ $sql .= "oid = '$oid'";     $result = db_stdlib::db_query($sql);
       if($this->numrows==0){
         $this->erro_banco = "";
         $this->erro_sql   = "Record Vazio na Tabela:db_menu";
-        $this->erro_msg   = "Usu·rio: \\n\\n ".$this->erro_sql." \\n\\n";
+        $this->erro_msg   = "Usu√°rio: \\n\\n ".$this->erro_sql." \\n\\n";
         $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
         $this->erro_status = "0";
         return false;
@@ -410,7 +414,7 @@ $sql .= "oid = '$oid'";     $result = db_stdlib::db_query($sql);
   }
 
   /**
-   * Busca os menus com as permissıes dos usuarios
+   * Busca os menus com as permiss√µes dos usuarios
    *
    * @param String $sCampos
    * @param String $sOrdem

@@ -1,0 +1,1 @@
+<body class="horizontal-layout horizontal-menu 2-columns   container boxed-layout" data-open="hover" data-menu="horizontal-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">

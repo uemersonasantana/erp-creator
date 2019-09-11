@@ -12,7 +12,7 @@ namespace model;
 abstract class Preferencia {
   
   /**
-   * Atributo que receber· os valores: db ou cliente
+   * Atributo que receber√° os valores: db ou cliente
    * @var string
    */
   private $sTipo       = "db";
@@ -24,24 +24,24 @@ abstract class Preferencia {
   private $sSkinDefault = "default";
   
   /**
-   * Path do arquivo de configuraÁ„o
+   * Path do arquivo de configura√ß√£o
    */
-  const CONFIGURACAO    = "config/preferencias.json";
+  const CONFIGURACAO    = "libs/preferencias.json";
     
   /**
-   * Objeto que ir· receber os valores de configuraÁ„o por tipo 
+   * Objeto que ir√° receber os valores de configura√ß√£o por tipo 
    * @var Object
    */
   protected $oPreferencia;
 
   /**
-   * Objeto de configuraÁ„o para salvar
+   * Objeto de configura√ß√£o para salvar
    * @var Object
    */
   private $oConfiguracao;
   
   /**
-   * Contrutor que receber· o tipo da configuraÁ„o
+   * Contrutor que receber√° o tipo da configura√ß√£o
    * @param String $sTipo
    */
   public function __construct($sTipo = null) {
@@ -71,7 +71,7 @@ abstract class Preferencia {
   }
   
   /**
-   * Salva as preferencias no arquivo de configuraÁ„o
+   * Salva as preferencias no arquivo de configura√ß√£o
    * @return void
    */
   public function salvarPreferencias() {

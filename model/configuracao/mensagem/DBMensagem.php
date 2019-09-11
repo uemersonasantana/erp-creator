@@ -55,7 +55,7 @@ class DBMensagem {
       $sNomeArquivo = "mensagens/{$sArquivo}";
       if (!file_exists($sNomeArquivo)) {
         // ATENCAO
-        //throw new FileException("Arquivo de mensagens '{$sNomeArquivo}' não existe no sistema");
+        //throw new FileException("Arquivo de mensagens '{$sNomeArquivo}' nÃ£o existe no sistema");
       }
       DBMensagem::getInstance()->aFile[$sArquivo] = file_get_contents($sNomeArquivo);
     }
@@ -75,13 +75,13 @@ class DBMensagem {
   /**
    * Retorna a mensagem passada como parametro para o usuario
    * @param string $sMensagem Caminho da mensagem a ser exibida
-   * @param array/stdClass $mOpcoes array com variaveis para substituição de Variaveis na mensagem
+   * @param array/stdClass $mOpcoes array com variaveis para substituiÃ§Ã£o de Variaveis na mensagem
    */
   public static function getMensagem($sMensagem, $aOpcoes = null) {
 
-  	if ( !is_null($aOpcoes) && !is_object($aOpcoes)) {
-  		throw new \Exception('Parametro $aOpcoes deve ser um objeto.');
-  	}
+    if ( !is_null($aOpcoes) && !is_object($aOpcoes)) {
+      throw new \Exception('Parametro $aOpcoes deve ser um objeto.');
+    }
 
     $oJson                 = Services_JSON::create();
     $aPartesArquivo        = explode('.', $sMensagem);
@@ -157,10 +157,10 @@ class DBMensagem {
   }
 
   /**
-   * Adiciona um novo arquivo ao arquivo de associações (associacoes.json)
+   * Adiciona um novo arquivo ao arquivo de associaÃ§Ãµes (associacoes.json)
    * Ex: DBMensagem::associarArquivo("patrimonial/protocolo/prot4_processodocumento001.json", 1234);
    * @param string  - Caminho completo do arquivo .json
-   * @param integer - Código do Menu Acessado
+   * @param integer - CÃ³digo do Menu Acessado
    */
   public static function associarArquivo($sArquivoProcurado, $iCodigoMenuProcurado) {
 
@@ -170,7 +170,7 @@ class DBMensagem {
     $oArquivo = $oJson->decode($sArquivo);
 
     /**
-     * Verifico se o arquivo e menu já existem cadastrados no arquivo de associações.
+     * Verifico se o arquivo e menu jÃ¡ existem cadastrados no arquivo de associaÃ§Ãµes.
      */
     $lEncontrouMenu    = true;
     $lEncontrouArquivo = false;
@@ -188,7 +188,7 @@ class DBMensagem {
     }
 
     /**
-     * Caso não encontre o arquivo, o programa adiciona na última posição do arquivo o menu
+     * Caso nÃ£o encontre o arquivo, o programa adiciona na Ãºltima posiÃ§Ã£o do arquivo o menu
      * acessado e o novo arquivo de mensagem
      */
     if ( !$lEncontrouArquivo ) {
@@ -200,7 +200,7 @@ class DBMensagem {
     }
 
     /**
-     * Caso não seja encontrado o arquivo ou o menu no arquivo de associações é reescrito adicionando
+     * Caso nÃ£o seja encontrado o arquivo ou o menu no arquivo de associaÃ§Ãµes Ã© reescrito adicionando
      * os novos menus e arquivos.
      */
     if ( !$lEncontrouArquivo || !$lEncontrouMenu ) {
@@ -232,7 +232,7 @@ class DBMensagem {
       $rsEscreverArquivo = file_put_contents($sCaminhoArquivoAssociacao, $oArquivo, LOCK_EX);
       if ( !$rsEscreverArquivo ) {
         // ATENCAO
-        //throw new FileException("Não foi possível reescrever o arquivo 'associacoes.json'.");
+        //throw new FileException("NÃ£o foi possÃ­vel reescrever o arquivo 'associacoes.json'.");
       }
     }
     return true;

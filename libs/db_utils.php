@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe com Utilitários comuns para Uso no Projeto
+ * Classe com UtilitÃ¡rios comuns para Uso no Projeto
  *
  * @package   libs
  * @author    $Author: dbrafael.nery $
@@ -12,7 +12,7 @@ namespace libs;
 class _db_fields {}
 
 /**
- * Classe com Utilitários comuns para Uso no Projeto
+ * Classe com UtilitÃ¡rios comuns para Uso no Projeto
  * @abstract
  */
 class db_utils {
@@ -48,13 +48,13 @@ class db_utils {
   }
 
   /**
-   * Metodo para carregar o arquivo de definição da classe requerida;
+   * Metodo para carregar o arquivo de definiÃ§Ã£o da classe requerida;
    *
    * @param string  $sClasse   - Nome da Classe na Pasta Classes.
    *                             Ex. db_arrecad_classe.php deve passar como parametro
    *                                 "arrecad"
-   * @param boolean $rInstance - Testa se além de carregar arquivo deve também Instanciá-la
-   * @return OBJECT|boolean - Objeto da Classe Instanciada ou Apenas confirmação do Carregamento
+   * @param boolean $rInstance - Testa se alÃ©m de carregar arquivo deve tambÃ©m InstanciÃ¡-la
+   * @return OBJECT|boolean - Objeto da Classe Instanciada ou Apenas confirmaÃ§Ã£o do Carregamento
    */
   static function getDao( $sClasse, $lInstanciaClasse = true ){
 
@@ -76,7 +76,7 @@ class db_utils {
   }
 
   /**
-   * Retorna Coleção de Objetos de TODAS as Linhas do Result passado
+   * Retorna ColeÃ§Ã£o de Objetos de TODAS as Linhas do Result passado
    *
    * @see db_utils::fieldsMemory()
    * @return stdClass[]
@@ -157,23 +157,23 @@ class db_utils {
   }
 
   /**
-   * Valida se uma String está codificada como UTF-8
+   * Valida se uma String estÃ¡ codificada como UTF-8
    * @param  string $string
    * @return boolean
    */
-	static function isUTF8( $sString ) {
+  static function isUTF8( $sString ) {
 
-	  if ( mb_detect_encoding($sString.'x', 'UTF-8, ISO-8859-1') == 'UTF-8'){
-	  	return true;
-	  }
-  	return false;
-	}
+    if ( mb_detect_encoding($sString.'x', 'UTF-8, ISO-8859-1') == 'UTF-8'){
+      return true;
+    }
+    return false;
+  }
 
-	/**
-   * Valida se uma String está codificada como LATIN1(ISO-8859-1)
-	 * @param  string $string
-	 * @return boolean
-	 */
+  /**
+   * Valida se uma String estÃ¡ codificada como LATIN1(ISO-8859-1)
+   * @param  string $string
+   * @return boolean
+   */
   static function isLATIN1( $sString ) {
 
     if ( mb_detect_encoding($sString.'x', 'UTF-8, ISO-8859-1') == 'ISO-8859-1') {
@@ -200,11 +200,11 @@ class db_utils {
   }
 
   /**
-   * Cria a representação da Linha de Query no formato especificado na Closure
+   * Cria a representaÃ§Ã£o da Linha de Query no formato especificado na Closure
    *
    * @param RecordSet  $rsRecord - Recordset do Resultado da query
-   * @param Closure    $fRetorno - Função que descreverá o retorno
-   * @param Integer    $iIndice  - Indice da linha do resultado, caso não seja informada pegará a próxima(fetch)
+   * @param Closure    $fRetorno - FunÃ§Ã£o que descreverÃ¡ o retorno
+   * @param Integer    $iIndice  - Indice da linha do resultado, caso nÃ£o seja informada pegarÃ¡ a prÃ³xima(fetch)
    *
    * @return mixed - Retorno informado na Closure
    */
@@ -214,12 +214,12 @@ class db_utils {
 
 
   /**
-   * Cria a representação da Coleção de Resultados de Query no formato especificado na Closure
+   * Cria a representaÃ§Ã£o da ColeÃ§Ã£o de Resultados de Query no formato especificado na Closure
    *
    * @param RecordSet  $rsRecord - Recordset do Resultado da query
-   * @param Closure    $fRetorno - Função que descreverá o retorno
+   * @param Closure    $fRetorno - FunÃ§Ã£o que descreverÃ¡ o retorno
    *
-   * @return array - Coleção criada
+   * @return array - ColeÃ§Ã£o criada
    */
   public static function makeCollectionFromRecord($rsRecord, Closure $fRetorno) {
 
@@ -244,9 +244,9 @@ class db_utils {
   }
 
   /**
-   * Verifica os dados postados e verificar se o conteudo enviado não ultrapassou o max_post_size,
-   * onde o PHP não dispara nenhum alerta quando esse valor é ultrapassado, 
-   * gerando apenas erros onde a variável POST/GET/REQUEST não for definida
+   * Verifica os dados postados e verificar se o conteudo enviado nÃ£o ultrapassou o max_post_size,
+   * onde o PHP nÃ£o dispara nenhum alerta quando esse valor Ã© ultrapassado, 
+   * gerando apenas erros onde a variÃ¡vel POST/GET/REQUEST nÃ£o for definida
    */
   public static function checkContentSize() {
 
@@ -258,7 +258,7 @@ class db_utils {
       $maxPostSize = DBString::formatSizeUnits($maxPostSize);
       $contentSize = DBString::formatSizeUnits($contentSize);
       throw new ParameterException(
-        "Tamanho do conteúdo enviado({$contentSize}), ultrapassa o valor máximo permitido({$maxPostSize})."
+        "Tamanho do conteÃºdo enviado({$contentSize}), ultrapassa o valor mÃ¡ximo permitido({$maxPostSize})."
       );
     }
     return true;

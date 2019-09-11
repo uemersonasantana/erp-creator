@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe respons·vel pela manipulaÁ„o das preferÍncias do usu·rio.
+ * Classe respons√°vel pela manipula√ß√£o das prefer√™ncias do usu√°rio.
  *
  * @package    model
  * @author Renan Melo <renan@dbseller.com.br>
@@ -17,7 +17,7 @@ class PreferenciaUsuario {
   const CAMINHO_ARQUIVO = 'cache/preferencias/';
 
   /**
-   * Caminhos para o arquivo JSON contendo as mensagens utilizadas na funÁ„o _M
+   * Caminhos para o arquivo JSON contendo as mensagens utilizadas na fun√ß√£o _M
    */
   const MENSAGENS = 'configuracao.configuracao.preferenciaUsuario.';
 
@@ -28,27 +28,27 @@ class PreferenciaUsuario {
   private $sNomeArquivo;
 
   /**
-   * Define a ordenaÁ„o que deve ser utilizado nos menus
+   * Define a ordena√ß√£o que deve ser utilizado nos menus
    * -Sequencial
-   * -AlfabÈtica
+   * -Alfab√©tica
    * @var String
    */
   private $sOrdenacao;
 
   /**
-   * Inst‚ncia da classe UsuarioSistema
+   * Inst√¢ncia da classe UsuarioSistema
    * @var UsuarioSistema
    */
   private $oUsuarioSistema;
 
   /**
-   * Define se a busca por menus deve ser exibida ou n„o.
+   * Define se a busca por menus deve ser exibida ou n√£o.
    * @var String
    */
   private $sExibeBusca;
 
   /**
-   * Define o skin que ser· utilizado pelo usu·rio
+   * Define o skin que ser√° utilizado pelo usu√°rio
    * @var String
    */
   private $sSkin;
@@ -60,14 +60,14 @@ class PreferenciaUsuario {
   private $lHabilitaCacheMenu;
 
   /**
-   * Filtros personalizados das funÁıes de pesquisa
+   * Filtros personalizados das fun√ß√µes de pesquisa
    * @var Array
    */
   private $aFiltrosPersonalizados;
 
     /**
-     * FunÁ„o construtura, recebe como parametro uma inst‚ncia de UsuarioSistema e
-     * realiza o LazyLoad carregando as preferÍncias do usu·rio
+     * Fun√ß√£o construtura, recebe como parametro uma inst√¢ncia de UsuarioSistema e
+     * realiza o LazyLoad carregando as prefer√™ncias do usu√°rio
      * @param UsuarioSistema $oUsuarioSistema [description]
      */
     function __construct( UsuarioSistema $oUsuarioSistema ) {
@@ -111,7 +111,7 @@ class PreferenciaUsuario {
     }
 
   /**
-   * Define a ordenaÁ„o utilizada nos menus
+   * Define a ordena√ß√£o utilizada nos menus
    * @param String $sOrdencao
    */
   public function setOrdenacao($sOrdencao){
@@ -119,7 +119,7 @@ class PreferenciaUsuario {
   }
 
   /**
-   * Retorna a ordenaÁ„o que deve ser utilizada nos menus
+   * Retorna a ordena√ß√£o que deve ser utilizada nos menus
    * @return String
    */
   public function getOrdenacao(){
@@ -135,7 +135,7 @@ class PreferenciaUsuario {
   }
 
   /**
-   * Retorna se ir· exibir a busca de menus
+   * Retorna se ir√° exibir a busca de menus
    * @return string
    */
   public function getExibeBusca(){
@@ -177,9 +177,9 @@ class PreferenciaUsuario {
   /**
    * Adiciona um filtro personalizado a rotina especificada
    *  
-   * @param String $sRotina -FuÁ„o de pesquisa
+   * @param String $sRotina -Fu√ß√£o de pesquisa
    * @param String $sFiltro -Nome do filtro
-   * @param boolean $lAtivo -Define se o filtro vai ser exibido ou n„o
+   * @param boolean $lAtivo -Define se o filtro vai ser exibido ou n√£o
    * @return Boolean
    */
   public function adicionarFiltroPersonalizado( $sRotina, $sFiltro ) {
@@ -210,7 +210,7 @@ class PreferenciaUsuario {
   /**
    * Remove o filtro personalizado
    *
-   * @param String $sRotina -FuÁ„o de pesquisa
+   * @param String $sRotina -Fu√ß√£o de pesquisa
    * @param String $sFiltro -Nome do filtro
    * @return Boolean
    */
@@ -234,7 +234,7 @@ class PreferenciaUsuario {
   }
 
   /**
-   * Salva o arquivo [login_usuario].json contendo as preferÍncias.
+   * Salva o arquivo [login_usuario].json contendo as prefer√™ncias.
    * @return boolean
    */
   public function salvar(){
@@ -274,7 +274,7 @@ class PreferenciaUsuario {
   }
 
   /**
-   * Converte um objeto com as preferÍncias do usuario
+   * Converte um objeto com as prefer√™ncias do usuario
    * para uma String JSON
    * @return String
    */

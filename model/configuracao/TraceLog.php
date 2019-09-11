@@ -11,7 +11,7 @@ namespace model;
 class TraceLog {
 
   /**
-   * Opções do tracelog
+   * Op?es do tracelog
    */
   private $lActive          = false;
   private $lShowAccount     = false;
@@ -46,7 +46,7 @@ class TraceLog {
 
 
   /**
-   * Salva objeto na sessão
+   * Salva objeto na sess?
    * @access public
    */
   public function persistSession() {
@@ -108,7 +108,7 @@ class TraceLog {
   }
 
   /**
-   * Verifica se é mostrado
+   * Verifica se ?mostrado
    *
    * @param mixed$sProperty
    * @access public
@@ -118,7 +118,7 @@ class TraceLog {
   public function isDisplayed( $sProperty ) {
 
     if ( !isset($this->{"lShow".$sProperty}) ) {
-      throw new ParameterException("Propriedade {$sProperty} não encontrada.");
+      throw new ParameterException("Propriedade {$sProperty} n? encontrada.");
     }
 
     return $this->{"lShow".$sProperty};
@@ -133,7 +133,7 @@ class TraceLog {
   public function setProperty( $sProperty, $sValue ) {
 
     if ( !isset($this->{$sProperty}) ) {
-      throw new ParameterException("Propriedade {$sProperty} não encontrada.");
+      throw new ParameterException("Propriedade {$sProperty} n? encontrada.");
     }
     $this->{$sProperty} = $sValue;
     $this->persistSession();

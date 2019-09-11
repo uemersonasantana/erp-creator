@@ -1,6 +1,6 @@
 <?php
 /**
- * Conex„o com o banco de dados.
+ * Conex√£o com o banco de dados.
  *
  * @package    libs
  * @author     Uemerson A. Santana <uemerson@icloud.com>
@@ -11,26 +11,16 @@ namespace libs;
 use \PDO;
 
 /*
-  * Parametros de conex„o e cofiguraÁ„o.
+  * Parametros de conex√£o e cofigura√ß√£o.
 */ 
-
-define("DB_COR_FUNDO" , "#00CCFF");
-define("DB_FILES"     , "/dbportal2/imagens/files");
-define("DB_DIRPCB"    , "/home/sistema");
-define("DB_EXEC"      , "/usr/bin/dbs");
-define("DB_NETSTAT"   , "netstat");
-
 define("DB_VALIDA_REQUISITOS" , false);
 define("lUtilizaCaptcha"      , false);
 
-define("db_fonte_codversao"   , "4");
-define("db_fonte_codrelease"  , "850");
-
-// Usu·rio do PostgreSQL
+// Usu√°rio do PostgreSQL
 define("DB_USUARIO"   , "postgres");
-// Senha do usu·rio do PostgreSQL
+// Senha do usu√°rio do PostgreSQL
 define("DB_SENHA"     , "postgres");
-// Ip do servidor para a conex„o com a base de dados
+// Ip do servidor para a conex√£o com a base de dados
 define("DB_SERVIDOR"  , "localhost");
 // Porta para conexao com o banco de dados (porta do Pool de Conexoes quando utilizado)
 define("DB_PORTA"     , "5432");
@@ -80,6 +70,8 @@ class db_conecta extends db_stdlib
 
     $UsuarioSistema->getUsuarioByLogin('dbseller');
 
+    $_SESSION['DB_skin']                  = 'default';
+
     $_SESSION['DB_traceLog']              = false;
     $_SESSION['DB_uol_hora']              = 1568122924;
 
@@ -95,64 +87,53 @@ class db_conecta extends db_stdlib
     $_SESSION['DB_instit']                = 1;
     $_SESSION['DB_itemmenu_acessado']     = 665;
     $_SESSION["DB_administrador"]         = 1;
-    $_SESSION['DB_preferencias_usuario']  = 'TzoxODoiUHJlZmVyZW5jaWFVc3VhcmlvIjo4OntzOjMyOiIAUHJlZmVyZW5jaWFVc3VhcmlvAHNOb21lQXJxdWl2byI7czoxMzoiZGJzZWxsZXIuanNvbiI7czozMDoiAFByZWZlcmVuY2lhVXN1YXJpbwBzT3JkZW5hY2FvIjtOO3M6MzU6IgBQcmVmZXJlbmNpYVVzdWFyaW8Ab1VzdWFyaW9TaXN0ZW1hIjtPOjE0OiJVc3VhcmlvU2lzdGVtYSI6MTM6e3M6MTM6IgAqAGlJZFVzdWFyaW8iO3M6MToiMSI7czo4OiIAKgBzTm9tZSI7czoxOToiUFJFRkVJVFVSQSBEQlNFTExFUiI7czo5OiIAKgBzTG9naW4iO3M6ODoiZGJzZWxsZXIiO3M6OToiACoAc1NlbmhhIjtzOjQwOiI2N2E3NDMwNmIwNmQwYzAxNjI0ZmUwZDAyNDlhNTcwZjRkMDkzNzQ3IjtzOjE5OiIAKgBpU2l0dWFjYW9Vc3VhcmlvIjtzOjE6IjEiO3M6OToiACoAc0VtYWlsIjtzOjI0OiJkYnNlbGxlckBkYnNlbGxlci5jb20uYnIiO3M6MTg6IgAqAGxVc3VhcmlvRXh0ZXJubyI7czoxOiIwIjtzOjE3OiIAKgBsQWRtaW5pc3RyYWRvciI7czoxOiIxIjtzOjEzOiIAKgBkRGF0YVRva2VuIjtzOjEwOiIyMDE2LTA1LTE5IjtzOjE2OiIAKgBhSW5zdGl0dWljb2VzIjthOjA6e31zOjE3OiIAKgBhRGVwYXJ0YW1lbnRvcyI7YTowOnt9czo3OiIAKgBvQ2dtIjtOO3M6MjA6IgAqAGxQcmVlbmNoZXVFc29jaWFsIjtiOjA7fXM6MzE6IgBQcmVmZXJlbmNpYVVzdWFyaW8Ac0V4aWJlQnVzY2EiO3M6MToiMCI7czoyNToiAFByZWZlcmVuY2lhVXN1YXJpbwBzU2tpbiI7czo3OiJkZWZhdWx0IjtzOjM4OiIAUHJlZmVyZW5jaWFVc3VhcmlvAGxIYWJpbGl0YUNhY2hlTWVudSI7YjoxO3M6NDI6IgBQcmVmZXJlbmNpYVVzdWFyaW8AYUZpbHRyb3NQZXJzb25hbGl6YWRvcyI7TjtzOjk6InNPcmRlbmNhbyI7czoxMDoic2VxdWVuY2lhbCI7fQ';
+    
+    /**
+     * Habilita acesso apenas para usuarios do e-cidade usuext = 0 negando para:
+     * 1 - Usu√°rio Externo
+     * 2 - Perfil
+    */
+    $sSql  = "select * from db_usuarios where usuarioativo <> '0' and usuext not in (1,2) and login = '".parent::db_getsession('DB_login')."'";
+    $result = parent::db_query($sSql)->fetch();
+
+    /**
+     * Realiza a busca das prefer√™ncias do usu√°rio.
+     */
+    $oUsuarioSistema = new \model\UsuarioSistema( $result->id_usuario );
+    $sPreferencias   = serialize($oPreferenciaUsuario = $oUsuarioSistema->getPreferenciasUsuario());
+    parent::db_putsession("DB_preferencias_usuario", base64_encode($sPreferencias));
+
+    
+    //------------
     
     if (!isset($_SESSION['DB_login']) || !isset($_SESSION['DB_id_usuario'])) {
       session_destroy();
-      echo "Sess„o Inv·lida!(12)<br>Feche seu navegador e faÁa login novamente.\n";
+      echo "Sess√£o Inv√°lida!(12)<br>Feche seu navegador e fa√ßa login novamente.\n";
       exit;
     }
 
-    if( isset($_SESSION['DB_servidor']) &&
-        isset($_SESSION['DB_base'])     &&
-        isset($_SESSION['DB_user'])     &&
-        isset($_SESSION['DB_porta'])    &&
-        isset($_SESSION['DB_senha']) ){
+    parent::db_logs();
 
-      $DB_SERVIDOR = db_stdlib::db_getsession("DB_servidor");
-      $DB_BASE     = db_stdlib::db_getsession("DB_base");
-      $DB_PORTA    = db_stdlib::db_getsession("DB_porta");
-      $DB_USUARIO  = db_stdlib::db_getsession("DB_user");
-      $DB_SENHA    = db_stdlib::db_getsession("DB_senha");
-    }
+    if (parent::db_getsession("DB_id_usuario") != 1 && parent::db_getsession("DB_administrador") != 1){
 
-    /**
-     * Nome do programa atual
-     */
-    $sProgramaAtual = basename($_SERVER["SCRIPT_NAME"]);
-
-    if (isset($_SESSION['DB_NBASE'])) {
-      $DB_BASE = $_SESSION["DB_NBASE"];
-    }
-
-    if (isset($_SESSION['DB_servidor'])) {
-      $DB_SERVIDOR = $_SESSION["DB_servidor"];
-    }
-
-
-    db_stdlib::db_logs();
-
-
-    if (db_stdlib::db_getsession("DB_id_usuario") != 1 && db_stdlib::db_getsession("DB_administrador") != 1){
-
-      $result1 = db_stdlib::db_query("select db21_ativo from db_config where prefeitura = true");
+      $result1 = parent::db_query("select db21_ativo from db_config where prefeitura = true");
 
       if (!$result1) {
-        print_r("Erro ao verificar se sistema est· liberado! Contate suporte!! Erro: ". $result->errorInfo());
+        print_r("Erro ao verificar se sistema est√° liberado! Contate suporte!! Erro: ". $result->errorInfo());
       }
 
       $ativo   = $result1->fetch()->db21_ativo;
 
       if ($ativo == 3) {
 
-        echo "Sistema desativado pelo administrador!   <br>Sess„o terminada, feche seu navegador!\n";
+        echo "Sistema desativado pelo administrador!   <br>Sess√£o terminada, feche seu navegador!\n";
         session_destroy();
         exit;
       }
     }
   }
 
-  //  Valida sessÙes
+  //  Valida sess√¥es
   static function val_sessao() {
     $sess = 0;
     if(!$_SESSION["DB_modulo"])
@@ -167,7 +148,7 @@ class db_conecta extends db_stdlib
       $sess = 1;
     if($sess == 1) {
       session_destroy();
-      echo "Sess„o Inv·lida!(14)<br>Feche seu navegador e faÁa login novamente.<Br>\n";
+      echo "Sess√£o Inv√°lida!(14)<br>Feche seu navegador e fa√ßa login novamente.<Br>\n";
       exit;
     }
   }

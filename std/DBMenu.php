@@ -17,25 +17,25 @@ use libs\db_utils;
 class DBMenu {
 
   /**
-   * MÛdulo atual a ser gerado o menu
+   * M√≥dulo atual a ser gerado o menu
    * @var integer
    */
   private $iModulo;
 
   /**
-   * Id do usu·rio para gerar as permissıes
+   * Id do usu√°rio para gerar as permiss√µes
    * @var integer
    */
   private $iIdUsuario;
 
   /**
-   * Ano atual da geraÁ„o
+   * Ano atual da gera√ß√£o
    * @var integer
    */
   private $iAnoUsu;
 
   /**
-   * InstituiÁ„o a ser gerado o menu
+   * Institui√ß√£o a ser gerado o menu
    * @var integer
    */
   private $iInstituicao;
@@ -64,49 +64,49 @@ class DBMenu {
   private $sHtmlMenu = "";
 
   /**
-   * Caso o usu·rio seja administrador
+   * Caso o usu√°rio seja administrador
    * @var Boolean
    */
   private $lAdministrador = false;
 
   /**
-   * Vai sabe pra que È usado isso
+   * Vai sabe pra que √© usado isso
    * @var Boolean
    */
   private $lDBSeller = false;
 
   /**
-   * Fonte onde o menu ser· renderizado
+   * Fonte onde o menu ser√° renderizado
    * @var string
    */
   private $sFuncao;
 
   /**
-   * Id da funÁ„o para o Helper
+   * Id da fun√ß√£o para o Helper
    * @var integer
    */
   private $iIdFuncaoHelp = '';
 
   /**
-   * DescriÁ„o da funÁ„o para o Helper
+   * Descri√ß√£o da fun√ß√£o para o Helper
    * @var integer
    */
   private $sDescricaoHelp = '';
 
   /**
-   * DescriÁ„o do item de menu atual
+   * Descri√ß√£o do item de menu atual
    * @var String
    */
   private $sDescricaoFuncao = '';
 
   /**
-   * Se deve exibir a busca r·pida de menus
+   * Se deve exibir a busca r√°pida de menus
    * @var Boolean
    */
   private $lExibeBuscaMenus = false;
 
   /**
-   * MantÈm o cache para busca dos menus
+   * Mant√©m o cache para busca dos menus
    * @var array
    */
   private $aCacheMenus = array();
@@ -234,13 +234,13 @@ class DBMenu {
     $oPreferenciaUsuario = $oUsuarioSistema->getPreferenciasUsuario();
 
     /**
-     * Verifica se os menus est„o em cache e se deve utilizar o cache
+     * Verifica se os menus est√£o em cache e se deve utilizar o cache
      */
-    if ( $oPreferenciaUsuario->getHabilitaCacheMenu()
+    /*if ( $oPreferenciaUsuario->getHabilitaCacheMenu()
          && ($sHtmlCache = DBCache::read("menus/{$this->iAnoUsu}_{$this->iModulo}_{$this->iInstituicao}_{$this->iIdUsuario}_estrutura")) ) { 
 
       return base64_decode($sHtmlCache);
-    }
+    }*/
 
     $this->sHtmlMenu   = "";
     $this->aCacheMenus = array();
@@ -250,35 +250,47 @@ class DBMenu {
     if ($this->oDaoMenu->numrows > 0) {
 
       $iTotalMenus      = $this->oDaoMenu->numrows;
-      $this->sHtmlMenu .= "<div id=\"db-menu\">\n";
+      
+      //  BEGIN: Main Menu
+      $this->sHtmlMenu .= "
+        <div class=\"header-navbar navbar-expand-sm navbar navbar-horizontal navbar-static navbar-dark navbar-without-dd-arrow navbar-shadow\" role=\"navigation\" data-menu=\"menu-wrapper\">
+        
+          <div class=\"navbar-container main-menu-content\" data-menu=\"menu-container\">\n";
+
+      $this->sHtmlMenu .= "<ul class=\"nav navbar-nav\" id=\"main-menu-navigation\" data-menu=\"menu-navigation\">\n";
 
       foreach ( $rsMenusPrincipais as $oMenu ) {
         $rsFilhos = $this->getMenuItens($oMenu->id_item_filho);
 
-        $this->sHtmlMenu .= "<ul>\n";
-        $this->sHtmlMenu .= "<li class=\"sub-menu\" onclick=\"Menu_toggle(this, event)\" onmouseover=\"Menu_parentOver(this, event)\">\n";
-        $this->sHtmlMenu .= "<a href=\"javascript:;\">{$oMenu->descricao}</a>\n";
+        
+        $this->sHtmlMenu .= "<li class=\"dropdown nav-item\" data-menu=\"dropdown\">\n";
+        $this->sHtmlMenu .= "<a class=\"dropdown-toggle nav-link\" href=\"index.html\" data-toggle=\"dropdown\"><i class=\"ft-layers\"></i><span>{$oMenu->descricao}</span></a></a>\n";
 
         $this->montaFilhos($rsFilhos, $oMenu->descricao);
-
+        
         $this->sHtmlMenu .= "</li>\n";
-        $this->sHtmlMenu .= "</ul>\n";
+       
       }
 
+      $this->sHtmlMenu .= "</ul>\n";
+
       $this->montaModulos();
-      $this->montaHelp();
+      //$this->montaHelp();
 
       /**
        * Exibe a busca de menus
-       */
+      
       if ($this->lExibeBuscaMenus) {
         $this->sHtmlMenu .= "<div id=\"autoComplete\">";
-        $this->sHtmlMenu .= "<label>Busca r·pida de menus: </label>";
+        $this->sHtmlMenu .= "<label>Busca r√°pida de menus: </label>";
         $this->sHtmlMenu .= "<input type=\"text\" id=\"autoCompleteMenus\" name=\"autoCompleteMenus\" autoComplete=\"off\" />";
         $this->sHtmlMenu .= "</div>";
-      }
+      } */
 
-      $this->sHtmlMenu .= "</div>";
+      //  END: Main Menu
+      $this->sHtmlMenu .= " 
+          </div>
+        </div>";
     }
 
     /**
@@ -307,19 +319,18 @@ class DBMenu {
     }
 
     $iTotalFilhos     = $this->oDaoMenu->numrows;
-    $this->sHtmlMenu .= "<ul>\n";
+    $this->sHtmlMenu .= "<ul class=\"dropdown-menu\">\n";
+    $this->sHtmlMenu .= "<div class=\"arrow_box\">";
 
     foreach ( $rsFilhos as $oMenu ) {
       $rsSubItens = $this->getMenuItens($oMenu->id_item_filho);
 
       if ($this->oDaoMenu->numrows > 0) {
-
-        $this->sHtmlMenu .= "<li class=\"sub-menu\" onmouseover=\"Menu_mouseOver(this, event)\">\n";
-        $this->sHtmlMenu .= "<a href=\"javascript:;\">{$oMenu->descricao}</a>\n";
+        $this->sHtmlMenu .= "<li data-menu=\"\">\n";
+        $this->sHtmlMenu .= "<li class=\"dropdown dropdown-submenu\" data-menu=\"dropdown-submenu\"><a class=\"dropdown-item dropdown-toggle\" href=\"#\" data-toggle=\"dropdown\">{$oMenu->descricao}</a>\n";
       } else {
-
-        $this->sHtmlMenu .= "<li onmouseover=\"Menu_mouseOver(this, event)\">\n";
-        $this->sHtmlMenu .= "<a id=\"DBmenu_{$oMenu->id_item_filho}\" href=\"{$oMenu->funcao}\">{$oMenu->descricao}</a>\n";
+        $this->sHtmlMenu .= "<li data-menu=\"\">\n";
+        $this->sHtmlMenu .= "<a class=\"dropdown-item\" href=\"{$oMenu->funcao}\" data-toggle=\"dropdown\">{$oMenu->descricao}</a>\n";
 
         /**
          * Cache dos itens de menu
@@ -329,7 +340,6 @@ class DBMenu {
         $oCacheMenu->funcao  = $oMenu->funcao;
 
         $this->aCacheMenus[] = $oCacheMenu;
-
 
         if ($oMenu->funcao == $this->sFuncao && empty($this->iIdFuncaoHelp)) {
 
@@ -343,18 +353,18 @@ class DBMenu {
 
       $this->sHtmlMenu .= "</li>\n";
     }
-
+    $this->sHtmlMenu .= "</div>\n";
     $this->sHtmlMenu .= "</ul>\n";
   }
 
   /**
-   * Monta o menu das areas e mÛdulos
+   * Monta o menu das areas e m√≥dulos
    */
   private function montaModulos() {
     $rsModulos = $this->getModulos();
 
     /**
-     * Monta o menu dos mÛdulos
+     * Monta o menu dos m√≥dulos
      */
     if (pg_numrows($rsModulos) == 0) {
       return;
@@ -362,7 +372,7 @@ class DBMenu {
 
     $this->sHtmlMenu .= "<ul>\n";
     $this->sHtmlMenu .= "<li class=\"sub-menu\" onclick=\"Menu_toggle(this, event)\" onmouseover=\"Menu_parentOver(this, event)\">\n";
-    $this->sHtmlMenu .= "<a href=\"javascript:;\">MÛdulos</a>\n";
+    $this->sHtmlMenu .= "<a href=\"javascript:;\">M√≥dulos</a>\n";
     $this->sHtmlMenu .= "<ul>\n";
 
     $sModuloAtual      = "";
@@ -449,7 +459,7 @@ class DBMenu {
     $this->sHtmlMenu .= "</li>\n";
 
     $this->sHtmlMenu .= "<li onmouseover=\"Menu_mouseOver(this, event)\">\n";
-    $this->sHtmlMenu .= "<a href=\"javascript:;\"onclick=\"require_once('scripts/classes/configuracao/DBViewReleaseNote.classe.js'); DBViewReleaseNote.build(); \">Notas da Vers„o</a>\n";
+    $this->sHtmlMenu .= "<a href=\"javascript:;\"onclick=\"require_once('scripts/classes/configuracao/DBViewReleaseNote.classe.js'); DBViewReleaseNote.build(); \">Notas da Vers√£o</a>\n";
     $this->sHtmlMenu .= "</li>\n";
 
     $this->sHtmlMenu .= "<li onmouseover=\"Menu_mouseOver(this, event)\">\n";

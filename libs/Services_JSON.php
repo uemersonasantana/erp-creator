@@ -128,16 +128,16 @@ class Services_JSON
       const UTF8_DECODE = 1000;
 
       /**
-       * Instância única do Objeto
+       * InstÃ¢ncia Ãºnica do Objeto
        *
        * @var \JSON
        */
       private static $instance;
 
       /**
-       * Transforma em objeto a representação JSON passada
+       * Transforma em objeto a representaÃ§Ã£o JSON passada
        *
-       * @param  String $string - String com a Representação JSON
+       * @param  String $string - String com a RepresentaÃ§Ã£o JSON
        * @return Mixed          - Objeto transformado
        */
       public function parse($string, $formatacao = \JSON::UTF8_DECODE) {
@@ -151,7 +151,7 @@ class Services_JSON
         $retorno = DBString::urldecode_all($retorno);
 
         if ($formatacao & Services_JSON::UTF8_DECODE) {
-          $retorno = DBString::utf8_decode_all($retorno); // Pois a conexão com o banco é mista
+          $retorno = DBString::utf8_decode_all($retorno); // Pois a conexÃ£o com o banco Ã© mista
         }
 
         return $retorno;
@@ -161,7 +161,7 @@ class Services_JSON
        * Transforma o objeto em uma string JSON
        *
        * @param  mixed $object Dado a ser convertido
-       * @return String Representação
+       * @return String RepresentaÃ§Ã£o
        */
       public function stringify($in, $formatacao = \JSON::UTF8_ENCODE) {
 
@@ -905,10 +905,10 @@ if (class_exists('PEAR_Error')) {
 }
 
 /**
- * Classe para manipulação do JSON
+ * Classe para manipulaÃ§Ã£o do JSON
  *
  * @author  Rafael Serpa Nery <rafael.nery@dbseller.com.br>
- * @author  Maurício Costa <mauricio@dbseller.com.br>
+ * @author  MaurÃ­cio Costa <mauricio@dbseller.com.br>
  */
 class JSON {
 

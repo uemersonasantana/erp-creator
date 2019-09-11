@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL ^ E_WARNING);
 
 //  A função autoload é utilizada no PHP para fazer o carregamento automático das classes.
-require ''.$_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
+require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 
 
 $db_conecta    = new libs\db_conecta; 

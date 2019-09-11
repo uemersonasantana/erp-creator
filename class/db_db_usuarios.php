@@ -43,16 +43,16 @@ class db_db_usuarios {
    var $dataexpira = null;
    // cria propriedade com as variaveis do arquivo
    var $campos = "
-                 id_usuario = int4 = Código do Usuário
+                 id_usuario = int4 = C?igo do Usu?io
                  nome = varchar(40) = nome do usuario
-                 login = varchar(20) = Login do Usuário
+                 login = varchar(20) = Login do Usu?io
                  senha = varchar(20) = senha
-                 usuarioativo = char(1) = Situação
+                 usuarioativo = char(1) = Situa?o
                  email = varchar(200) = email
                  usuext = int4 = Utiliza DBPortal
                  administrador = int4 = Administrador
-                 datatoken = date = Data de Criação do token
-                 dataexpira = date = Data de Expiração
+                 datatoken = date = Data de Cria?o do token
+                 dataexpira = date = Data de Expira?o
                  ";
    //funcao construtor da classe
    function cl_db_usuarios() {
@@ -100,59 +100,59 @@ class db_db_usuarios {
        $this->id_usuario = ($this->id_usuario == ""?@$GLOBALS["HTTP_POST_VARS"]["id_usuario"]:$this->id_usuario);
      }
    }
-   // funcao para Inclusão
+   // funcao para Inclus?
    function incluir ($id_usuario){
       $this->atualizacampos();
      if($this->nome == null ){
-       $this->erro_sql = " Campo nome do usuario não informado.";
+       $this->erro_sql = " Campo nome do usuario n? informado.";
        $this->erro_campo = "nome";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
      if($this->login == null ){
-       $this->erro_sql = " Campo Login do Usuário não informado.";
+       $this->erro_sql = " Campo Login do Usu?io n? informado.";
        $this->erro_campo = "login";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
      if($this->senha == null ){
-       $this->erro_sql = " Campo senha não informado.";
+       $this->erro_sql = " Campo senha n? informado.";
        $this->erro_campo = "senha";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
      if($this->usuarioativo == null ){
-       $this->erro_sql = " Campo Situação não informado.";
+       $this->erro_sql = " Campo Situa?o n? informado.";
        $this->erro_campo = "usuarioativo";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
      if($this->usuext == null ){
-       $this->erro_sql = " Campo Utiliza DBPortal não informado.";
+       $this->erro_sql = " Campo Utiliza DBPortal n? informado.";
        $this->erro_campo = "usuext";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
      if($this->administrador == null ){
-       $this->erro_sql = " Campo Administrador não informado.";
+       $this->erro_sql = " Campo Administrador n? informado.";
        $this->erro_campo = "administrador";
        $this->erro_banco = "";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
@@ -169,18 +169,18 @@ class db_db_usuarios {
        if($result==false){
          $this->erro_banco = str_replace("\n","",@pg_last_error());
          $this->erro_sql   = "Verifique o cadastro da sequencia: db_usuarios_id_usuario_seq do campo: id_usuario";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
        }
-       $this->id_usuario = pg_result($result,0,0);
+       $this->id_usuario = $result->fetch();
      }else{
        $result = db_stdlib::db_query("select last_value from db_usuarios_id_usuario_seq");
-       if(($result != false) && (pg_result($result,0,0) < $id_usuario)){
-         $this->erro_sql = " Campo id_usuario maior que último número da sequencia.";
-         $this->erro_banco = "Sequencia menor que este número.";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       if(($result != false) && ($result->fetch() < $id_usuario)){
+         $this->erro_sql = " Campo id_usuario maior que ?ltimo n?mero da sequencia.";
+         $this->erro_banco = "Sequencia menor que este n?mero.";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -189,9 +189,9 @@ class db_db_usuarios {
        }
      }
      if(($this->id_usuario == null) || ($this->id_usuario == "") ){
-       $this->erro_sql = " Campo id_usuario não declarado.";
+       $this->erro_sql = " Campo id_usuario n? declarado.";
        $this->erro_banco = "Chave Primaria zerada.";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
@@ -224,13 +224,13 @@ class db_db_usuarios {
      if($result==false){
        $this->erro_banco = str_replace("\n","",@pg_last_error());
        if( strpos(strtolower($this->erro_banco),"duplicate key") != 0 ){
-         $this->erro_sql   = " ($this->id_usuario) não Incluído. Inclusão Abortada.";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
-         $this->erro_banco = " já Cadastrado";
+         $this->erro_sql   = " ($this->id_usuario) n? Inclu?o. Inclus? Abortada.";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_banco = " j?Cadastrado";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        }else{
-         $this->erro_sql   = " ($this->id_usuario) não Incluído. Inclusão Abortada.";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_sql   = " ($this->id_usuario) n? Inclu?o. Inclus? Abortada.";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        }
        $this->erro_status = "0";
@@ -238,12 +238,12 @@ class db_db_usuarios {
        return false;
      }
      $this->erro_banco = "";
-     $this->erro_sql = "Inclusão efetuada com Sucesso\\n";
+     $this->erro_sql = "Inclus? efetuada com Sucesso\\n";
          $this->erro_sql .= "Valores : ".$this->id_usuario;
-     $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+     $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
      $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
      $this->erro_status = "1";
-     $this->numrows_incluir= pg_affected_rows($result);
+     $this->numrows_incluir= $result->rowCount();
      $lSessaoDesativarAccount = db_getsession("DB_desativar_account", false);
      if (!isset($lSessaoDesativarAccount) || (isset($lSessaoDesativarAccount)
        && ($lSessaoDesativarAccount === false))) {
@@ -278,10 +278,10 @@ class db_db_usuarios {
        $sql  .= $virgula." id_usuario = $this->id_usuario ";
        $virgula = ",";
        if(trim($this->id_usuario) == null ){
-         $this->erro_sql = " Campo Código do Usuário não informado.";
+         $this->erro_sql = " Campo C?igo do Usu?io n? informado.";
          $this->erro_campo = "id_usuario";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -291,10 +291,10 @@ class db_db_usuarios {
        $sql  .= $virgula." nome = '$this->nome' ";
        $virgula = ",";
        if(trim($this->nome) == null ){
-         $this->erro_sql = " Campo nome do usuario não informado.";
+         $this->erro_sql = " Campo nome do usuario n? informado.";
          $this->erro_campo = "nome";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -304,10 +304,10 @@ class db_db_usuarios {
        $sql  .= $virgula." login = '$this->login' ";
        $virgula = ",";
        if(trim($this->login) == null ){
-         $this->erro_sql = " Campo Login do Usuário não informado.";
+         $this->erro_sql = " Campo Login do Usu?io n? informado.";
          $this->erro_campo = "login";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -318,10 +318,10 @@ class db_db_usuarios {
        $virgula = ",";
 
        /*if(trim($this->senha) == null ){
-         $this->erro_sql = " Campo senha não Informado.";
+         $this->erro_sql = " Campo senha n? Informado.";
          $this->erro_campo = "senha";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -331,10 +331,10 @@ class db_db_usuarios {
        $sql  .= $virgula." usuarioativo = '$this->usuarioativo' ";
        $virgula = ",";
        if(trim($this->usuarioativo) == null ){
-         $this->erro_sql = " Campo Situação não informado.";
+         $this->erro_sql = " Campo Situa?o n? informado.";
          $this->erro_campo = "usuarioativo";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -348,10 +348,10 @@ class db_db_usuarios {
        $sql  .= $virgula." usuext = $this->usuext ";
        $virgula = ",";
        if(trim($this->usuext) == null ){
-         $this->erro_sql = " Campo Utiliza DBPortal não informado.";
+         $this->erro_sql = " Campo Utiliza DBPortal n? informado.";
          $this->erro_campo = "usuext";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -361,10 +361,10 @@ class db_db_usuarios {
        $sql  .= $virgula." administrador = $this->administrador ";
        $virgula = ",";
        if(trim($this->administrador) == null ){
-         $this->erro_sql = " Campo Administrador não informado.";
+         $this->erro_sql = " Campo Administrador n? informado.";
          $this->erro_campo = "administrador";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -374,10 +374,10 @@ class db_db_usuarios {
        $sql  .= $virgula." datatoken = '$this->datatoken' ";
        $virgula = ",";
        if(trim($this->datatoken) == null ){
-         $this->erro_sql = " Campo Data de Criação do token não informado.";
+         $this->erro_sql = " Campo Data de Cria?o do token n? informado.";
          $this->erro_campo = "datatoken_dia";
          $this->erro_banco = "";
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "0";
          return false;
@@ -387,10 +387,10 @@ class db_db_usuarios {
          $sql  .= $virgula." datatoken = null ";
          $virgula = ",";
          if(trim($this->datatoken) == null ){
-           $this->erro_sql = " Campo Data de Criação do token não informado.";
+           $this->erro_sql = " Campo Data de Cria?o do token n? informado.";
            $this->erro_campo = "datatoken_dia";
            $this->erro_banco = "";
-           $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+           $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
            $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
            $this->erro_status = "0";
            return false;
@@ -452,31 +452,31 @@ class db_db_usuarios {
      $result = db_stdlib::db_query($sql);
      if (!$result) {
        $this->erro_banco = str_replace("\n","",@pg_last_error());
-       $this->erro_sql   = " não Alterado. Alteração Abortada.\\n";
+       $this->erro_sql   = " n? Alterado. Altera?o Abortada.\\n";
          $this->erro_sql .= "Valores : ".$this->id_usuario;
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        $this->numrows_alterar = 0;
        return false;
      } else {
-       if (pg_affected_rows($result) == 0) {
+       if ($result->rowCount() == 0) {
          $this->erro_banco = "";
-         $this->erro_sql = " não foi Alterado. Alteração Executada.\\n";
+         $this->erro_sql = " n? foi Alterado. Altera?o Executada.\\n";
          $this->erro_sql .= "Valores : ".$this->id_usuario;
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
          $this->numrows_alterar = 0;
          return true;
        } else {
          $this->erro_banco = "";
-         $this->erro_sql = "Alteração efetuada com Sucesso\\n";
+         $this->erro_sql = "Altera?o efetuada com Sucesso\\n";
          $this->erro_sql .= "Valores : ".$this->id_usuario;
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_alterar = pg_affected_rows($result);
+         $this->numrows_alterar = $result->rowCount();
          return true;
        }
      }
@@ -531,31 +531,31 @@ class db_db_usuarios {
      $result = db_stdlib::db_query($sql.$sql2);
      if ($result == false) {
        $this->erro_banco = str_replace("\n","",@pg_last_error());
-       $this->erro_sql   = " não Excluído. Exclusão Abortada.\\n";
+       $this->erro_sql   = " n? Exclu?o. Exclus? Abortada.\\n";
        $this->erro_sql .= "Valores : ".$id_usuario;
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        $this->numrows_excluir = 0;
        return false;
      } else {
-       if (pg_affected_rows($result) == 0) {
+       if ($result->rowCount() == 0) {
          $this->erro_banco = "";
-         $this->erro_sql = " não Encontrado. Exclusão não Efetuada.\\n";
+         $this->erro_sql = " n? Encontrado. Exclus? n? Efetuada.\\n";
          $this->erro_sql .= "Valores : ".$id_usuario;
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
          $this->numrows_excluir = 0;
          return true;
        } else {
          $this->erro_banco = "";
-         $this->erro_sql = "Exclusão efetuada com Sucesso\\n";
+         $this->erro_sql = "Exclus? efetuada com Sucesso\\n";
          $this->erro_sql .= "Valores : ".$id_usuario;
-         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+         $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_excluir = pg_affected_rows($result);
+         $this->numrows_excluir = $result->rowCount();
          return true;
        }
      }
@@ -567,7 +567,7 @@ class db_db_usuarios {
        $this->numrows    = 0;
        $this->erro_banco = str_replace("\n","",@pg_last_error());
        $this->erro_sql   = "Erro ao selecionar os registros.";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
@@ -576,7 +576,7 @@ class db_db_usuarios {
       if ($this->numrows == 0) {
         $this->erro_banco = "";
         $this->erro_sql   = "Record Vazio na Tabela:db_usuarios";
-        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+        $this->erro_msg   = "Usu?io: \\n\\n ".$this->erro_sql." \\n\\n";
         $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
         $this->erro_status = "0";
         return false;
@@ -952,9 +952,9 @@ class db_db_usuarios {
      return $sql;
   }
    /**
-   * Retorna Todos os usuários que possuem permissão no item de menu 8634
-   * item de menu 8634 é usado como parâmetro para saber os usuários do sistema que podem possuir permissão em
-   * projétos do BI
+   * Retorna Todos os usu?ios que possuem permiss? no item de menu 8634
+   * item de menu 8634 ?usado como par?etro para saber os usu?ios do sistema que podem possuir permiss? em
+   * proj?os do BI
    * @param String $campos
    * @param String $ordem
    * @param String $dbwhere
