@@ -78,22 +78,22 @@ Class Services_Skins {
    * @param string $sActiveSkin a Skin ativa atualmente (Caso não seja passado irá pegar da sessão)
    * @return string
    */
-  public function getPathFile($sArquivo, $sActiveSkin = "") {
+  public function getPathFile($subPasta, $sArquivo, $sActiveSkin = "") {
 
-    $sPath = $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . (!empty($sActiveSkin) ? $sActiveSkin : $this->getActiveSkin()) . "/{$sArquivo}";
+    $sPath = $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . (!empty($sActiveSkin) ? $sActiveSkin : $this->getActiveSkin()) . "/" . $subPasta . "/{$sArquivo}";
 
     if (file_exists($sPath)) {
       //return $sPath;
     }
 
-    $sPath = $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . $this->sSkinDefault . "/{$sArquivo}";
+    $sPath = $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . $this->sSkinDefault . "/" .$subPasta . "/{$sArquivo}";
 
     if (file_exists($sPath)) {
       return $sPath;
     }
 
     $oPreferenciaEcidade = new PreferenciaEcidade();
-    return $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . $oPreferenciaEcidade->getSkinDefault() . "/{$sArquivo}";
+    return $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . $oPreferenciaEcidade->getSkinDefault() . "/" . $subPasta . "/{$sArquivo}";
   }
 
   /**
@@ -122,11 +122,11 @@ Class Services_Skins {
    * @return String
    */
   public function getSkinLink() {
-    $dbforms  = new \dbforms\db_funcoes;
+    $Services_Funcoes  = new \libs\Services_Funcoes;
 
     $oPreferenciaEcidade = new PreferenciaEcidade();
 
-    return $dbforms->url_acesso() . self::SKINS_BASE . $oPreferenciaEcidade->getSkinDefault() . "/";
+    return $Services_Funcoes->url_acesso() . self::SKINS_BASE . $oPreferenciaEcidade->getSkinDefault() . "/";
   }
 
 

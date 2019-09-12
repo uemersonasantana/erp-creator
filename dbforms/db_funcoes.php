@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * db_funcoes.
  *
@@ -1629,15 +1629,6 @@ function db_retorna_periodo($mes = 1, $tipo = "B"){
 	}
 
 	return $periodo;
-}
-
-// Retorna url do Sistema
-public function url_acesso() {
-	if ( $_SERVER['SERVER_NAME'] == 'uas.lan' ) {
-		return 'http://uas.lan/';
-	} else {
-		return 'http://'.$_SERVER['SERVER_NAME'].'/sistema/';
-	}
 }
 
 }

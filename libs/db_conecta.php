@@ -38,7 +38,12 @@ class db_conecta extends db_stdlib
 
   private static $instance;
 
-  public static function getInstance() {
+  public function __construct() {
+    self::conecta();
+    self::val_sessao();
+  }
+  
+  private static function getInstance() {
     if (!isset(self::$instance)) { 
       try { 
         self::$instance = new PDO('pgsql:host='.DB_SERVIDOR.';port='.DB_PORTA.';dbname='.DB_BASE, DB_USUARIO, DB_SENHA);
@@ -60,7 +65,7 @@ class db_conecta extends db_stdlib
     return self::getInstance()->lastInsertId();
   }
 
-  function conecta() {
+  private function conecta() {
 
     if (!isset($_SESSION)) {
       session_start();
@@ -133,8 +138,8 @@ class db_conecta extends db_stdlib
     }
   }
 
-  //  Valida sessôes
-  static function val_sessao() {
+  //  Valida sessões
+  private static function val_sessao() {
     $sess = 0;
     if(!$_SESSION["DB_modulo"])
       $sess = 1;

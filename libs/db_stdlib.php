@@ -67,7 +67,7 @@ static function db_query($param1, $param2=null, $param3="SQL"){
   }
 
   $lExecutaAccount = true;
-  $lSessaoDesativarAccount = db_stdlib::db_getsession("DB_desativar_account", false);
+  $lSessaoDesativarAccount = self::db_getsession("DB_desativar_account", false);
 
   if (isset($lSessaoDesativarAccount) && $lSessaoDesativarAccount === true) {
     $lExecutaAccount = false;
@@ -104,13 +104,13 @@ static function db_query($param1, $param2=null, $param3="SQL"){
   /*
    * Trecho comentado devido a um problema na execução do Duplos CGM executado via crontab.
    */
-  if( db_stdlib::db_getsession("DB_traceLog", false) != null ) {
+  if( self::db_getsession("DB_traceLog", false) != null ) {
 
     $oTraceLog = TraceLog::getInstance();
     $oTraceLog->makeMessage($dbsql,(!$dbresult?true:false));
   }
 
-  if ( db_stdlib::db_getsession("DB_premenus", false) != null  ) {
+  if ( self::db_getsession("DB_premenus", false) != null  ) {
 
     $oPreMenus = PreMenus::getInstance();
     $oPreMenus->verificaInstrucaoSql($dbsql);
@@ -252,7 +252,7 @@ function db_verifica_ip_banco() {
                inner join db_sysregrasacessoip   on db46_idacesso = db48_idacesso
                left join db_sysregrasacessocanc on db46_idacesso = db49_idacesso
           where db49_idacesso is null
-            and db47_id_usuario = ".db_stdlib::db_getsession("DB_id_usuario")."
+            and db47_id_usuario = ".self::db_getsession("DB_id_usuario")."
             and (( db46_dtinicio  < '".date('Y-m-d')."' and db46_datafinal > '".date('Y-m-d')."' )
             or  ( db46_dtinicio = '".date('Y-m-d')."' and db46_horaini   <= '".date("G:i")."' )
             or  ( db46_datafinal = '".date('Y-m-d')."' and db46_horafinal >= '".date("G:i")."' ))
@@ -877,11 +877,11 @@ function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreen
 
 
 //Cria variaveis globais para a instituição passada
-//Se instituição não for passada, buscará dados da instituição do db_stdlib::db_getsession
+//Se instituição não for passada, buscará dados da instituição do self::db_getsession
 //Retorna false se tiver problemas na execução do sql e numrows caso sql esteja correto (0 se não encontrar instituição e 1 caso encontre)
 function db_sel_instit($instit=null,$campos=" * "){
   if($instit == null || trim($instit) == ""){
-    $instit = db_stdlib::db_getsession("DB_instit");
+    $instit = self::db_getsession("DB_instit");
   }
   if(trim($campos) == ""){
     $campos = " * ";
@@ -907,11 +907,11 @@ function db_sel_instit($instit=null,$campos=" * "){
 }
 
 //Cria variaveis globais para usuário passado
-//Se o usuário não for passado, buscará dados do usuário do db_stdlib::db_getsession
+//Se o usuário não for passado, buscará dados do usuário do self::db_getsession
 //Retorna false se tiver problemas na execução do sql e numrows caso sql esteja correto (0 se não encontrar o usuário e 1 caso encontre)
 function db_sel_usuario($usuario=null,$campos=" * "){
   if($usuario == null || trim($usuario) == ""){
-    $usuario = db_stdlib::db_getsession("DB_id_usuario");
+    $usuario = self::db_getsession("DB_id_usuario");
   }
   if(trim($campos) == ""){
     $campos = " * ";
@@ -1105,11 +1105,11 @@ function db_vencimento($dt = "") {
   //#10#//Esta funcao coloca a data no formato ano-mes-dia para o postgres
   //#15#//db_vencimento($dt);
   //#20#//Dt : Data a ser convertida para o formato
-  //#20#//     Caso a data em branco ou não informada, o sistema carrega a data da função |db_stdlib::db_getsession|
+  //#20#//     Caso a data em branco ou não informada, o sistema carrega a data da função |self::db_getsession|
   //#40#//Data formatada para postgres
 
   if (empty ($dt))
-    $dt = db_stdlib::db_getsession("DB_datausu");
+    $dt = self::db_getsession("DB_datausu");
   $data = date("Y-m-d", $dt);
   /*
 if ( (date("H",$dt) >= "16" ) ) {
@@ -1154,7 +1154,7 @@ function db_redireciona($url = "0") {
 
 //retorna uma variável de sessão
 /*
- function db_stdlib::db_getsession($var) {
+ function self::db_getsession($var) {
  global $HTTP_SESSION_VARS;
  if(!class_exists("crypt_hcemd5"))
  include(modification("db_calcula.php"));
@@ -1167,9 +1167,9 @@ function db_redireciona($url = "0") {
 
 //retorna uma variável de sessão
 static function db_getsession($var = "0", $alertarExistencia = true) {
-  //#00#//db_stdlib::db_getsession
+  //#00#//self::db_getsession
   //#10#//Esta funcao recupera da sessão do php uma determinada variável, ou todas as variáveis lá registradas
-  //#15#//db_stdlib::db_getsession($var="0", $alertarExistencia = true)
+  //#15#//self::db_getsession($var="0", $alertarExistencia = true)
   //#20#//Var : Nome da variável que será recuperada
   //#20#//alertarExistencia : Se deseja alertar que váriavel de sessão não existe (conforme o caso).
   //#99#//Variaveis disponíveis na sessão
@@ -1188,7 +1188,7 @@ static function db_getsession($var = "0", $alertarExistencia = true) {
   //#99#//DB_instit       Código da instituição
   //#99#//
   //#99#//Exemplo:
-  //#99#//db_stdlib::db_getsession("DB_datausu");
+  //#99#//self::db_getsession("DB_datausu");
   //#99#//Irá abrir a página index.php
   if ($var == "0") {
     reset($_SESSION);
@@ -1344,7 +1344,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   if( ( empty ($$tot_registros) && !empty ($query) ) || isset($recomecar)) {
 
     if( isset( $recomecar ) ) {
-      $query = db_stdlib::db_getsession("dblov_query_inicial");
+      $query = self::db_getsession("dblov_query_inicial");
     }
 
     $Dd1 = "disabled";
@@ -2243,7 +2243,7 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
 function db_logs($string = '', $codcam = 0, $chave = 0) {
   $wheremod="";
   if(isset($_SESSION["DB_modulo"])){
-    $wheremod =  "and modulo = ".db_stdlib::db_getsession("DB_modulo");
+    $wheremod =  "and modulo = ".self::db_getsession("DB_modulo");
   }
   $sql = "select db_itensmenu.id_item
                   from configuracoes.db_itensmenu
@@ -2266,17 +2266,17 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
 
 
     $sql = "INSERT INTO db_logsacessa VALUES ($codsequen,
-                                              '".db_stdlib::db_getsession("DB_ip")."',
+                                              '".self::db_getsession("DB_ip")."',
                                               '".date("Y-m-d")."',
                                               '".date("H:i:s")."',
                                               '".$_SERVER["REQUEST_URI"]."',
                                               '$string',
-                                              ".db_stdlib::db_getsession("DB_id_usuario").",
-                                              ".db_stdlib::db_getsession("DB_modulo").",
+                                              ".self::db_getsession("DB_id_usuario").",
+                                              ".self::db_getsession("DB_modulo").",
                                               ".$item.",
-                                              ".db_stdlib::db_getsession("DB_coddepto").",
+                                              ".self::db_getsession("DB_coddepto").",
 
-                                              ".db_stdlib::db_getsession("DB_instit").")";
+                                              ".self::db_getsession("DB_instit").")";
 
     $rs = self::db_query($sql);
     if (!$rs) {
@@ -2286,7 +2286,7 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
 }
 
 function db_logsmanual($string = '', $modulo = 0, $item = 0, $codcam = 0, $chave = 0) {
-  $sql = "INSERT INTO db_logsacessa VALUES (nextval('db_logsacessa_codsequen_seq'),'".db_stdlib::db_getsession("DB_ip")."','".date("Y-m-d")."','".date("H:i:s")."','".$_SERVER["REQUEST_URI"]."','$string',".db_stdlib::db_getsession("DB_id_usuario").",".$modulo.",".$item.",".db_stdlib::db_getsession("DB_coddepto").",".db_stdlib::db_getsession("DB_instit").")";
+  $sql = "INSERT INTO db_logsacessa VALUES (nextval('db_logsacessa_codsequen_seq'),'".self::db_getsession("DB_ip")."','".date("Y-m-d")."','".date("H:i:s")."','".$_SERVER["REQUEST_URI"]."','$string',".self::db_getsession("DB_id_usuario").",".$modulo.",".$item.",".self::db_getsession("DB_coddepto").",".self::db_getsession("DB_instit").")";
   $rs = self::db_query($sql);
   if (!$rs) {
     die("Houve um problema ao realizar a auditoria do sistema.");
@@ -2326,24 +2326,24 @@ function db_logsmanual_demais($string = '', $id_usuario=0, $modulo = 0, $item = 
  */
 function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null) {
   
-  $usuario = !empty($usuario) ? $usuario : db_stdlib::db_getsession("DB_id_usuario");
-  $modulo  = !empty($modulo)  ? $modulo  : db_stdlib::db_getsession("DB_modulo");
-  $anousu  = !empty($anousu)  ? $anousu  : db_stdlib::db_getsession("DB_anousu");
-  $instit  = !empty($instit)  ? $instit  : db_stdlib::db_getsession("DB_instit");
+  $usuario = !empty($usuario) ? $usuario : self::db_getsession("DB_id_usuario");
+  $modulo  = !empty($modulo)  ? $modulo  : self::db_getsession("DB_modulo");
+  $anousu  = !empty($anousu)  ? $anousu  : self::db_getsession("DB_anousu");
+  $instit  = !empty($instit)  ? $instit  : self::db_getsession("DB_instit");
 
-  $idItem = db_stdlib::db_getsession('DB_itemmenu_acessado');
+  $idItem = self::db_getsession('DB_itemmenu_acessado');
 
   /**
    * Busca as preferênias do usuário
    */
   
-  $oPreferencias = unserialize(base64_decode(db_stdlib::db_getsession('DB_preferencias_usuario')));
+  $oPreferencias = unserialize(base64_decode(self::db_getsession('DB_preferencias_usuario')));
   $sOrdenacao    = DBMenu::getCampoOrdenacao();
   $DBMenu        = new DBMenu($modulo, $usuario, $anousu, $instit);
-  $DBMenu->setAdministrador( (db_stdlib::db_getsession("DB_administrador") == 1) );
+  $DBMenu->setAdministrador( (self::db_getsession("DB_administrador") == 1) );
   $DBMenu->setDBSeller( isset($DB_SELLER) );
   $DBMenu->setExibeBuscaMenus( ($oPreferencias->getExibeBusca() == '1') );
-  $DBMenu->setDataUsu( (isset($_SESSION["DB_datausu"]) ? date("Y", db_stdlib::db_getsession("DB_datausu")) : date("Y")) );
+  $DBMenu->setDataUsu( (isset($_SESSION["DB_datausu"]) ? date("Y", self::db_getsession("DB_datausu")) : date("Y")) );
   $DBMenu->setFuncao( strtolower(basename($_SERVER["PHP_SELF"])) );
   $DBMenu->setOrdenacao($sOrdenacao);
 
@@ -2357,11 +2357,11 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
 
     if (isset ($_SESSION["DB_coddepto"])) {
 
-      $iCodigoDepartamento = db_stdlib::db_getsession("DB_coddepto");
-      $result = @ self::db_query("select descrdepto from db_depart where coddepto = ".db_stdlib::db_getsession("DB_coddepto"));
+      $iCodigoDepartamento = self::db_getsession("DB_coddepto");
+      $result = @ self::db_query("select descrdepto from db_depart where coddepto = ".self::db_getsession("DB_coddepto"));
 
       if ($result != false && pg_numrows($result) > 0) {
-        $descrdep = "[<strong>".db_stdlib::db_getsession("DB_coddepto")."-".substr(pg_result($result, 0, 'descrdepto'), 0, 40)."</strong>]";
+        $descrdep = "[<strong>".self::db_getsession("DB_coddepto")."-".substr(pg_result($result, 0, 'descrdepto'), 0, 40)."</strong>]";
       } else {
         $descrdep = "";
       }
@@ -2370,12 +2370,12 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
       $descrdep = "";
     }
 
-    $msg = ucfirst(db_stdlib::db_getsession("DB_nome_modulo")) . $descrdep . "->" . $DBMenu->getDescricaoFuncao();
+    $msg = ucfirst(self::db_getsession("DB_nome_modulo")) . $descrdep . "->" . $DBMenu->getDescricaoFuncao();
 
     echo "<script>
             (window.CurrentWindow || parent.CurrentWindow).bstatus.document.getElementById('st').innerHTML = '&nbsp;&nbsp;$msg' ;
-            (window.CurrentWindow || parent.CurrentWindow).bstatus.document.getElementById('dtatual').innerHTML = '".date("d/m/Y", db_stdlib::db_getsession("DB_datausu"))."' ;
-            (window.CurrentWindow || parent.CurrentWindow).bstatus.document.getElementById('dtanousu').innerHTML = '".db_stdlib::db_getsession("DB_anousu")."' ;
+            (window.CurrentWindow || parent.CurrentWindow).bstatus.document.getElementById('dtatual').innerHTML = '".date("d/m/Y", self::db_getsession("DB_datausu"))."' ;
+            (window.CurrentWindow || parent.CurrentWindow).bstatus.document.getElementById('dtanousu').innerHTML = '".self::db_getsession("DB_anousu")."' ;
 
             if ((window.CurrentWindow || parent.CurrentWindow).bstatus.window.carregaDepartamentos) {
               (window.CurrentWindow || parent.CurrentWindow).bstatus.window.carregaDepartamentos($iCodigoDepartamento);
@@ -2413,7 +2413,7 @@ function db_acessamenu($item_menu, $descr, $acao) {
   $sql = "select m.descricao
                   from db_permissao p
                        inner join db_itensmenu m on m.id_item = p .id_item
-                  where p.anousu = ".db_stdlib::db_getsession("DB_anousu")." and p.id_item = $item_menu and id_usuario = ".db_stdlib::db_getsession("DB_id_usuario");
+                  where p.anousu = ".self::db_getsession("DB_anousu")." and p.id_item = $item_menu and id_usuario = ".self::db_getsession("DB_id_usuario");
   $res = self::db_query($sql);
   if (pg_numrows($res) > 0) {
     $descri = pg_result($res, 0, 'descricao');
@@ -2486,16 +2486,16 @@ function db_permissaomenu($ano, $modulo, $item) {
   //#20#//Modulo: codigo do modulo que deseja utilizar para verificar o acesso
   //#20#//Item: codigo do item que deseja utilizar para verificar o acesso
   //#20#//Sempre será utilizado o usuario atual para a verificacao
-  if (db_stdlib::db_getsession("DB_id_usuario") == 1 || db_stdlib::db_getsession("DB_administrador") == 1) {
+  if (self::db_getsession("DB_id_usuario") == 1 || self::db_getsession("DB_administrador") == 1) {
     return "true";
   } else {
     $sql = "select id_item
                                                                 from db_permissao
-                                where anousu = $ano and id_modulo = $modulo and id_item = $item and id_usuario = ".db_stdlib::db_getsession("DB_id_usuario") . " and db_permissao.id_instit = " . db_stdlib::db_getsession("DB_instit") . " union
+                                where anousu = $ano and id_modulo = $modulo and id_item = $item and id_usuario = ".self::db_getsession("DB_id_usuario") . " and db_permissao.id_instit = " . self::db_getsession("DB_instit") . " union
                                 select id_item
                                 from db_permissao
                                 inner join db_permherda on db_permherda.id_perfil = db_permissao.id_usuario
-                                where db_permissao.anousu = $ano and db_permissao.id_modulo = $modulo and db_permissao.id_item = $item and db_permherda.id_usuario = ".db_stdlib::db_getsession("DB_id_usuario") . " and db_permissao.id_instit = " . db_stdlib::db_getsession("DB_instit");
+                                where db_permissao.anousu = $ano and db_permissao.id_modulo = $modulo and db_permissao.id_item = $item and db_permherda.id_usuario = ".self::db_getsession("DB_id_usuario") . " and db_permissao.id_instit = " . self::db_getsession("DB_instit");
 
 
 
@@ -2826,8 +2826,8 @@ function monta_menu($item_modulo,$id_modulo,$espacos,$lista, $iUsuario = false){
   $sOrdenacao = DBMenu::getCampoOrdenacao();
   global $matriz_item , $matriz_item_seleciona ;
 
-  $iAnoUsu      = db_stdlib::db_getsession('DB_anousu', false);
-  $iInstituicao = db_stdlib::db_getsession('DB_instit', false);
+  $iAnoUsu      = self::db_getsession('DB_anousu', false);
+  $iInstituicao = self::db_getsession('DB_instit', false);
 
   $sql  = "select id_item_filho,descricao ,funcao                         ";
   $sql .= "  from db_menu m                                               ";
@@ -2836,7 +2836,7 @@ function monta_menu($item_modulo,$id_modulo,$espacos,$lista, $iUsuario = false){
   $sql .= "    and m.modulo  = $id_modulo                                 ";
   $sql .= "  order by {$sOrdenacao} asc                                     ";
 
-  if ($iUsuario and ($iUsuario != 1 || db_stdlib::db_getsession("DB_administrador") != 1)) {
+  if ($iUsuario and ($iUsuario != 1 || self::db_getsession("DB_administrador") != 1)) {
 
     $sql  = "  select id_item_filho,descricao ,funcao                                                  ";
     $sql .= "    from db_menu m                                                                        ";
@@ -2907,7 +2907,7 @@ function db_getnomelogo(){
   $rsLogo = self::db_query("select logo
                             from db_config
                                  left join db_tipoinstit on db21_codtipo = db21_tipoinstit
-                                                         where codigo = ".db_stdlib::db_getsession("DB_instit"));
+                                                         where codigo = ".self::db_getsession("DB_instit"));
   if($rsLogo == false || pg_num_rows($rsLogo) == 0 ){
     return false;
   }else{
@@ -2933,11 +2933,11 @@ function db_dataextenso( $timestamp=null, $sMunic=null ){
                   "12" => "Dezembro" );
 
   if ( $timestamp == null ) {
-    $timestamp = db_stdlib::db_getsession('DB_datausu');
+    $timestamp = self::db_getsession('DB_datausu');
   }
 
   if ( $sMunic == null and  $sMunic <> "" ) {
-    $sSqlMunic = "select munic from db_config where codigo = ".db_stdlib::db_getsession('DB_instit')." limit 1";
+    $sSqlMunic = "select munic from db_config where codigo = ".self::db_getsession('DB_instit')." limit 1";
     $sMunic    = pg_result( self::db_query( $sSqlMunic ),0,'munic' );
   }
 
@@ -3156,7 +3156,7 @@ function db_round($valor, $decimais=0) {
 
 function db_buscaImagemInstituicao($instit,$tipo){
   /**
-   * $instit código da instituição {db_stdlib::db_getsession("DB_instit")}
+   * $instit código da instituição {self::db_getsession("DB_instit")}
    * $tipo 1 - para logo 2 - para figura
    * $conn conexao com o banco
    */
@@ -3358,7 +3358,7 @@ function db_mesAbreviado ($iMes){
 function analiseQueryPlanoOrcamento($sQuery, $iAnoUsu = null)  {
 
   if (empty($iAnoUsu)) {
-    $iAnoUsu = db_stdlib::db_getsession("DB_anousu");
+    $iAnoUsu = self::db_getsession("DB_anousu");
   }
 
   $aTablesFrom = array(" conplano ",
