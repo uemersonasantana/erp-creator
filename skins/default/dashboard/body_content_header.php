@@ -1,6 +1,6 @@
 <div class="content-wrapper-before"></div>
 <div class="content-header row">
-    <div class="content-header-left col-md-4 col-12 mb-2">
+    <!--<div class="content-header-left col-md-4 col-12 mb-2">
         <h3 class="content-header-title">Invoice</h3>
     </div>
     <div class="content-header-right col-md-8 col-12">
@@ -16,5 +16,5 @@
                 </ol>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>

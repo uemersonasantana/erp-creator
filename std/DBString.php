@@ -9,6 +9,8 @@
 
 namespace std;
 
+use libs\db_utils;
+
 abstract class DBString {
 
   /**

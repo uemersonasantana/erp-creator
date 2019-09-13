@@ -2,6 +2,10 @@
   RewriteEngine on
   RewriteCond %{REQUEST_URI} !=/server-status
   RewriteCond %{REQUEST_URI} !=/server-status-php-fpm
+
+  RewriteRule ^login/?$ 				/files/login.php 							[NC,L]
+  RewriteRule ^in/([a-z0-9-]+)/?$ 		/files/dashboard.php?pagina=$1 				[NC,L]
+  RewriteRule ^in/([a-z0-9-]+)/(.*)/?$ 	/files/dashboard.php?pagina=$1&get=$2 		[NC,L]
 </IfModule>
 
 <filesMatch "\.(htaccess|htpasswd|ini|sh)$">

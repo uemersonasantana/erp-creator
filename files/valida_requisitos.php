@@ -8,7 +8,7 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 
 $db_conecta             =   new libs\db_conecta; 
 $db_stdlib              =   new libs\db_stdlib;
-$oSkin                  =   new libs\Services_Skins;
+$Services_Skins                  =   new libs\Services_Skins;
 $Services_Funcoes       =   new libs\Services_Funcoes;
 $db_valida_requisitos   =   new libs\db_valida_requisitos;
 
@@ -292,15 +292,15 @@ if ( isset($_DB_VALIDA_REQUISITOS) && $_DB_VALIDA_REQUISITOS == true ) {
 }
 
 //  BEGIN: HTML
-include $oSkin->getPathFile('dashboard','html_start.php');
+include $Services_Skins->getPathFile('dashboard','html_start.php');
     //  BEGIN: Head
-    include $oSkin->getPathFile('dashboard','head.php');
+    include $Services_Skins->getPathFile('dashboard','head.php');
     //  END: Head
 
     //  BEGIN: Body
-    include $oSkin->getPathFile('login','body_start.php');
+    include $Services_Skins->getPathFile('login','body_start.php');
         //  BEGIN: Content
-        include $oSkin->getPathFile('login','body_content_start.php');
+        include $Services_Skins->getPathFile('login','body_content_start.php');
 
             //  ----Páginas que será carregada-----
 
@@ -311,7 +311,7 @@ include $oSkin->getPathFile('dashboard','html_start.php');
                             <div class="card border-grey border-lighten-3 px-1 py-1 m-0">
                                 <div class="card-header border-0">
                                     <div class="text-center mb-1">
-                                        <img src="<?php echo $oSkin->getSkinLink(); ?>app-assets/images/logo/logo.png" alt="branding logo">
+                                        <img src="<?php echo $Services_Skins->getSkinLink(); ?>app-assets/images/logo/logo.png" alt="branding logo">
                                     </div>
                                     <div class="font-large-1 text-center">
                                         Verificação de Configurações 
@@ -659,14 +659,14 @@ include $oSkin->getPathFile('dashboard','html_start.php');
                     </div>
                 </section>
     <?php
-        include $oSkin->getPathFile('login','body_content_end.php');
+        include $Services_Skins->getPathFile('login','body_content_end.php');
 
         //  BEGIN: Header
-        include $oSkin->getPathFile('login','body_footer.php');
+        include $Services_Skins->getPathFile('login','body_footer.php');
         //  END: Header
 
     //  END: Body
-    include $oSkin->getPathFile('login','body_end.php'); 
+    include $Services_Skins->getPathFile('login','body_end.php'); 
 
 //  END: HTML
-include $oSkin->getPathFile('dashboard','html_end.php'); 
+include $Services_Skins->getPathFile('dashboard','html_end.php'); 

@@ -17,7 +17,11 @@
                         ]
             ,"classes\\": "class/"
             ,"dbforms\\": "dbforms/"
-            ,"std\\": "std/"
+            ,"std\\": [  
+                            "std/"
+                            ,"std/label/"
+                            ,"std/dd/"
+                        ]
             ,"model\\": [  
                             "model/"
                             ,"model/configuracao/"

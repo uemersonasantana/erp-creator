@@ -92,7 +92,11 @@ static function db_query($param1, $param2=null, $param3="SQL"){
     }
 
     $dbresult = db_conecta::prepare($dbsql);
+
     $dbresult->execute();
+    if (!$dbresult) {
+      $dbresult = $dbresult->errorInfo();
+    }
   }else{
 
     $dbsql    = $sBackTrace . $param2;
@@ -168,7 +172,7 @@ function db_subdata($data,$opcao,$formatar="b"){
   }else if($formatar == "t"){
     $data = date("d/m/Y",$data);
   }
-  $arr_data = split("/",$data);
+  $arr_data = explode("/",$data);
   if(trim($arr_data[0]) == "" || !isset($arr_data[1]) || !isset($arr_data[2])){
     return 0;
   }
@@ -225,6 +229,7 @@ function db_hora($id_timestamp = 0, $formato = "H:i") {
     return date($formato);
   }
 }
+//  db_verifica_ip_anco
 function db_verifica_ip_banco() {
   //#00#//db_verifica_ip_anco
   //#10#//Verifica se o IP que esta acessando poderá abrir o dbportal, pesquisando o arquivo db_acessa
@@ -237,43 +242,38 @@ function db_verifica_ip_banco() {
   //#99#//                  testa o tamanho do IP até o asterisco e desconsidera a partir dele.
   //#99#//db_acessa[1][2] = Campo Lógico, quando verdadeiro, poderá acessar, o IP ou máscara do IP e quando
   //#99#//                  falso nao poderá acessar o db_portal
-  global $SERVER, $HTTP_SERVER_VARS, $db48_ip, $db47_id_usuario;
-  if (isset ($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-    $db_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-  } else {
-    $db_ip = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-  }
+  $db_ip = $_SERVER['REMOTE_ADDR'];
 
   $usuario_liberado = '0';
-  // verifica pelo codigo do usuário
-  $sql = "select db47_id_usuario, db48_ip
-          from db_sysregrasacesso
-               inner join db_sysregrasacessousu  on db46_idacesso = db47_idacesso
-               inner join db_sysregrasacessoip   on db46_idacesso = db48_idacesso
-               left join db_sysregrasacessocanc on db46_idacesso = db49_idacesso
-          where db49_idacesso is null
-            and db47_id_usuario = ".self::db_getsession("DB_id_usuario")."
-            and (( db46_dtinicio  < '".date('Y-m-d')."' and db46_datafinal > '".date('Y-m-d')."' )
-            or  ( db46_dtinicio = '".date('Y-m-d')."' and db46_horaini   <= '".date("G:i")."' )
-            or  ( db46_datafinal = '".date('Y-m-d')."' and db46_horafinal >= '".date("G:i")."' ))
-            ";
-  $result = self::db_query($sql);
-  $numrows = pg_numrows($result);
-  for ($i = 0; $i < $numrows; $i ++) {
-    db_fieldsmemory($result,$i);
-    if( $db48_ip == "" ){
+  
+  //  Verifica pelo código do usuário.
+  $sql = "SELECT 
+                db47_id_usuario
+                ,db48_ip
+            FROM db_sysregrasacesso
+                INNER  JOIN db_sysregrasacessousu  ON db46_idacesso = db47_idacesso
+                INNER  JOIN db_sysregrasacessoip   ON db46_idacesso = db48_idacesso
+                LEFT   JOIN db_sysregrasacessocanc ON db46_idacesso = db49_idacesso
+            WHERE 
+                db49_idacesso is null
+                and db47_id_usuario   = ".self::db_getsession("DB_id_usuario")."
+                and (( db46_dtinicio  < '".date('Y-m-d')."' and db46_datafinal > '".date('Y-m-d')."' )
+                or  ( db46_dtinicio   = '".date('Y-m-d')."' and db46_horaini   <= '".date("G:i")."' )
+                or  ( db46_datafinal  = '".date('Y-m-d')."' and db46_horafinal >= '".date("G:i")."' ))
+                ";
+  $result   = self::db_query($sql);
+
+  foreach ( $result as $linha ) {
+    if ( $linha->db48_ip == "" ) {
       $usuario_liberado = '1';
     }else{
-      if ( $db48_ip == $db_ip) {
-
+      if ( $linha->db48_ip == $db_ip ) {
         $usuario_liberado = '1';
-
       }else{
-
-        $aster = strpos("#".$db48_ip, "*");
+        $aster = strpos("#".$linha->db48_ip, "*");
         if ($aster != 0) {
-          $quantos = substr($db48_ip, 0, $aster -1);
-          if (substr($db48_ip, 0, strlen($quantos)) == substr($db_ip, 0, strlen($quantos))) {
+          $quantos = substr($linha->db48_ip, 0, $aster -1);
+          if ( substr($linha->db48_ip, 0, strlen($quantos)) == substr($db_ip, 0, strlen($quantos)) ) {
             $usuario_liberado = '1';
           }
         }
@@ -282,38 +282,35 @@ function db_verifica_ip_banco() {
   }
 
   // verifica somente ips liberados sem usuarios
-  $sql = "select  db48_ip
-          from db_sysregrasacesso
-               inner join db_sysregrasacessoip   on db46_idacesso = db48_idacesso
-               left join db_sysregrasacessousu  on db46_idacesso = db47_idacesso
-               left join db_sysregrasacessocanc on db46_idacesso = db49_idacesso
-          where db49_idacesso is null
-            and db47_id_usuario is null
-            and (( db46_dtinicio  < '".date('Y-m-d')."' and db46_datafinal > '".date('Y-m-d')."' )
-            or  ( db46_dtinicio = '".date('Y-m-d')."' and db46_horaini   <= '".date("H:i")."' )
-            or  ( db46_datafinal = '".date('Y-m-d')."' and db46_horafinal >= '".date("H:i")."' ))"
+  $sql = "SELECT 
+                db48_ip
+            FROM db_sysregrasacesso
+                INNER JOIN db_sysregrasacessoip   on db46_idacesso = db48_idacesso
+                LEFT JOIN db_sysregrasacessousu  on db46_idacesso = db47_idacesso
+                LEFT  JOIN db_sysregrasacessocanc on db46_idacesso = db49_idacesso
+            WHERE 
+                db49_idacesso is null
+                and db47_id_usuario is null
+                and (( db46_dtinicio  < '".date('Y-m-d')."' and db46_datafinal > '".date('Y-m-d')."' )
+                or  ( db46_dtinicio = '".date('Y-m-d')."' and db46_horaini   <= '".date("H:i")."' )
+                or  ( db46_datafinal = '".date('Y-m-d')."' and db46_horafinal >= '".date("H:i")."' ))"
   ;
   $result = self::db_query($sql);
-  $numrows = pg_numrows($result);
-  for ($i = 0; $i < $numrows; $i ++) {
-    db_fieldsmemory($result,$i);
-    if ( $db48_ip == $db_ip) {
-
+  
+  foreach ( $result as $linha ) { 
+    if ( $linha->db48_ip == $db_ip) {
       $usuario_liberado = '1';
-
-    }else{
-
-      $aster = strpos("#".$db48_ip, "*");
+    } else {
+      $aster = strpos("#".$linha->db48_ip, "*");
       if ($aster != 0) {
-        $quantos = substr($db48_ip, 0, $aster -1);
-        if (substr($db48_ip, 0, strlen($quantos)) == substr($db_ip, 0, strlen($quantos))) {
+        $quantos = substr($linha->db48_ip, 0, $aster -1);
+        if (substr($linha->db48_ip, 0, strlen($quantos)) == substr($db_ip, 0, strlen($quantos))) {
           $usuario_liberado = '1';
         }
       }
     }
   }
   return $usuario_liberado;
-
 }
 
 function db_verifica_ip() {
@@ -417,7 +414,7 @@ function db_mes($xmes,$tipo=0) {
 
 function db_geratexto($texto) {
   $texto .= "#";
-  $txt = split("#", $texto);
+  $txt = explode("#", $texto);
   $texto1 = '';
   for ($x = 0; $x < sizeof($txt); $x ++) {
     if (substr($txt[$x], 0, 1) == "$") {
@@ -462,7 +459,7 @@ function db_verfPostGet($post) {
   }
 }
 
-
+//  Esta funcao mostra os dados de um record set na tela, em uma tabela.
 function db_criatabela($result, $columns=array()) {
   //#00#//db_criatabela
   //#10#//Esta funcao mostra os dados de um record set na tela, em uma tabela
@@ -470,9 +467,9 @@ function db_criatabela($result, $columns=array()) {
   //#20#//result  : Record set gerado
   //#20#//columns : Array com nomes das colunas a exibir, se nao passar nada mostra todas colunas do recordset
 
-  $numrows = pg_numrows($result);
-  if(count($columns)==0) {
-    $numcols  = pg_numfields($result);
+  $numrows = $result->rowCount();
+  if ( count($columns) == 0 ) {
+    $numcols  = $result->columnCount();
     $bycolumn = false;
   } else {
     $numcols  = count($columns);
@@ -481,22 +478,30 @@ function db_criatabela($result, $columns=array()) {
   echo "<br><br><table border=\"1\" cellpadding=\"0\" cellspacing=\"0\">";
   echo "<tr bgcolor=\"#00CCFF\">\n";
 
-  for ($j = 0; $j < $numcols; $j ++) {
+  $nomesColuna  = array();
+  $linha        = $result->fetchAll();  
+
+  for ( $j = 0; $j < $numcols; $j++ ) { 
     if(!$bycolumn) {
-      echo "<td>".pg_fieldname($result, $j)."</td>\n";
+      echo "<td>".$result->getColumnMeta($j)['name']."</td>\n";
+      
+      $nomesColuna[$j] = $result->getColumnMeta($j)['name'];
     } else {
       echo "<td>".$columns[$j]."</td>\n";
     }
   }
+
   $cor = "#07F89D";
   echo "</tr>\n";
-  for ($i = 0; $i < $numrows; $i ++) {
+
+  for ( $i = 0; $i < $numrows; $i++ ) {
+    
     echo "<tr bgcolor=\"". ($cor = ($cor == "#07F89D" ? "#51F50A" : "#07F89D"))."\">\n";
-    for ($j = 0; $j < $numcols; $j ++) {
-      if(!$bycolumn) {
-        echo "<td nowrap>".pg_result($result, $i, $j)."</td>\n";
+    for ( $j = 0; $j < $numcols; $j++ ) {
+      if( !$bycolumn ) {
+        echo "<td nowrap>".$linha[$i]->$nomesColuna[$j]."</td>\n";
       } else {
-        echo "<td nowrap>".pg_result($result, $i, $columns[$j])."</td>\n";
+        echo "<td nowrap>".$linha[$i]->$columns[$j]."</td>\n";
       }
     }
     echo "</tr>\n";
@@ -841,7 +846,7 @@ function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreen
     case "d" :
 
       if ($str != "") {
-        $data = split("-", str_replace("/","-",$str));
+        $data = explode("-", str_replace("/","-",$str));
         return $data[2]."/".$data[1]."/".$data[0];
       } else {
         return $str;
@@ -863,11 +868,11 @@ function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreen
         return $str;
       } else
         if (strpos($str, "-") != "") {
-          $str = split("-", $str);
+          $str = explode("-", $str);
           return $str[2]."-".$str[1]."-".$str[0];
         } else
           if (strpos($str, "/") != "") {
-            $str = split("/", $str);
+            $str = explode("/", $str);
             return $str[2]."-".$str[1]."-".$str[0];
           }
       break;
@@ -875,196 +880,7 @@ function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreen
   return false;
 }
 
-
-//Cria variaveis globais para a instituição passada
-//Se instituição não for passada, buscará dados da instituição do self::db_getsession
-//Retorna false se tiver problemas na execução do sql e numrows caso sql esteja correto (0 se não encontrar instituição e 1 caso encontre)
-function db_sel_instit($instit=null,$campos=" * "){
-  if($instit == null || trim($instit) == ""){
-    $instit = self::db_getsession("DB_instit");
-  }
-  if(trim($campos) == ""){
-    $campos = " * ";
-  }
-  $record_config = self::db_query("select ".$campos."
-                            from db_config
-                                 left join db_tipoinstit on db21_codtipo = db21_tipoinstit
-                            where codigo = ".$instit);
-  if($record_config == false){
-    return false;
-  }else{
-    $num_rows = pg_numrows($record_config);
-    if($num_rows > 0){
-      $num_cols = pg_numfields($record_config);
-      for($index=0; $index<$num_cols; $index++){
-        $nam_campo = pg_fieldname($record_config, $index);
-        global $$nam_campo;
-        $$nam_campo = pg_result($record_config, 0, $nam_campo);
-      }
-    }
-  }
-  return $num_rows;
-}
-
-//Cria variaveis globais para usuário passado
-//Se o usuário não for passado, buscará dados do usuário do self::db_getsession
-//Retorna false se tiver problemas na execução do sql e numrows caso sql esteja correto (0 se não encontrar o usuário e 1 caso encontre)
-function db_sel_usuario($usuario=null,$campos=" * "){
-  if($usuario == null || trim($usuario) == ""){
-    $usuario = self::db_getsession("DB_id_usuario");
-  }
-  if(trim($campos) == ""){
-    $campos = " * ";
-  }
-  $record_usuarios = self::db_query("select ".$campos."
-                            from db_usuarios
-                            where id_usuario = ".$usuario);
-  if($record_usuarios == false){
-    return false;
-  }else{
-    $num_rows = pg_numrows($record_usuarios);
-    if($num_rows > 0){
-      $num_cols = pg_numfields($record_usuarios);
-      for($index=0; $index<$num_cols; $index++){
-        $nam_campo = pg_fieldname($record_usuarios, $index);
-        global $$nam_campo;
-        $$nam_campo = pg_result($record_usuarios, 0, $nam_campo);
-      }
-    }
-  }
-  return $num_rows;
-}
-
-//Cria veriaveis globais de todos os campos do recordset no indice $indice
-function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false) {
-  //#00#//db_fieldsmemory
-  //#10#//Esta funcao cria as variáveis de uma determinada linha de um record set, sendo o nome da variável
-  //#10#//o nome do campo no record set e seu conteúdo o conteúdo da variável
-  //#15#//db_fieldsmemory($recordset,$indice,$formatar="",$mostravar=false);
-  //#20#//Record Set        : Record set que será pesquisado
-  //#20#//Indice            : Número da linha (índice) que será caregada as funções
-  //#20#//Formatar          : Se formata as variáveis conforme o tipo no banco de dados
-  //#20#//                    true = Formatar      false = Não Formatar (Padrão = false)
-  //#20#//Mostrar Variáveis : Mostrar na tela as variáveis que estão sendo geradas
-  //#99#//Esta função é bastante utilizada quando se faz um for para percorrer um record set.
-  //#99#//Exemplo:
-  //#99#//db_fieldsmemory($result,0);
-  //#99#//Cria todas as variáveis com o conteúdo de cada uma sendo o valor do campo
-  $fm_numfields = pg_numfields($recordset);
-  $fm_numrows = pg_numrows($recordset);
-  //if(pg_numrows($recordset)==0){
-  // echo "RecordSet Vazio: <br>";
-  // for ($i = 0;$i < $fm_numfields;$i++){
-  //    echo pg_fieldname($recordset,$i)."<br>";
-  // }
-  // exit;
-  // }
-  for ($i = 0; $i < $fm_numfields; $i ++) {
-    $matriz[$i] = pg_fieldname($recordset, $i);
-    //if($fm_numrows==0){
-    //  $aux = trim(pg_result($recordset,$indice,$matriz[$i]));
-    //  echo "Record set vazio->".$aux;
-    //  continue;
-    //}
-
-    global ${$matriz[$i]};
-    $aux = trim(pg_result($recordset, $indice, $matriz[$i]));
-    if (($formatar != '')) {
-      switch (pg_fieldtype($recordset, $i)) {
-        case "float8" :
-        case "float4" :
-        case "float" :
-
-          if (empty($aux) ){
-            $aux = 0;
-          }
-          $$matriz[$i] = number_format($aux, 2, ".", "");
-          if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
-          break;
-        case "date" :
-          if ($aux != "") {
-            $data = split("-", $aux);
-            $$matriz[$i] = $data[2]."/".$data[1]."/".$data[0];
-          } else {
-            $$matriz[$i] = "";
-          }
-          if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
-          break;
-        default :
-          $$matriz[$i] = stripslashes($aux);
-          if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
-          break;
-      }
-    } else
-      switch (pg_fieldtype($recordset, $i)) {
-        case "date" :
-          $datav = split("-", $aux);
-          $split_data = $matriz[$i]."_dia";
-          global $$split_data;
-          $$split_data = @ $datav[2];
-          if ($mostravar == true)
-            echo $split_data."->".$$split_data."<br";
-          $split_data = $matriz[$i]."_mes";
-          global $$split_data;
-          $$split_data = @ $datav[1];
-          if ($mostravar == true)
-            echo $split_data."->".$$split_data."<br>";
-          $split_data = $matriz[$i]."_ano";
-          global $$split_data;
-          $$split_data = @ $datav[0];
-          if ($mostravar == true)
-            echo $split_data."->".$$split_data."<br>";
-          $$matriz[$i] = $aux;
-          if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
-          break;
-        default :
-          $$matriz[$i] = stripslashes($aux);
-          if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
-          break;
-      }
-
-    //          echo $matriz[$i] . " - " . pg_fieldtype($recordset,$i) . " - " . $aux . " - " . gettype($$matriz[$i]) . "<br>";
-
-  }
-
-}
-
-///////  Calcula Digito Verificador
-///////  sCampo - Valor  Ipeso - Qual peso 10 11
-
-function db_CalculaDV($sCampo, $iPeso = 11) {
-  $mult = 2;
-  $i = 0;
-  $iDigito = 0;
-  $iSoma1 = 0;
-  $iDV1 = 0;
-  $iTamCampo = strlen($sCampo);
-  for ($i = $iTamCampo -1; $i > -1; $i --) {
-    $iDigito = $sCampo[$i];
-    $iSoma1 = intval($iSoma1, 10) + intval(($iDigito * $mult), 10);
-    $mult ++;
-    if ($mult > 9)
-      $mult = 2;
-  }
-  $iDV1 = ($iSoma1 % 11);
-  if ($iDV1 < 2)
-    $iDV1 = 0;
-  else
-    $iDV1 = 11 - $iDV1;
-  return $iDV1;
-}
-
-//funcao para a db_CalculaDV
-function db_Calcular_Peso($iPosicao, $iPeso) {
-  return ($iPosicao % ($iPeso -1)) + 2;
-}
-
-//formata uma string pra cgc ou cpf
+//  Formata uma string pra cgc ou cpf
 function db_cgccpf($str) {
   if (strlen($str) == 14)
     return substr($str, 0, 2).".".substr($str, 2, 3).".".substr($str, 5, 3)."/".substr($str, 8, 4)."-".substr($str, 12, 2);
@@ -1147,7 +963,7 @@ function db_redireciona($url = "0") {
   //#99#//db_redireciona("index.php");
   //#99#//Irá abrir a página index.php
   if ($url == "0")
-    $url = $GLOBALS["PHP_SELF"];
+    $url = $_SERVER["PHP_SELF"];
   echo "<script>location.href='$url'</script>\n";
   exit;
 }
@@ -1246,7 +1062,7 @@ function db_strpos($str, $pos) {
 
 //imprime uma mensagem de erro, com um link pra voltar pra página anterior
 function db_erro($msg, $voltar = 1) {
-  $uri = $GLOBALS["PHP_SELF"];
+  $uri = $_SERVER["PHP_SELF"];
   echo "$msg<br>\n";
   if ($voltar == 1)
     echo "<a href=\"$uri\">Voltar</a>\n";
@@ -1725,11 +1541,11 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     }
   } else if( isset( $_POST["totalizacao_repas"] ) ) {
 
-    $totalizacao_split = split( "\|", $_POST["totalizacao_repas"] );
+    $totalizacao_split = explode( "\|", $_POST["totalizacao_repas"] );
 
     for( $totrep = 0; $totrep < count( $totalizacao_split ); $totrep++ ) {
 
-      $totalizacao_sep                  = split( "\=", $totalizacao_split[$totrep] );
+      $totalizacao_sep                  = explode( "\=", $totalizacao_split[$totrep] );
       $totalizacao[$totalizacao_sep[0]] = $totalizacao_sep[1];
 
       if( isset( $_POST["totrep_".$totalizacao_sep[0]] ) ) {
@@ -1771,7 +1587,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     // se foi passado funcao
     if ( $campos_layer != "" ) {
 
-      $campo_layerexe = split( "\|", $campos_layer );
+      $campo_layerexe = explode( "\|", $campos_layer );
       $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"Executa Procedimento Específico.\" class='DBLovrotClique'>";
       $sHtml .= "  Clique";
       $sHtml .= "</td>";
@@ -1812,7 +1628,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   //cria nome da funcao com parametros
   if( $arquivo == "()" ) {
 
-    $arrayFuncao                = split( "\|", $aonde );
+    $arrayFuncao                = explode( "\|", $aonde );
     $quantidadeItemsArrayFuncao = sizeof( $arrayFuncao );
   }
 
@@ -1861,7 +1677,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
     if( $campos_layer != "" ) {
 
-      $campo_layerexe = split( "\|", $campos_layer );
+      $campo_layerexe = explode( "\|", $campos_layer );
       $sHtml .= "<td id=\"funcao_aux" . $i . "\" ";
       $sHtml .= "    class = 'DBLovrotTdFuncaoAuxiliar' ";
       $sHtml .= "    bgcolor=\"$cor\"> ";
@@ -1886,7 +1702,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
           if( pg_result( $result, $i, $j ) != "" ) {
 
-            $matriz_data = split( "-", pg_result( $result, $i, $j ) );
+            $matriz_data = explode( "-", pg_result( $result, $i, $j ) );
             $var_data    = $matriz_data[2] . "/" . $matriz_data[1] . "/" . $matriz_data[0];
           } else {
             $var_data = "//";
@@ -2258,7 +2074,7 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
 
     $sql        = "select nextval('db_logsacessa_codsequen_seq')";
     $result     = self::db_query($sql);
-    $codsequen  = db_conecta::lastInsertId();
+    $codsequen  = self::lastInsertId();
 
     // grava codigo na sessao
     db_stdlib::db_putsession("DB_itemmenu_acessado",$item);
@@ -2294,25 +2110,13 @@ function db_logsmanual($string = '', $modulo = 0, $item = 0, $codcam = 0, $chave
 }
 
 function db_logsmanual_demais($string = '', $id_usuario=0, $modulo = 0, $item = 0, $coddepto = 0, $instit = 0) {
-
-  // sem conexao com o banco
-  if (!isset($GLOBALS['conn']) || !is_resource($GLOBALS['conn'])) {
-    return false;
-  }
-
-  global $SERVER, $HTTP_SERVER_VARS;
-  if (isset ($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-    $db_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-  } else {
-    $db_ip = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-  }
+  $db_ip = $_SERVER['REMOTE_ADDR'];
 
   $sql = "INSERT INTO db_logsacessa VALUES (nextval('db_logsacessa_codsequen_seq'),'$db_ip','".date("Y-m-d")."','".date("H:i:s")."','".$_SERVER["REQUEST_URI"]."','$string',$id_usuario,$modulo,$item,$coddepto,$instit)";
   $rs = self::db_query($sql);
   if (!$rs) {
     die("Houve um problema ao realizar a auditoria do sistema.");
   }
-
 }
 
 /**
@@ -2694,7 +2498,7 @@ function db_separainstrucao($texto, $comeca=0, &$layout, $linha, $separador, $ma
 
   $texto = db_geratexto($texto);
 
-  $textos = split("\|", $texto);
+  $textos = explode("\|", $texto);
 
   //        for ($xxx=0; $xxx < sizeof($textos); $xxx++) {
   //                echo "$xxx: " . $textos[$xxx] . "<br>";
@@ -2778,7 +2582,7 @@ function db_formatatexto($linhas, $largura, $texto, $tipo="t") {
     $quebra = "<br>";
   }
 
-  $linha       = split("\n",$texto);
+  $linha       = explode("\n",$texto);
   $numlinhas   = count($linha);
   $obs         ="";
 
@@ -3439,5 +3243,13 @@ function urlencode_all($entrada) {
   return DBString::urlencode_all($entrada);
 }
 
+/***
+ *
+ * Funcao para pegar um último ID (PostgreSQL)
+ *
+ */
+public static function lastInsertId() {
+  return db_conecta::lastInsertId();
+}
  
 }

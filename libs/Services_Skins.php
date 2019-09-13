@@ -83,7 +83,7 @@ Class Services_Skins {
     $sPath = $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . (!empty($sActiveSkin) ? $sActiveSkin : $this->getActiveSkin()) . "/" . $subPasta . "/{$sArquivo}";
 
     if (file_exists($sPath)) {
-      //return $sPath;
+      return $sPath;
     }
 
     $sPath = $_SERVER['DOCUMENT_ROOT'] . "/" . self::SKINS_BASE . $this->sSkinDefault . "/" .$subPasta . "/{$sArquivo}";

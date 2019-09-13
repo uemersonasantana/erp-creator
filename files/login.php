@@ -6,25 +6,23 @@ error_reporting(E_ALL ^ E_WARNING);
 //  A função autoload é utilizada no PHP para fazer o carregamento automático das classes.
 require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 
-$db_conecta     =   new libs\db_conecta; 
-$db_stdlib      =   new libs\db_stdlib;
-$db_funcoes     =   new dbforms\db_funcoes; 
-$oSkin          =   new libs\Services_Skins;
-
+$db_conecta             =   new libs\db_conecta(1); 
+$db_stdlib              =   new libs\db_stdlib;
+$db_funcoes             =   new dbforms\db_funcoes; 
+$Services_Skins                  =   new libs\Services_Skins;
+$Services_Funcoes       =   new libs\Services_Funcoes;
 $db_valida_requisitos   =   new libs\db_valida_requisitos(DB_VALIDA_REQUISITOS);
 
-
-
 //  BEGIN: HTML
-include $oSkin->getPathFile('dashboard','html_start.php');
+include $Services_Skins->getPathFile('dashboard','html_start.php');
     //  BEGIN: Head
-    include $oSkin->getPathFile('dashboard','head.php');
+    include $Services_Skins->getPathFile('dashboard','head.php');
     //  END: Head
 
     //  BEGIN: Body
-    include $oSkin->getPathFile('login','body_start.php');
+    include $Services_Skins->getPathFile('login','body_start.php');
         //  BEGIN: Content
-        include $oSkin->getPathFile('login','body_content_start.php');
+        include $Services_Skins->getPathFile('login','body_content_start.php');
 
             //  ----Páginas que será carregada-----
 
@@ -35,24 +33,34 @@ include $oSkin->getPathFile('dashboard','html_start.php');
                             <div class="card border-grey border-lighten-3 px-1 py-1 m-0">
                                 <div class="card-header border-0">
                                     <div class="text-center mb-1">
-                                        <img src="<?php echo $oSkin->getSkinLink(); ?>app-assets/images/logo/logo.png" alt="branding logo">
+                                        <img src="<?php echo $Services_Skins->getSkinLink(); ?>app-assets/images/logo/logo.png" alt="branding logo">
                                     </div>
-                                    <div class="font-large-1  text-center">
-                                        Member Login
-                                    </div>
+
+                                    
                                 </div>
+                                <div class="card-content">
+                                    <div id="carregando" class="col-md-4 col-sm-6 col-12 fonticon-container" style="display:none;">
+                                        <div class="fonticon-wrap icon-shadow icon-shadow-primary">
+                                            <i class="ft-loader"></i>
+                                        </div>
+                                    </div>
+                                    <div id="msg_erro" class="alert alert-danger mb-2" role="alert" style="cursor:pointer;display:none;" title="Clique para fechar AVISO" onclick="$(this).hide();">
+                                        </div>
+                                </div>
+                                
+
                                 <div class="card-content">
 
                                     <div class="card-body">
-                                        <form class="form-horizontal" action="index.html" novalidate>
+                                        <form class="form-horizontal" id="login" action="javascript: formularios_dinamicos('#login', '<?php echo $Services_Funcoes->url_acesso(); ?>files/rpc/login.RPC.php', '#carregando', '#msg_erro', 's', '');" novalidate>
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="text" class="form-control round" id="user-name" placeholder="Informe seu login" required>
+                                                <input type="text" class="form-control round" id="DB_login" name="DB_login" placeholder="Informe seu login" required>
                                                 <div class="form-control-position">
                                                     <i class="ft-user"></i>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="password" class="form-control round" id="user-password" placeholder="Informe sua senha" required>
+                                                <input type="password" class="form-control round" id="DB_login" name="DB_senha" placeholder="Informe sua senha" required>
                                                 <div class="form-control-position">
                                                     <i class="ft-lock"></i>
                                                 </div>
@@ -82,14 +90,10 @@ include $oSkin->getPathFile('dashboard','html_start.php');
                     </div>
                 </section>
     <?php
-        include $oSkin->getPathFile('login','body_content_end.php');
-
-        //  BEGIN: Header
-        include $oSkin->getPathFile('login','body_footer.php');
-        //  END: Header
+        include $Services_Skins->getPathFile('login','body_content_end.php');
 
     //  END: Body
-    include $oSkin->getPathFile('login','body_end.php'); 
+    include $Services_Skins->getPathFile('login','body_end.php'); 
 
 //  END: HTML
-include $oSkin->getPathFile('dashboard','html_end.php'); 
+include $Services_Skins->getPathFile('dashboard','html_end.php'); 

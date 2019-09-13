@@ -19,8 +19,16 @@ public function url_acesso() {
 	if ( $_SERVER['SERVER_NAME'] == 'uas.lan' ) {
 		return 'http://uas.lan/';
 	} else {
-		return 'http://'.$_SERVER['SERVER_NAME'].'/sistema/';
+		return 'http://'.$_SERVER['SERVER_NAME'].'/';
 	}
+}
+
+public function url_acesso_in() {
+  if ( $_SERVER['SERVER_NAME'] == 'uas.lan' ) {
+    return 'http://uas.lan/in/';
+  } else {
+    return 'http://'.$_SERVER['SERVER_NAME'].'/in/';
+  }
 }
 
 /**
@@ -97,5 +105,38 @@ public function redireciona($url) {
   echo "<script>location.href='$url'</script>\n";
   exit;
 }
+
+//  Redireciona para uma url com mensagem de retorno.
+public function redireciona_msgretorno($url, $msg, $tagclassOrig = 'alert-danger', $tagclassDest = 'alert-success') {
+  echo "<script type=\"text/javascript\">
+        $('#msg_erro').hide();
+        $('#msg_erro').html('".$msg."');
+        $('#msg_erro').removeClass('".$tagclassOrig."').addClass('".$tagclassDest."');
+        $('.modal-footer').hide();
+        $('#msg_erro').show('30', function () {
+          //  Delay adicionado para o usuário visualizar nitidaente a mensagem informando que o produto foi cadastrado.
+          setTimeout(function(){
+              window.open('$url','_self');
+          }, 1000);
+          });
+      </script>";
+  exit;
+}
+
+//  Converte $_GET/$_POST em string
+public function convert_post_string($valores) {
+  $sAuth  =   '';
+  $i      =    0;
+  foreach ($valores as $key => $value) {
+      $sAuth .= htmlspecialchars($key)."=".htmlspecialchars($value);
+
+      $i++;
+      if ( $i < count($valores) ) {
+        $sAuth .= "&";
+      }
+  }
+  return $sAuth;
+}
+  
 
 }

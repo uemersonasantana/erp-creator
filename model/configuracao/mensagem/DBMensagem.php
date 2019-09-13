@@ -50,16 +50,17 @@ class DBMensagem {
    */
   public static function getFile($sArquivo) {
 
-    if (!isset(DBMensagem::getInstance()->aFile[$sArquivo])) {
+    if (!isset(self::getInstance()->aFile[$sArquivo])) {
 
-      $sNomeArquivo = "mensagens/{$sArquivo}";
+      $sNomeArquivo = $_SERVER['DOCUMENT_ROOT'] . "/mensagem/{$sArquivo}";
+      
       if (!file_exists($sNomeArquivo)) {
         // ATENCAO
-        //throw new FileException("Arquivo de mensagens '{$sNomeArquivo}' não existe no sistema");
+        throw new \Exception("Arquivo de mensagens '{$sNomeArquivo}' não existe no sistema");
       }
-      DBMensagem::getInstance()->aFile[$sArquivo] = file_get_contents($sNomeArquivo);
+      self::getInstance()->aFile[$sArquivo] = file_get_contents($sNomeArquivo);
     }
-    $sArquivo = DBMensagem::getInstance()->aFile[$sArquivo];
+    $sArquivo = self::getInstance()->aFile[$sArquivo];
 
     //metodo que abre o associacoes
     return $sArquivo;
@@ -89,15 +90,15 @@ class DBMensagem {
     $sNomeArquivo          = $aPartesArquivo[$iTamanhoPartesArquivo - 2];
     $sNomeMensagem         = $aPartesArquivo[$iTamanhoPartesArquivo - 1];
     $sCaminhoArquivo       = implode("/", array_slice($aPartesArquivo, 0, $iTamanhoPartesArquivo - 1)).".json";
-    $sArquivo              = DBMensagem::getInstance()->getFile($sCaminhoArquivo);
-    $oJsonArquivo          = $oJson->parse($sArquivo, Services_JSON::UTF8_DECODE);
+    $sArquivo              = self::getInstance()->getFile($sCaminhoArquivo);
+    $oJsonArquivo          = $oJson->parse($sArquivo,'');
     $sMensagem             = 'Ocorreu um erro inesperado. Contate suporte.';
 
     if (isset($oJsonArquivo->{$sNomeMensagem})) {
 
       $sMensagem = $oJsonArquivo->{$sNomeMensagem};
       if (!empty($aOpcoes)) {
-        $sMensagem = DBMensagem::getInstance()->aplicarVariaveis($sMensagem, $aOpcoes);
+        $sMensagem = self::getInstance()->aplicarVariaveis($sMensagem, $aOpcoes);
       }
 
     }
@@ -158,7 +159,7 @@ class DBMensagem {
 
   /**
    * Adiciona um novo arquivo ao arquivo de associações (associacoes.json)
-   * Ex: DBMensagem::associarArquivo("patrimonial/protocolo/prot4_processodocumento001.json", 1234);
+   * Ex: self::associarArquivo("patrimonial/protocolo/prot4_processodocumento001.json", 1234);
    * @param string  - Caminho completo do arquivo .json
    * @param integer - Código do Menu Acessado
    */

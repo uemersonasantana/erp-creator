@@ -19,7 +19,7 @@ class PreferenciaUsuario {
   /**
    * Caminhos para o arquivo JSON contendo as mensagens utilizadas na função _M
    */
-  const MENSAGENS = 'configuracao.configuracao.preferenciaUsuario.';
+  const MENSAGENS = 'configuracao.preferenciaUsuario.';
 
   /**
    * Nome do arquivo a ser salvo
@@ -88,7 +88,7 @@ class PreferenciaUsuario {
 
       $sPreferencias = file_get_contents( PreferenciaUsuario::CAMINHO_ARQUIVO . $this->sNomeArquivo );
       $oPreferencias = json_decode($sPreferencias);
-
+      
       $this->sOrdencao          = $oPreferencias->ordenacao;
       $this->sExibeBusca        = $oPreferencias->busca;
       
@@ -267,8 +267,8 @@ class PreferenciaUsuario {
     /**
      * Salva o skin no cookie
      */
-    $oSkin = new SkinService();
-    $oSkin->setCookie();
+    $Services_Skins = new SkinService();
+    $Services_Skins->setCookie();
 
     return true;
   }

@@ -11536,19 +11536,19 @@ define("tinymce/html/Schema", [
 			attributes = attributes || "";
 
 			if (typeof children === "string") {
-				children = split(children);
+				children = explode(children);
 			}
 
 			// Split string children
 			for (i = 3; i < args.length; i++) {
 				if (typeof args[i] === "string") {
-					args[i] = split(args[i]);
+					args[i] = explode(args[i]);
 				}
 
 				children.push.apply(children, args[i]);
 			}
 
-			name = split(name);
+			name = explode(name);
 			ni = name.length;
 			while (ni--) {
 				attributesOrder = [].concat(globalAttributes, split(attributes));
@@ -11563,9 +11563,9 @@ define("tinymce/html/Schema", [
 		function addAttrs(name, attributes) {
 			var ni, schemaItem, i, l;
 
-			name = split(name);
+			name = explode(name);
 			ni = name.length;
-			attributes = split(attributes);
+			attributes = explode(attributes);
 			while (ni--) {
 				schemaItem = schema[name[ni]];
 				for (i = 0, l = attributes.length; i < l; i++) {
@@ -11581,10 +11581,10 @@ define("tinymce/html/Schema", [
 		}
 
 		// Attributes present on all elements
-		globalAttributes = split("id accesskey class dir lang style tabindex title");
+		globalAttributes = explode("id accesskey class dir lang style tabindex title");
 
 		// Event attributes can be opt-in/opt-out
-		/*eventAttributes = split("onabort onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange " +
+		/*eventAttributes = explode("onabort onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange " +
 				"ondblclick ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended " +
 				"onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart " +
 				"onmousedown onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange " +
@@ -11593,12 +11593,12 @@ define("tinymce/html/Schema", [
 		);*/
 
 		// Block content elements
-		blockContent = split(
+		blockContent = explode(
 			"address blockquote div dl fieldset form h1 h2 h3 h4 h5 h6 hr menu ol p pre table ul"
 		);
 
 		// Phrasing content elements from the HTML5 spec (inline)
-		phrasingContent = split(
+		phrasingContent = explode(
 			"a abbr b bdo br button cite code del dfn em embed i iframe img input ins kbd " +
 			"label map noscript object q s samp script select small span strong sub sup " +
 			"textarea u var #text #comment"
@@ -11617,14 +11617,14 @@ define("tinymce/html/Schema", [
 		if (type != "html5-strict") {
 			globalAttributes.push("xml:lang");
 
-			html4PhrasingContent = split("acronym applet basefont big font strike tt");
+			html4PhrasingContent = explode("acronym applet basefont big font strike tt");
 			phrasingContent.push.apply(phrasingContent, html4PhrasingContent);
 
 			each(html4PhrasingContent, function(name) {
 				add(name, "", phrasingContent);
 			});
 
-			html4BlockContent = split("center dir isindex noframes");
+			html4BlockContent = explode("center dir isindex noframes");
 			blockContent.push.apply(blockContent, html4BlockContent);
 
 			// Flow content elements from the HTML5 spec (block+inline)
@@ -11899,7 +11899,7 @@ define("tinymce/html/Schema", [
 
 			if (validElements) {
 				// Split valid elements into an array with rules
-				validElements = split(validElements, ',');
+				validElements = explode(validElements, ',');
 
 				if (elements['@']) {
 					globalAttributes = elements['@'].attributes;
@@ -11952,7 +11952,7 @@ define("tinymce/html/Schema", [
 
 						// Attributes defined
 						if (attrData) {
-							attrData = split(attrData, '|');
+							attrData = explode(attrData, '|');
 							for (ai = 0, al = attrData.length; ai < al; ai++) {
 								matches = attrRuleRegExp.exec(attrData[ai]);
 								if (matches) {
@@ -12163,7 +12163,7 @@ define("tinymce/html/Schema", [
 			// Switch these on HTML4
 			if (settings.schema != "html5") {
 				each(split('strong/b em/i'), function(item) {
-					item = split(item, '/');
+					item = explode(item, '/');
 					elements[item[1]].outputName = item[0];
 				});
 			}

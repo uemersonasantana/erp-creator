@@ -687,7 +687,7 @@ function db_selectrecord($nome, $record, $dbcadastro, $db_opcao = 3, $js_script 
 
 				if ($todos != "") {
 					if (strpos($todos, "-") > 0)
-						$todos = split("-", $todos);
+						$todos = explode("-", $todos);
 					else
 						$todos = array ("0" => $todos, "1" => "Todos ...");
 					?>

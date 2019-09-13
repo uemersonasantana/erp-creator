@@ -353,7 +353,7 @@ class UsuarioSistema {
    */
   public function getUsuarioByLogin($sLoginUsuario) {
 
-    $sSqlBuscaDadosUsuario = "select * from configuracoes.db_usuarios where login = '{$sLoginUsuario}'";
+    $sSqlBuscaDadosUsuario = "SELECT * FROM configuracoes.db_usuarios WHERE login = '{$sLoginUsuario}'";
     $rsExecutaBusca        = db_stdlib::db_query($sSqlBuscaDadosUsuario);
     $iLinhasBusca          = $rsExecutaBusca->rowCount();
 
