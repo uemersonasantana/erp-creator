@@ -271,6 +271,5 @@ if( $rsVersao->db30_codversao != $db_fonte_codversao || $rsVersao->db30_codrelea
 
 $db_stdlib->db_logsmanual_demais("Acesso Liberado ao sistema - Login: " . $db_stdlib->db_getsession("DB_login"), $db_stdlib->db_getsession("DB_id_usuario"));
 
-$Services_Funcoes->redireciona_msgretorno($Services_Funcoes->url_acesso() . "in/instit", 'Login feito com sucesso!');
-
+$Services_Funcoes->redireciona_msgretorno($Services_Funcoes->url_acesso() . "in/instituicoes", 'Login feito com sucesso!');
 }

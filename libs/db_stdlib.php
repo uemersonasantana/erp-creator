@@ -24,6 +24,12 @@ set_time_limit(0);
 class db_stdlib
 {
 
+public function __construct(){
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+}
+
 /***
  *
  * Funcao para montar uma string com o backtrace do PHP **SEM PARAMETROS***
@@ -92,8 +98,8 @@ static function db_query($param1, $param2=null, $param3="SQL"){
     }
 
     $dbresult = db_conecta::prepare($dbsql);
-
     $dbresult->execute();
+    
     if (!$dbresult) {
       $dbresult = $dbresult->errorInfo();
     }
@@ -2109,7 +2115,7 @@ function db_logsmanual($string = '', $modulo = 0, $item = 0, $codcam = 0, $chave
   }
 }
 
-function db_logsmanual_demais($string = '', $id_usuario=0, $modulo = 0, $item = 0, $coddepto = 0, $instit = 0) {
+static function db_logsmanual_demais($string = '', $id_usuario=0, $modulo = 0, $item = 0, $coddepto = 0, $instit = 0) {
   $db_ip = $_SERVER['REMOTE_ADDR'];
 
   $sql = "INSERT INTO db_logsacessa VALUES (nextval('db_logsacessa_codsequen_seq'),'$db_ip','".date("Y-m-d")."','".date("H:i:s")."','".$_SERVER["REQUEST_URI"]."','$string',$id_usuario,$modulo,$item,$coddepto,$instit)";
@@ -3243,7 +3249,7 @@ function urlencode_all($entrada) {
   return DBString::urlencode_all($entrada);
 }
 
-/***
+/**
  *
  * Funcao para pegar um último ID (PostgreSQL)
  *
@@ -3251,5 +3257,44 @@ function urlencode_all($entrada) {
 public static function lastInsertId() {
   return db_conecta::lastInsertId();
 }
- 
+
+
+/**
+ *
+ * Funcao para registrar atividade na tabela db_usuariosonline.
+ *
+ */
+public function log_db_usuariosonline($tipo, $msg) {
+  
+  $hora = time();
+  $ip   = $_SERVER['REMOTE_ADDR'];
+
+
+  if ( $tipo == 'insert' ) {
+    self::db_query("INSERT INTO 
+                                db_usuariosonline 
+                          VALUES 
+                              ( ".self::db_getsession("DB_id_usuario")."
+                                ,".$hora."
+                                ,'".$ip."'
+                                ,'".self::db_getsession("DB_login")."'
+                                ,'".$msg."'          
+                                ,''
+                                ,".$hora."
+                                ,' ')");
+  } else if ( $tipo == 'update' ) {
+    self::db_query("UPDATE 
+                            db_usuariosonline
+                        SET 
+                            uol_arquivo = ''
+                            ,uol_modulo = '".$msg."'
+                            ,uol_inativo = ".time()."
+                        WHERE uol_id = ".self::db_getsession("DB_id_usuario")."
+                            and uol_ip = '".$ip."'
+                            and uol_hora = ".self::db_getsession("DB_uol_hora")) or die("Erro(26) atualizando db_usuariosonline");
+  }
+  
+}
+
+
 }

@@ -623,7 +623,7 @@ function db_multiploselect($valueobj,$descrobj, $objnsel="", $objsel="", $record
 }
 
 
-function db_selectrecord($nome, $record, $dbcadastro, $db_opcao = 3, $js_script = "", $nomevar = "", $bgcolor = "", $todos = "", $onchange = "", $numcol = 2) {
+function db_selectrecord($nomeFormulario, $nome, $record, $dbcadastro, $db_opcao = 3, $js_script = "", $nomevar = "", $bgcolor = "", $todos = "", $onchange = "", $numcol = 2) {
 	//#00#//db_selectrecord
 	//#10#//Função para montar um ou dois objetos select na tela, recebendo dados de um recordset
 	//#15#//db_selectrecord($nome,$record,$dbcadastro,$db_opcao=3,$js_script="",$nomevar="",$bgcolor="",$todos="",$onchange="",$numcol=2);
@@ -651,6 +651,8 @@ function db_selectrecord($nome, $record, $dbcadastro, $db_opcao = 3, $js_script 
 	//#99#//Após montar o select, sistema executa uma função javascript para selecionar o elemento
 	//#99#//do select que possui o mesmo valor do campo indicado na variável Nome
 	if ($db_opcao != 3 && $db_opcao != 5 && $db_opcao != 22 && $db_opcao != 33 && $db_opcao != 11) {
+		$record_temp = $record->fetchAll();
+
 		if ($nomevar != "") {
 			$nome = $nomevar;
 			$nomedescr = $nomevar."descr";
@@ -659,8 +661,8 @@ function db_selectrecord($nome, $record, $dbcadastro, $db_opcao = 3, $js_script 
 		}
 		if ($numcol == 2) {
 			?>
-			<select name="<?=$nome?>" id="<?=$nome?>"
-				<?
+			<select name="<?php echo $nome; ?>" id="<?php echo $nome; ?>"
+				<?php
 
 
 
@@ -668,141 +670,116 @@ function db_selectrecord($nome, $record, $dbcadastro, $db_opcao = 3, $js_script 
 					echo "onchange=\"js_ProcCod_$nome('$nome','$nomedescr');$onchange\"";
 				else
 					echo "onchange=\"$onchange\"";
-				if ($dbcadastro == true) {
-					if ($db_opcao == 3 || $db_opcao == 22 || $db_opcao == 11) {
+				if ( $dbcadastro == true ) {
+					if ( $db_opcao == 3 || $db_opcao == 22 || $db_opcao == 11 ) {
 						echo " readonly ";
 						if ($bgcolor == "")
 							$bgcolor = "#DEB887";
 					}
-					if ($db_opcao == 5) {
+					if ( $db_opcao == 5 ) {
 						echo " disabled ";
 					}
 				}
 				echo $js_script;
 				?>
 			>
-				<?
-
-
-
-				if ($todos != "") {
+				<?php
+				if ( $todos != "" ) {
 					if (strpos($todos, "-") > 0)
 						$todos = explode("-", $todos);
 					else
 						$todos = array ("0" => $todos, "1" => "Todos ...");
 					?>
-					<option value="<?=$todos[0]?>" ><?=$todos[0]?></option>
-					<?
-
-
-
+					<option value="<?php echo $todos[0]; ?>" ><?php echo $todos[0]; ?></option>
+					<?php
 				}
+
 				$iTotalRegistros = 0;
 				if ($record) {
-					$iTotalRegistros = pg_num_rows($record);
+					$iTotalRegistros = $record->rowCount();
 				}
-				for ($sqli = 0; $sqli < $iTotalRegistros; $sqli ++) {
-					$sqlv = pg_result($record, $sqli, 0);
+				
+				for ( $i = 0; $i < $iTotalRegistros; $i++ ) {
+					$comp_tmp = ( $_SESSION['DB_coddepto'] == $record_temp[$i]->coddepto ? 'selected' : "");
 					?>
-					<option value="<?=$sqlv?>" <?=(@$GLOBALS[$nome]==$sqlv?"selected":"")?>><?=$sqlv?></option>
-					<?
+						<option value="<?php echo $record_temp[$i]->coddepto; ?>" <?php echo $comp_tmp; ?>>
+							<?php echo $record_temp[$i]->coddepto; ?>
+						</option>
+					<?php
 				}
 				?>
 			</select>
-			<?
-
-
-
+			<?php
 		} else {
 			$nomedescr = $nome;
 		}
-		if ($record != false && pg_numrows($record) > 0 && pg_numfields($record) > 0) {
+		if ( $record != false and $record->rowCount() > 0 and $record->columnCount() > 0 ) {
 			?>
-			<select name="<?=$nomedescr?>" id="<?=$nomedescr?>"
-							onchange="js_ProcCod_<?=$nome?>('<?=$nomedescr?>','<?=$nome?>');<?=$onchange?>"
-				<?
+			<select name="<?php echo $nomedescr; ?>" id="<?php echo $nomedescr; ?>"
+							onchange="js_ProcCod_<?php echo $nome; ?>('<?php echo $nomedescr; ?>','<?php echo $nome; ?>'); <?php echo $onchange; ?>"
+				<?php
 
-
-				if ($dbcadastro == true) {
-					if ($db_opcao == 3 || $db_opcao == 22) {
+				if ( $dbcadastro == true ) {
+					if ( $db_opcao == 3 || $db_opcao == 22 ) {
 						echo " readonly ";
-						if ($bgcolor == "")
+						if ( $bgcolor == "" )
 							$bgcolor = "#DEB887";
 
 					}
-					if ($db_opcao == 5) {
+					if ( $db_opcao == 5 ) {
 						echo " disabled ";
 					}
 				}
 				echo $js_script;
 				?>
 			>
-				<?
-
-
-
-				if (is_array($todos) || $todos != "") {
+				<?php
+				if ( is_array($todos) || $todos != "" ) {
 					?>
-					<option value="<?=$todos[0]?>" ><?=$todos[1]?></option>
-					<?
-
-
-
+					<option value="<?php echo $todos[0]; ?>" ><?php echo $todos[1]; ?></option>
+					<?php
 				}
-				for ($sqli = 0; $sqli < pg_numrows($record); $sqli ++) {
-					$sqlv = pg_result($record, $sqli, 0);
-					$sqlv1 = pg_result($record, $sqli, 1);
+
+				$iTotalRegistros = 0;
+				if ($record) {
+					$iTotalRegistros = $record->rowCount();
+				}
+
+				for ( $i = 0; $i < $iTotalRegistros; $i++ ) {
 					?>
-					<option value="<?=$sqlv?>" ><?=$sqlv1?></option>
-					<?
-
-
-
+					<option value="<?php echo $record_temp[$i]->coddepto; ?>" ><?php echo $record_temp[$i]->descrdepto; ?></option>
+					<?php
 				}
 				?>
 			</select>
-			<script>
-				function js_ProcCod_<?=$nome?>(proc,res) {
-					var sel1 = document.forms[0].elements[proc];
-					var sel2 = document.forms[0].elements[res];
-					for(var i = 0;i < sel1.options.length;i++) {
-						if(sel1.options[sel1.selectedIndex].value == sel2.options[i].value)
-							sel2.options[i].selected = true;
+			<script language="JavaScript" type="text/javascript">
+					function js_ProcCod_<?php echo $nome; ?>(proc,res) {
+						var sel1 = document.forms['<?php echo $nomeFormulario; ?>'].elements[proc];
+						var sel2 = document.forms['<?php echo $nomeFormulario; ?>'].elements[res];
+						
+						for(var i = 0;i < sel1.options.length;i++) {
+							if(sel1.options[sel1.selectedIndex].value == sel2.options[i].value)
+								sel2.options[i].selected = true;
+						}
 					}
-				}
-				<?
-
-
-
-				if (isset ($GLOBALS[$nome])) {
-					if ($GLOBALS[$nome] != "") {
-						echo "var sel1 = document.form1.$nome;\n";
-						echo "for(var i = 0;i < sel1.options.length;i++) {\n";
-						echo "  if(sel1.options[i].value == '".$GLOBALS[$nome]."')\n";
-						echo "  sel1.options[i].selected = true;\n";
-						echo "}\n";
-					} else {
-						echo "document.forms[0].".$nome.".options[0].selected = true;";
-					}
-				} else {
-					echo "document.forms[0].".$nome.".options[0].selected = true;";
-				}
-				?>
-				js_ProcCod_<?=$nome?>('<?=$nome?>','<?=$nomedescr?>');
+					// self executing function here
+					(function() {
+					   // your page initialization code here
+					   // the DOM will be available here
+					   js_ProcCod_<?php echo $nome; ?>('<?php echo $nome; ?>','<?php echo $nomedescr; ?>');
+					})();
 			</script>
-			<?
-
-
+			<?php
 
 		} else {
 			?>
 			<script>
-				function js_ProcCod_<?=$nome?>(){
+				function js_ProcCod_<?php echo $nome; ?>(){
 				}
 			</script>
-			<?
+			<?php
 		}
-	} else {
+	} else { 
 		$clrot = new rotulocampo;
 		$clrot->label("$nome");
 		$tamm = "M$nome";
@@ -817,7 +794,7 @@ function db_selectrecord($nome, $record, $dbcadastro, $db_opcao = 3, $js_script 
 
 		if(is_resource($record)){
 			for ($sqli = 0; $sqli < pg_numrows($record); $sqli ++) {
-				if (pg_result($record, $sqli, 0) == @ $GLOBALS[$nome]) {
+				if (pg_result($record, $sqli, 0) == @ $_SESSION['descrdepto']) {
 					$nomec = pg_fieldname($record, 1);
 					global $$nomec;
 					$$nomec = pg_result($record, $sqli, 1);

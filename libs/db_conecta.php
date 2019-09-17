@@ -42,6 +42,10 @@ class db_conecta extends db_stdlib
   private static $instance;
 
   public function __construct( $naoconecta = 0 ) {
+    if (!isset($_SESSION)) {
+      session_start();
+    }
+    
     if ( $naoconecta == 0 ) {
       self::conecta();
       //self::val_sessao();
@@ -70,11 +74,7 @@ class db_conecta extends db_stdlib
     return self::getInstance()->lastInsertId();
   }
 
-  private function conecta() {
-
-    if (!isset($_SESSION)) {
-      session_start();
-    }    
+  private function conecta() {    
     /**
      * Habilita acesso apenas para usuarios do e-cidade usuext = 0 negando para:
      * 1 - Usuário Externo

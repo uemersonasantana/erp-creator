@@ -1,18 +1,15 @@
 <?php
 
-$_SESSION["DB_itemmenu_acessado"] 	=	"0";
+/**
+ *
+ * Funcao para registrar atividade na tabela db_usuariosonline.
+ *
+ */
+$db_stdlib->log_db_usuariosonline('update','Selecionando Área');
 
-$db_stdlib->db_query("UPDATE 
-                            db_usuariosonline
-                        SET 
-                            uol_arquivo = ''
-                            ,uol_modulo = 'Selecionando Área'
-                            ,uol_inativo = ".time()."
-                        WHERE uol_id = ".$db_stdlib->db_getsession("DB_id_usuario")."
-                            and uol_ip = '".$_SERVER['REMOTE_ADDR']."'
-                            and uol_hora = ".$db_stdlib->db_getsession("DB_uol_hora")) or die("Erro(26) atualizando db_usuariosonline");
 
-$rsInstituicao = $db_stdlib->db_query("SELECT nomeinst as nome, ender, telef, cep, email, url FROM db_config WHERE codigo = ".$db_stdlib->db_getsession("DB_instit"));
+$rsInstituicao = $db_stdlib->db_query("select nomeinst as nome,ender,telef,cep,email,url from db_config where codigo = ".$db_stdlib->db_getsession("DB_instit"));
+
 
 if( $db_stdlib->db_getsession("DB_id_usuario") == "1" || $db_stdlib->db_getsession("DB_administrador") == 1 ) {
     $rsArea = $db_stdlib->db_query("SELECT 
@@ -41,7 +38,7 @@ if( $db_stdlib->db_getsession("DB_id_usuario") == "1" || $db_stdlib->db_getsessi
 								                           where i.itemativo = 1
 								                             and p.id_usuario = ".$db_stdlib->db_getsession("DB_id_usuario")."
 								                             and p.id_instit = ".$db_stdlib->db_getsession("DB_instit")." 
-								                             and p.anousu = ".(isset($HTTP_SESSION_VARS["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))." 
+								                             and p.anousu = ".(isset($_SESSION["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))." 
 								                         ) as i           
 								                         inner join db_modulos m on m.id_item = i.id_modulo
 								                         inner join db_itensmenu it on it.id_item = i.id_modulo
@@ -63,7 +60,7 @@ if( $db_stdlib->db_getsession("DB_id_usuario") == "1" || $db_stdlib->db_getsessi
 																where i.itemativo = 1
 																and h.id_usuario = ".$db_stdlib->db_getsession("DB_id_usuario")."
 																and p.id_instit = ".$db_stdlib->db_getsession("DB_instit")." 
-																and p.anousu = ".(isset($HTTP_SESSION_VARS["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))." 
+																and p.anousu = ".(isset($_SESSION["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))." 
 																) as i            
 												        		
 												        		inner join db_modulos m on m.id_item = i.id_modulo

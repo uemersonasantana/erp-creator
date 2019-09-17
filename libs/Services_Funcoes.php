@@ -137,6 +137,40 @@ public function convert_post_string($valores) {
   }
   return $sAuth;
 }
+
+/**
+ * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
+ */
+public function cabecalho_pagina($pagina, $instit, $area_de_acesso) {
   
+  $_SESSION["DB_itemmenu_acessado"] = "0";
+
+  if( !isset($_SESSION["DB_instit"]) ) {
+    
+    if ( isset($instit) ) {
+      db_stdlib::db_putsession("DB_instit",$instit);
+    } else {
+      // Caso não esteja selecionado uma instituição e o usuário tentar acessar as áreas.
+      self::redireciona(self::url_acesso_in() . "instituicoes");
+      exit();
+    }
+    db_stdlib::db_logsmanual_demais(
+                                      "Acesso instituição - Login: ".db_stdlib::db_getsession("DB_login")
+                                      ,db_stdlib::db_getsession("DB_id_usuario")
+                                      ,0
+                                      ,0
+                                      ,0
+                                      ,( $instit > 0 ? $instit : db_stdlib::db_getsession("DB_instit") )
+                                    );
+  } 
+
+  if( db_stdlib::db_getsession("DB_instit") == "" ) {
+    db_stdlib::db_erro("Instituição não selecionada.",0);
+  }
+
+  if( isset($area_de_acesso) and !isset($_SESSION['DB_Area']) ){
+    db_stdlib::db_putsession("DB_Area", $area_de_acesso);
+  }
+}
 
 }

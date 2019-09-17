@@ -1,59 +1,13 @@
 <?php
 
-$_SESSION["DB_itemmenu_acessado"] 	=	"0";
-
-$db_stdlib->db_query("UPDATE 
-                            db_usuariosonline
-                        SET 
-                            uol_arquivo = ''
-                            ,uol_modulo = 'Selecionando Módulo'
-                            ,uol_inativo = ".time()."
-                        WHERE uol_id = ".$db_stdlib->db_getsession("DB_id_usuario")."
-                            and uol_ip = '".$_SERVER['REMOTE_ADDR']."'
-                            and uol_hora = ".$db_stdlib->db_getsession("DB_uol_hora")) or die("Erro(26) atualizando db_usuariosonline");
-
-if( !empty($DB_SELLER) ){ 
-	if( !empty($_SESSION["DB_SELLER"]) ) {
-		$db_stdlib->db_putsession("DB_SELLER","on");
-	}
-	if( !empty($_SESSION["DB_NBASE"]) ) {
-		$db_stdlib->db_putsession("DB_NBASE",$DB_BASE);
-	}
-} else if( isset($_SESSION["DB_NBASE"]) ) {
-	unset($_SESSION["DB_NBASE"]);
-}
-
-//	Converte a string em variáveis
-if ( isset($get) ) {
-	parse_str(base64_decode($get));
-}
-
-if( !isset($_SESSION["DB_instit"]) ) {
-	if ( isset($instit) ) {
-		$db_stdlib->db_putsession("DB_instit",$instit);
-	} else {
-		// Caso não esteja selecionado uma instituição e o usuário tentar acessar as áreas.
-		echo "<script>location.href='instit';</script>";
-		exit;
-	}
-
-  	$db_stdlib->db_logsmanual_demais("Acesso instituição - Login: ".$db_stdlib->db_getsession("DB_login"),$db_stdlib->db_getsession("DB_id_usuario"),0,0,0,$db_stdlib->db_getsession("DB_instit"));
-} else {  
-  if( isset($area_de_acesso) ){
-  	$db_stdlib->db_putsession("DB_Area",$area_de_acesso);
-  }
-
-}
-
-if( $db_stdlib->db_getsession("DB_instit") == "" ) {
-	$db_stdlib->db_erro("Instituição não selecionada.",0);
-}
+/**
+ *
+ * Funcao para registrar atividade na tabela db_usuariosonline.
+ *
+ */
+$db_stdlib->log_db_usuariosonline('update','Selecionando Módulo');
 
 $rsInstituicao = $db_stdlib->db_query("select nomeinst as nome,ender,telef,cep,email,url from db_config where codigo = ".$db_stdlib->db_getsession("DB_instit"));
-
-if(	isset($_SESSION["DB_Area"]) )	{
-	$area_de_acesso = $db_stdlib->db_getsession("DB_Area");
-}
 
 if ( $db_stdlib->db_getsession("DB_id_usuario") == 1 || $db_stdlib->db_getsession("DB_administrador") == 1 ) {
   	$sSqlmodulos = "SELECT 
@@ -102,8 +56,8 @@ if ( $db_stdlib->db_getsession("DB_id_usuario") == 1 || $db_stdlib->db_getsessio
 											          where i.itemativo = 1
 												          and p.id_usuario = ".$db_stdlib->db_getsession("DB_id_usuario")."
 												          and p.id_instit = ".$db_stdlib->db_getsession("DB_instit")."
-												          and (p.anousu = ".(isset($HTTP_SESSION_VARS["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))."
-												           or  p.anousu = ".(isset($HTTP_SESSION_VARS["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))."+1)
+												          and (p.anousu = ".(isset($_SESSION["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))."
+												           or  p.anousu = ".(isset($_SESSION["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))."+1)
 											        ) as i
 								                    inner join db_modulos m on m.id_item = i.id_modulo
 								        			inner join db_itensmenu it on it.id_item = i.id_modulo
@@ -136,7 +90,7 @@ if ( $db_stdlib->db_getsession("DB_id_usuario") == 1 || $db_stdlib->db_getsessio
 									         	i.itemativo = 1
 									         	and h.id_usuario = ".$db_stdlib->db_getsession("DB_id_usuario")."
 										        and p.id_instit = ".$db_stdlib->db_getsession("DB_instit")."
-										        and (p.anousu = ".(isset($HTTP_SESSION_VARS["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))." or  p.anousu = ".(isset($HTTP_SESSION_VARS["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))."+1)
+										        and (p.anousu = ".(isset($_SESSION["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))." or  p.anousu = ".(isset($_SESSION["DB_datausu"])?date("Y",$db_stdlib->db_getsession("DB_datausu")):date("Y"))."+1)
 									       ) as i
 										    inner join db_modulos m on m.id_item = i.id_modulo
 										    inner join db_itensmenu it on it.id_item = i.id_modulo
@@ -185,7 +139,7 @@ if ( $iNumRowsModulos == 0 ) {
 
             echo "
                     <div class=\"col-xl-3 col-md-6 col-sm-12\">
-                        <a title='".$linha->help."' href=\"".$Services_Funcoes->url_acesso_in()."modulo.php?".base64_encode("anousu=".$linha->anousu."&modulo=".$linha->id_item."&nomemod=".$linha->nome_modulo)."\">
+                        <a title='".$linha->help."' href=\"".$Services_Funcoes->url_acesso_in()."modulo/".base64_encode("instit=".$db_stdlib->db_getsession("DB_instit")."&area_de_acesso=".$db_stdlib->db_getsession("DB_Area"). "&anousu=".$linha->anousu."&modulo=".$linha->id_item."&nomemod=".$linha->nome_modulo)."\">
                             <div class=\"card text-white box-shadow-0 bg-info\">
                                 <div class=\"card-content collapse show\">
                                     <div class=\"card-body text-center\">

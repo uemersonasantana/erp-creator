@@ -11,40 +11,111 @@ $db_stdlib          =   new libs\db_stdlib;
 $Services_Funcoes   =   new libs\Services_Funcoes;
 $Services_Skins     =   new libs\Services_Skins;
 
+
+//  Variáveis que serão usadas no sistema.
+$DB_SELLER  =   DB_SELLER;
+$hora       =   time();
+
+/**
+ * Salva o skin no cookie
+ */
+$Services_Skins->setCookie();
+
+
 //  Converte a string em variáveis
 $sAuth  = $Services_Funcoes->convert_post_string($_GET);
 if (isset($sAuth)) {
     parse_str($sAuth);
 }
 
-$hora = time();
+/**
+ * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
+ */
+$db_stdlib->log_db_usuariosonline('insert','Entrou no sistema');
 
-$db_stdlib->db_query("INSERT INTO 
-                                db_usuariosonline 
-                            
-                            VALUES 
-                                ( ".$db_stdlib->db_getsession("DB_id_usuario")."
-                                    ,".$hora."
-                                    ,'".$_SERVER['REMOTE_ADDR']."'
-                                    ,'".$db_stdlib->db_getsession("DB_login")."'
-                                    ,'Entrou no sistema'          
-                                    ,''
-                                    ,".time()."
-                                    ,' ')");
 
 $db_stdlib->db_putsession("DB_uol_hora", $hora);
 
+/**
+ * Carrega informações do usuário.
+ */
 $result = $db_stdlib->db_query("SELECT nome, login, administrador FROM db_usuarios WHERE id_usuario = ".$db_stdlib->db_getsession("DB_id_usuario"));
 
 $oDadosUsuario = $result->fetch();
 
+/**
+ *  Converte a string em variáveis.
+ *  Focado nas páginas: Instituições, Áreas, Módulos e Módulo.
+ */ 
+if ( isset($get) ) {
+    parse_str(base64_decode($get));
+}
 
-$DB_SELLER  =   DB_SELLER;
+if( !empty($DB_SELLER) ){ 
+    if( !empty($_SESSION["DB_SELLER"]) ) {
+        $db_stdlib->db_putsession("DB_SELLER","on");
+    }
+    if( !empty($_SESSION["DB_NBASE"]) ) {
+        $db_stdlib->db_putsession("DB_NBASE",DB_BASE);
+    }
+} else if( isset($_SESSION["DB_NBASE"]) ) {
+    unset($_SESSION["DB_NBASE"]);
+}
 
 /**
- * Salva o skin no cookie
+ * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
  */
-$Services_Skins->setCookie();
+if ( $pagina != 'instituicoes' ) {
+    if ( !isset($instit) and isset($_SESSION['DB_instit']) ) {
+        $instit = $_SESSION['DB_instit'];
+    }
+
+    if ( !isset($area_de_acesso) and isset($_SESSION['DB_Area']) ) {
+        $area_de_acesso = $_SESSION['DB_Area'];
+    }
+
+    $Services_Funcoes->cabecalho_pagina($pagina, (isset($instit) ? $instit : null), (isset($area_de_acesso) ? $area_de_acesso : null) );
+}
+
+
+if(isset($modulo) and is_numeric($modulo)){
+
+  $sSqlAreaModulo   =   " SELECT at26_codarea FROM atendcadareamod WHERE at26_id_item = $modulo ";
+  $rsSqlAreaModulo  =   $db_stdlib->db_query($sSqlAreaModulo);
+
+  $iNumAreaModulo   =   $rsSqlAreaModulo->rowCount();
+
+  if($iNumAreaModulo > 0){
+    $rsSqlAreaModulo    =   $rsSqlAreaModulo->fetch();
+    $db_stdlib->db_putsession("DB_Area",$rsSqlAreaModulo->at26_codarea);
+  }
+}
+
+$db_stdlib->db_putsession( "DB_datausu",time() );
+
+if ( count($_POST) > 0 ) {
+    //  Converte $_POST string em variáveis
+    $sPOST  = $Services_Funcoes->convert_post_string($_POST);
+    if (isset($sPOST)) {
+        parse_str($sPOST);
+    }
+}
+
+if( !isset($formAnousu) and isset($modulo) ) {
+    $db_stdlib->db_putsession("DB_modulo"           ,   $modulo);
+    $db_stdlib->db_putsession("DB_nome_modulo"      ,   $nomemod);
+    $db_stdlib->db_putsession("DB_anousu"           ,   $anousu);
+} else if(  isset($formAnousu) and $formAnousu != "" ) {
+    $db_stdlib->db_putsession("DB_anousu"           ,   $formAnousu);
+}
+
+//  Se o exercício não for selecionado no módulo, está acessando o módulo.
+if( !isset($formAnousu) and isset($modulo) ) {
+  //  Se o ano da data do exercício for diferente do anousu registrado, o sistema utiliza como padrão o anousu da data.
+  if( $db_stdlib->db_getsession("DB_anousu") != date("Y",$db_stdlib->db_getsession("DB_datausu")) ){
+    $db_stdlib->db_putsession("DB_anousu" , date("Y",$db_stdlib->db_getsession("DB_datausu")) );
+  }
+}
 
 //  BEGIN: HTML
 include $Services_Skins->getPathFile('dashboard','html_start.php');
@@ -76,11 +147,12 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
             //  END: Content Body
             include $Services_Skins->getPathFile('dashboard','body_content_body_end.php');
 
+        //  END: Content
         include $Services_Skins->getPathFile('dashboard','body_content_end.php');
 
-        //  BEGIN: Header
+        //  BEGIN: Footer
         include $Services_Skins->getPathFile('dashboard','body_footer.php');
-        //  END: Header
+        //  END: Footer
 
     //  END: Body
     include $Services_Skins->getPathFile('dashboard','body_end.php'); 

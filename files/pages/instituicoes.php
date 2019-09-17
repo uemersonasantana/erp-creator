@@ -1,6 +1,11 @@
 <?php
 
-$_SESSION["DB_itemmenu_acessado"] 	=	"0";
+/**
+ * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
+ */
+$db_stdlib->log_db_usuariosonline('udpate','Selecionando Instituição');
+
+
 $sDataSistema   					= 	date('Y-m-d', $db_stdlib->db_getsession("DB_datausu", false) ?: time());
 $iUsuarioLogado 					=	$db_stdlib->db_getsession("DB_id_usuario");
 
@@ -13,16 +18,6 @@ if ( !$oUsuario->isAtualizado() && ( !isset($_SESSION['DB_atualiza_cadastro']) |
   exit;
 }
 */
-
-$db_stdlib->db_query("UPDATE 
-                            db_usuariosonline
-                        SET 
-                            uol_arquivo = ''
-                            ,uol_modulo = 'Selecionando Instituição'
-                            ,uol_inativo = ".time()."
-                        WHERE uol_id = ".$db_stdlib->db_getsession("DB_id_usuario")."
-                            and uol_ip = '".$_SERVER['REMOTE_ADDR']."'
-                            and uol_hora = ".$db_stdlib->db_getsession("DB_uol_hora")) or die("Erro(26) atualizando db_usuariosonline");
 
 
 $sSqlInstit =  "SELECT 
@@ -54,7 +49,6 @@ $sSqlInstit =   "SELECT
 $rsInstituicoes = $db_stdlib->db_query( $sSqlInstit );
 
 ?>
-
 <div class="row">
     <?php 
         //  Se tiver somente uma instituição o sistema redireciona automaticamente para o area.
