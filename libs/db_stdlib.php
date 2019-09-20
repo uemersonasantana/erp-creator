@@ -960,8 +960,8 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
   //#99#//Exemplo:
   //#99#//db_fieldsmemory($result,0);
   //#99#//Cria todas as variáveis com o conteúdo de cada uma sendo o valor do campo
-  $fm_numfields = pg_numfields($recordset);
-  $fm_numrows = pg_numrows($recordset);
+  $fm_numfields = $recordset->columnCount();
+  $fm_numrows   = $recordset->rowCount();
   //if(pg_numrows($recordset)==0){
   // echo "RecordSet Vazio: <br>";
   // for ($i = 0;$i < $fm_numfields;$i++){
@@ -969,18 +969,15 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
   // }
   // exit;
   // }
-  for ($i = 0; $i < $fm_numfields; $i ++) {
-    $matriz[$i] = pg_fieldname($recordset, $i);
-    //if($fm_numrows==0){
-    //  $aux = trim(pg_result($recordset,$indice,$matriz[$i]));
-    //  echo "Record set vazio->".$aux;
-    //  continue;
-    //}
+  $result = $recordset->fetchAll();
 
-    global ${$matriz[$i]};
-    $aux = trim(pg_result($recordset, $indice, $matriz[$i]));
-    if (($formatar != '')) {
-      switch (pg_fieldtype($recordset, $i)) {
+  for ($i = 0; $i < $fm_numfields; $i ++) {
+    $nomeCampo  = $recordset->getColumnMeta($i)['name'];
+
+    $aux = $result[$indice]->$nomeCampo;
+
+    if ( ($formatar != '') ) {
+      switch ( $recordset->getColumnMeta($nomeCampo)['native_type'] ) {
         case "float8" :
         case "float4" :
         case "float" :
@@ -988,57 +985,55 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
           if (empty($aux) ){
             $aux = 0;
           }
-          $$matriz[$i] = number_format($aux, 2, ".", "");
+          $valor = number_format($aux, 2, ".", "");
           if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+            echo $nomeCampo ."->".$valor."<br>";
           break;
         case "date" :
           if ($aux != "") {
-            $data = split("-", $aux);
-            $$matriz[$i] = $data[2]."/".$data[1]."/".$data[0];
+            $data = explode("-", $aux);
+            $valor = $data[2]."/".$data[1]."/".$data[0];
           } else {
-            $$matriz[$i] = "";
+            $valor = "";
           }
           if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+            echo $nomeCampo."->".$valor."<br>";
           break;
         default :
-          $$matriz[$i] = stripslashes($aux);
+          $valor = stripslashes($aux);
           if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+            echo $nomeCampo."->".$valor."<br>";
           break;
       }
-    } else
-      switch (pg_fieldtype($recordset, $i)) {
+    } else {
+      switch ( $recordset->getColumnMeta($nomeCampo)['native_type'] ) {
         case "date" :
-          $datav = split("-", $aux);
-          $split_data = $matriz[$i]."_dia";
-          global $$split_data;
-          $$split_data = @ $datav[2];
+          $datav = explode("-", $aux);
+          
+          $GLOBALS[ $nomeCampo."_dia" ]  =  @$datav[2];
           if ($mostravar == true)
-            echo $split_data."->".$$split_data."<br";
-          $split_data = $matriz[$i]."_mes";
-          global $$split_data;
-          $$split_data = @ $datav[1];
+            echo $nomeCampo."->".@$datav[2]."<br";
+          
+          $GLOBALS[ $nomeCampo."_mes" ]  =  @$datav[1];
           if ($mostravar == true)
             echo $split_data."->".$$split_data."<br>";
-          $split_data = $matriz[$i]."_ano";
-          global $$split_data;
-          $$split_data = @ $datav[0];
+
+          $GLOBALS[ $nomeCampo."_ano" ]  =  @$datav[0];
           if ($mostravar == true)
-            echo $split_data."->".$$split_data."<br>";
-          $$matriz[$i] = $aux;
+            echo $nomeCampo."->".@$datav[0]."<br>";
+          
+          $GLOBALS[ $nomeCampo ]  = $aux;
           if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+            echo $nomeCampo."->".$aux."<br>";
+          
           break;
         default :
-          $$matriz[$i] = stripslashes($aux);
+          $GLOBALS[ $nomeCampo ]  = stripslashes($aux);
           if ($mostravar == true)
-            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+            echo $nomeCampo."->".stripslashes($aux)."<br>";
           break;
       }
-
-    //          echo $matriz[$i] . " - " . pg_fieldtype($recordset,$i) . " - " . $aux . " - " . gettype($$matriz[$i]) . "<br>";
+    }
 
   }
 
@@ -1361,7 +1356,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
       $Dd2 = "disabled";
     }
   }
-
+  
   if( isset( $_POST["nova_quantidade_linhas"] ) && $_POST["nova_quantidade_linhas"] != '' ) {
 
     $_POST["nova_quantidade_linhas"] = $_POST["nova_quantidade_linhas"] + 0;
@@ -1794,11 +1789,17 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   //cria nome da funcao com parametros
   if( $arquivo == "()" ) {
 
-    $arrayFuncao                = explode( "\|", $aonde );
+    $arrayFuncao                = explode( "|", $aonde );
     $quantidadeItemsArrayFuncao = sizeof( $arrayFuncao );
   }
 
   $result2  = $result->fetchAll();
+
+
+  for( $j = 0; $j < $NumFields; $j ++ ) {
+    $campoCodigo  = $result->getColumnMeta($j)['name'];
+    break;
+  }
 
   /********************************/
   /****** escreve o corpo *********/
@@ -1826,10 +1827,8 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
             }
           }
 
-
-
           $loop     .= $caracter . "'";
-          $loop     .= addslashes( str_replace( '"', '', @pg_result( $result, $i, ( strlen( $arrayFuncao[$cont] ) < 4 ? (int) $arrayFuncao[$cont] : $arrayFuncao[$cont] ) ) ) ) . "'";
+          $loop     .= $result2[$i]->$campoCodigo . "'";
           $caracter  = ",";
         }
 
