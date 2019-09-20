@@ -23,7 +23,7 @@ public function url_acesso() {
 	}
 }
 
-public function url_acesso_in() {
+static public function url_acesso_in() {
   if ( $_SERVER['SERVER_NAME'] == 'uas.lan' ) {
     return 'http://uas.lan/in/';
   } else {

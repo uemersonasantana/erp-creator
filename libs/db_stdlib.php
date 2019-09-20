@@ -69,7 +69,7 @@ static function db_query($param1, $param2=null, $param3="SQL"){
   $lMostraBackTrace = false;
   $sBackTrace = "";
   if ($lMostraBackTrace) { 
-    $sBackTrace = db_stdlib::db_debug_backtrace();
+    $sBackTrace = self::db_debug_backtrace();
   }
 
   $lExecutaAccount = true;
@@ -535,11 +535,11 @@ function db_getMaxSizeField($recordset, $campo = 0) {
   }
   return (int) $val;
 }
-//Pega um vetor e cria variaveis globais pelo indice do vetor
+//  Pega um vetor e cria variáveis globais pelo índice do vetor.
 //atualiza a classe dos arquivos
 function db_postmemory($vetor, $verNomeIndices = 0) {
   //#00#//db_postmemory
-  //#10#//Esta funcao cria as veriáveis que são passadas por POST no array $HTTP_POST_VARS do apache
+  //#10#//Esta funcao cria as variáveis que são passadas por POST no array $HTTP_POST_VARS do apache
   //#15#//db_postmemory($vetor,$verNomeIndices = 0);
   //#20#//vetor         : Array que será pesquisado
   //#20#//verNomeIndice : 1 - para gerar as variáveis
@@ -554,8 +554,8 @@ function db_postmemory($vetor, $verNomeIndices = 0) {
     echo "<br><br>\n";
   for ($i = 0; $i < $tam_vetor; $i ++) {
     $matriz[$i] = key($vetor);
-    global ${$matriz[$i]};
-    $$matriz[$i] = $vetor[$matriz[$i]];
+    $GLOBALS[$matriz[$i]] = $vetor[$matriz[$i]];
+
     if ($verNomeIndices == 1)
       echo "$".$matriz[$i]."<br>\n";
     else
@@ -886,6 +886,164 @@ function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreen
   return false;
 }
 
+//Cria variaveis globais para a instituição passada
+//Se instituição não for passada, buscará dados da instituição do db_getsession
+//Retorna false se tiver problemas na execução do sql e numrows caso sql esteja correto (0 se não encontrar instituição e 1 caso encontre)
+function db_sel_instit($instit=null,$campos=" * "){
+  if($instit == null || trim($instit) == ""){
+    $instit = db_getsession("DB_instit");
+  }
+  if(trim($campos) == ""){
+    $campos = " * ";
+  }
+  $record_config = db_query("select ".$campos."
+                            from db_config
+                                 left join db_tipoinstit on db21_codtipo = db21_tipoinstit
+                            where codigo = ".$instit);
+  if($record_config == false){
+    return false;
+  }else{
+    $num_rows = pg_numrows($record_config);
+    if($num_rows > 0){
+      $num_cols = pg_numfields($record_config);
+      for($index=0; $index<$num_cols; $index++){
+        $nam_campo = pg_fieldname($record_config, $index);
+        global $$nam_campo;
+        $$nam_campo = pg_result($record_config, 0, $nam_campo);
+      }
+    }
+  }
+  return $num_rows;
+}
+
+//Cria variaveis globais para usuário passado
+//Se o usuário não for passado, buscará dados do usuário do db_getsession
+//Retorna false se tiver problemas na execução do sql e numrows caso sql esteja correto (0 se não encontrar o usuário e 1 caso encontre)
+function db_sel_usuario($usuario=null,$campos=" * "){
+  if($usuario == null || trim($usuario) == ""){
+    $usuario = db_getsession("DB_id_usuario");
+  }
+  if(trim($campos) == ""){
+    $campos = " * ";
+  }
+  $record_usuarios = db_query("select ".$campos."
+                            from db_usuarios
+                            where id_usuario = ".$usuario);
+  if($record_usuarios == false){
+    return false;
+  }else{
+    $num_rows = pg_numrows($record_usuarios);
+    if($num_rows > 0){
+      $num_cols = pg_numfields($record_usuarios);
+      for($index=0; $index<$num_cols; $index++){
+        $nam_campo = pg_fieldname($record_usuarios, $index);
+        global $$nam_campo;
+        $$nam_campo = pg_result($record_usuarios, 0, $nam_campo);
+      }
+    }
+  }
+  return $num_rows;
+}
+
+//  Cria variáveis globais de todos os campos do recordset no indice $indice
+function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false) {
+  //#00#//db_fieldsmemory
+  //#10#//Esta funcao cria as variáveis de uma determinada linha de um record set, sendo o nome da variável
+  //#10#//o nome do campo no record set e seu conteúdo o conteúdo da variável
+  //#15#//db_fieldsmemory($recordset,$indice,$formatar="",$mostravar=false);
+  //#20#//Record Set        : Record set que será pesquisado
+  //#20#//Indice            : Número da linha (índice) que será caregada as funções
+  //#20#//Formatar          : Se formata as variáveis conforme o tipo no banco de dados
+  //#20#//                    true = Formatar      false = Não Formatar (Padrão = false)
+  //#20#//Mostrar Variáveis : Mostrar na tela as variáveis que estão sendo geradas
+  //#99#//Esta função é bastante utilizada quando se faz um for para percorrer um record set.
+  //#99#//Exemplo:
+  //#99#//db_fieldsmemory($result,0);
+  //#99#//Cria todas as variáveis com o conteúdo de cada uma sendo o valor do campo
+  $fm_numfields = pg_numfields($recordset);
+  $fm_numrows = pg_numrows($recordset);
+  //if(pg_numrows($recordset)==0){
+  // echo "RecordSet Vazio: <br>";
+  // for ($i = 0;$i < $fm_numfields;$i++){
+  //    echo pg_fieldname($recordset,$i)."<br>";
+  // }
+  // exit;
+  // }
+  for ($i = 0; $i < $fm_numfields; $i ++) {
+    $matriz[$i] = pg_fieldname($recordset, $i);
+    //if($fm_numrows==0){
+    //  $aux = trim(pg_result($recordset,$indice,$matriz[$i]));
+    //  echo "Record set vazio->".$aux;
+    //  continue;
+    //}
+
+    global ${$matriz[$i]};
+    $aux = trim(pg_result($recordset, $indice, $matriz[$i]));
+    if (($formatar != '')) {
+      switch (pg_fieldtype($recordset, $i)) {
+        case "float8" :
+        case "float4" :
+        case "float" :
+
+          if (empty($aux) ){
+            $aux = 0;
+          }
+          $$matriz[$i] = number_format($aux, 2, ".", "");
+          if ($mostravar == true)
+            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+          break;
+        case "date" :
+          if ($aux != "") {
+            $data = split("-", $aux);
+            $$matriz[$i] = $data[2]."/".$data[1]."/".$data[0];
+          } else {
+            $$matriz[$i] = "";
+          }
+          if ($mostravar == true)
+            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+          break;
+        default :
+          $$matriz[$i] = stripslashes($aux);
+          if ($mostravar == true)
+            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+          break;
+      }
+    } else
+      switch (pg_fieldtype($recordset, $i)) {
+        case "date" :
+          $datav = split("-", $aux);
+          $split_data = $matriz[$i]."_dia";
+          global $$split_data;
+          $$split_data = @ $datav[2];
+          if ($mostravar == true)
+            echo $split_data."->".$$split_data."<br";
+          $split_data = $matriz[$i]."_mes";
+          global $$split_data;
+          $$split_data = @ $datav[1];
+          if ($mostravar == true)
+            echo $split_data."->".$$split_data."<br>";
+          $split_data = $matriz[$i]."_ano";
+          global $$split_data;
+          $$split_data = @ $datav[0];
+          if ($mostravar == true)
+            echo $split_data."->".$$split_data."<br>";
+          $$matriz[$i] = $aux;
+          if ($mostravar == true)
+            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+          break;
+        default :
+          $$matriz[$i] = stripslashes($aux);
+          if ($mostravar == true)
+            echo $matriz[$i]."->".$$matriz[$i]."<br>";
+          break;
+      }
+
+    //          echo $matriz[$i] . " - " . pg_fieldtype($recordset,$i) . " - " . $aux . " - " . gettype($$matriz[$i]) . "<br>";
+
+  }
+
+}
+
 //  Formata uma string pra cgc ou cpf
 function db_cgccpf($str) {
   if (strlen($str) == 14)
@@ -1027,7 +1185,7 @@ static function db_getsession($var = "0", $alertarExistencia = true) {
       return $_SESSION[$var];
     } else {
       if($alertarExistencia == true){
-        db_stdlib::db_msgbox('Variavel de sessão nao encontrada: '.$var);
+        self::db_msgbox('Variavel de sessão nao encontrada: '.$var);
       }
       return null;
     }
@@ -1036,9 +1194,9 @@ static function db_getsession($var = "0", $alertarExistencia = true) {
 
 //atualiza uma variável de sessao
 static function db_putsession($var, $valor) {
-  //#00#//db_stdlib::db_putsession
+  //#00#//self::db_putsession
   //#10#//Esta funcao inclui na sessão do php uma determinada variável
-  //#15#//db_stdlib::db_putsession($var,$valor)
+  //#15#//self::db_putsession($var,$valor)
   //#20#//Var   : Nome da variável que será incluida na sessão
   //#20#//valor : Valor da variável incluída
   $_SESSION[$var] = $valor;
@@ -1130,22 +1288,22 @@ function db_indexOf($str, $proc) {
  * @return mixed                      HTML com a estrutura do datagrid
  */
 function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_self", $campos_layer = "", $NomeForm = "NoMe", $variaveis_repassa = array (), $automatico = true, $totalizacao = array()) {
-
-  global $BrowSe;
+  //global $BrowSe;
   //cor do cabecalho
-  global $db_corcabec;
+  //global $db_corcabec;
   //cor de fundo de cada registro
-  global $cor1;
-  global $cor2;
-  global $_POST;
-  $db_corcabec   = $db_corcabec == "" ? "#CDCDFF" : $db_corcabec;
+  //global $cor1;
+  //global $cor2;
+  //global $_POST;
+  
+  $db_corcabec   = $GLOBALS['db_corcabec'] == "" ? "#e1e1e1" : $db_corcabec;
   $mensagem      = "Clique Aqui";
-  $cor1          = $cor1 == "" ? "#97B5E6" : $cor1;
-  $cor2          = $cor2 == "" ? "#E796A4" : $cor2;
+  $cor1          = $GLOBALS['cor1'] == "" ? "#ffffff" : $cor1;
+  $cor2          = $GLOBALS['cor2'] == "" ? "#e1dede" : $cor2;
   $tot_registros = "tot_registros".$NomeForm;
   $offset        = "offset".$NomeForm;
-  //recebe os valores do campo hidden
-
+  
+  //  Recebe os valores do campo hidden
   if( isset( $_POST["totreg".$NomeForm] ) ) {
     $$tot_registros = $_POST["totreg".$NomeForm];
   } else {
@@ -1190,14 +1348,14 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
       }
 
       reset($totalizacao);
-      $tot = self::db_query("select count(*),$total_campos from ($query) as temp");
+      $tot = self::db_query("SELECT count(*) as total, $total_campos FROM ($query) as temp");
     } else {
-      $tot = self::db_query("select count(*) from ($query) as temp");
+      $tot = self::db_query("SELECT count(*) as total FROM ($query) as temp");
     }
 
-    db_stdlib::db_putsession("dblov_query_inicial",$query);
+    self::db_putsession("dblov_query_inicial",$query);
 
-    $$tot_registros = pg_result($tot, 0, 0);
+    $$tot_registros = $tot->fetch()->total;
 
     if ( $$tot_registros == 0 ) {
       $Dd2 = "disabled";
@@ -1288,7 +1446,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
            */
           $sValorPesquisa    = $_POST["codigo_pesquisa"];
           $sWhere            = "nomecam = '{$_POST['campo_filtrado']}'";
-          $oDaoDbSysCampo    = new cl_db_syscampo();
+          $oDaoDbSysCampo    = new \classes\db_db_syscampo();
           $sSqlDaoDbSysCampo = $oDaoDbSysCampo->sql_query_file( null, 'conteudo', null, $sWhere );
           $rsDaoDbSysCampo   = self::db_query( $sSqlDaoDbSysCampo );
 
@@ -1339,7 +1497,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
   $query  .= " limit $numlinhas offset ".$$offset;
   $result  = self::db_query($query);
-  $NumRows = pg_numrows($result);
+  $NumRows = $result->rowCount();
 
   if( $NumRows == 0 ) {
 
@@ -1366,16 +1524,16 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
         }
 
         reset($totalizacao);
-        $tot = self::db_query( "select count(*),{$total_campos} from ({$query_anterior}) as temp" );
+        $tot = self::db_query( "SELECT count(*) as total,{$total_campos} FROM ({$query_anterior}) as temp" );
       } else {
-        $tot = self::db_query("select count(*) from ({$query_anterior}) as temp");
+        $tot = self::db_query("SELECT count(*) as total FROM ({$query_anterior}) as temp");
       }
 
-      $$tot_registros = pg_result($tot, 0, 0);
+      $$tot_registros = $tot->fetch()->total;
 
       $query       = $query_anterior . " limit $numlinhas offset " . $$offset;
       $result      = self::db_query($query);
-      $NumRows     = pg_numrows($result);
+      $NumRows     = $result->rowCount();
       $filtroquery = $query_anterior;
     }
   } else {
@@ -1403,12 +1561,12 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
         }
 
         reset($totalizacao);
-        $tot = self::db_query("select count(*),{$total_campos} from ({$query_novo_filtro}) as temp");
+        $tot = self::db_query("SELECT count(*) as total,{$total_campos} FROM ({$query_novo_filtro}) as temp");
       } else {
-        $tot = self::db_query("select count(*) from ({$query_novo_filtro}) as temp");
+        $tot = self::db_query("SELECT count(*) FROM ({$query_novo_filtro}) as temp");
       }
 
-      $$tot_registros = pg_result($tot, 0, 0);
+      $$tot_registros = $tot->fetch()->total;
 
       if ( $$tot_registros == 0 ) {
         $Dd2 = "disabled";
@@ -1416,7 +1574,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     }
   }
 
-  $NumFields = pg_numfields( $result );
+  $NumFields = $result->columnCount();
 
   if( ( $NumRows < $numlinhas ) && ( $numlinhas < ( $$tot_registros - $$offset - $numlinhas ) ) ) {
     $Dd1 = @ $Dd2 = "disabled";
@@ -1479,17 +1637,18 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
                   }
                 }
               </script>";
+
   echo $sScript;
 
-  $sHtml  = "<table id=\"TabDbLov\" class='DBLovrotTable' >";
+  $sHtml  = "<table class='table table-bordered table-responsive-lg' style='font-size:14px;margin:0;'>";
   /**** botoes de navegacao ********/
   $sHtml .= "  <tr>";
   $sHtml .= "    <td colspan=\"". ($NumFields +1)."\">";
   $sHtml .= "      <form name=\"navega_lov".$NomeForm."\" method=\"post\">";
-  $sHtml .= "        <input type=\"submit\" name=\"pri".$NomeForm."\"    value=\"Início\" ".@ $Dd1.">     ";
-  $sHtml .= "        <input type=\"submit\" name=\"ant".$NomeForm."\"    value=\"Anterior\" ".@ $Dd1.">   ";
-  $sHtml .= "        <input type=\"submit\" name=\"prox".$NomeForm."\"   value=\"Próximo\" ".@ $Dd2.">    ";
-  $sHtml .= "        <input type=\"submit\" name=\"ult".$NomeForm."\"    value=\"Último\" ".@ $Dd2.">     ";
+  $sHtml .= "        <input class=\"btn btn-sm btn-dark\" type=\"submit\" name=\"pri".$NomeForm."\"    value=\"Início\" ".@ $Dd1.">     ";
+  $sHtml .= "        <input class=\"btn btn-sm btn-dark\" type=\"submit\" name=\"ant".$NomeForm."\"    value=\"Anterior\" ".@ $Dd1.">   ";
+  $sHtml .= "        <input class=\"btn btn-sm btn-dark\" type=\"submit\" name=\"prox".$NomeForm."\"   value=\"Próximo\" ".@ $Dd2.">    ";
+  $sHtml .= "        <input class=\"btn btn-sm btn-dark\" type=\"submit\" name=\"ult".$NomeForm."\"    value=\"Último\" ".@ $Dd2.">     ";
   $sHtml .= "        <input type=\"hidden\" name=\"offset".$NomeForm."\" value=\"".@ $$offset."\">        ";
   $sHtml .= "        <input type=\"hidden\" name=\"totreg".$NomeForm."\" value=\"".@ $$tot_registros."\"> ";
   $sHtml .= "        <input type=\"hidden\" name=\"codigo_pesquisa\"     value=\"\">                      ";
@@ -1569,9 +1728,9 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
   if( $NumRows > 0 ) {
 
-    $sHtml .= "Foram retornados <label class='DBLovrotNumeroRegistros'> ". $$tot_registros . "</label> registros.";
-    $sHtml .= " Mostrando de <label class='DBLovrotNumeroRegistros'>" . (@$$offset +1)." </label> até";
-    $sHtml .= "<label class='DBLovrotNumeroRegistros'> ";
+    $sHtml .= "Foram retornados <label> ". $$tot_registros . "</label> registros.";
+    $sHtml .= " Mostrando de <label>" . (@$$offset +1)." </label> até";
+    $sHtml .= "<label> ";
     $sHtml .= ($$tot_registros < (@ $$offset + $numlinhas) ? ($NumRows <= $numlinhas ? $$tot_registros : $NumRows) : ($$offset + $numlinhas));
     $sHtml .= "</label>.";
   } else {
@@ -1594,7 +1753,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     if ( $campos_layer != "" ) {
 
       $campo_layerexe = explode( "\|", $campos_layer );
-      $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"Executa Procedimento Específico.\" class='DBLovrotClique'>";
+      $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"Executa Procedimento Específico.\">";
       $sHtml .= "  Clique";
       $sHtml .= "</td>";
     }
@@ -1603,26 +1762,27 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
     for ( $i = 0; $i < $NumFields; $i ++ ) {
 
-      if( strlen( strstr( pg_fieldname( $result, $i ), "db_") ) == 0 ) {
 
-        $clrotulocab->label( pg_fieldname( $result, $i) );
-        $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"".$clrotulocab->title."\" class = 'DBLovrotTdCabecalho'> ";
-        $sHtml .= "  <input name=\"" . pg_fieldname( $result, $i ) . "\" ";
+      if( strlen( strstr( $result->getColumnMeta($i)['name'], "db_") ) == 0 ) {
+
+        $clrotulocab->label( $result->getColumnMeta($i)['name'] );
+        $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"".$clrotulocab->title."\" style=\"padding-top:0;padding-bottom:0;\"> ";
+        $sHtml .= "  <input name=\"" . $result->getColumnMeta($i)['name'] . "\" ";
         $sHtml .= "         value=\"" . ucfirst( $clrotulocab->titulo ) . "\" ";
         $sHtml .= "         type=\"button\" ";
         $sHtml .= "         onclick=\"js_troca_ordem( 'navega_lov" . $NomeForm . "', ";
-        $sHtml .= "                                   'ordem_dblov" . pg_fieldname( $result, $i ) . "', ";
-        $sHtml .= "                                   '" . pg_fieldname( $result, $i ) . "');\" ";
-        $sHtml .= "         class='DBLovrotInputCabecalho'>";
+        $sHtml .= "                                   'ordem_dblov" . $result->getColumnMeta($i)['name'] . "', ";
+        $sHtml .= "                                   '" . $result->getColumnMeta($i)['name'] . "');\" ";
+        $sHtml .= "        >";
         $sHtml .= "</td>";
 
       } else {
 
-        if( strlen( strstr( pg_fieldname( $result, $i ), "db_m_" ) ) != 0 ) {
+        if( strlen( strstr( $result->getColumnMeta($i)['name'], "db_m_" ) ) != 0 ) {
           $sHtml .= "<td bgcolor=\"$db_corcabec\" ";
-          $sHtml .= "    title=\"" . substr( pg_fieldname( $result, $i ), 5 ) . "\" ";
-          $sHtml .= "    class = 'DBLovrotTdCabecalho'> ";
-          $sHtml .= "  <b><u>" . substr( pg_fieldname( $result, $i ), 5 ) . "</u></b> ";
+          $sHtml .= "    title=\"" . substr( $result->getColumnMeta($i)['name'], 5 ) . "\" ";
+          $sHtml .= "    > ";
+          $sHtml .= "  <b><u>" . substr( $result->getColumnMeta($i)['name'], 5 ) . "</u></b> ";
           $sHtml .= "</td>";
         }
       }
@@ -1637,6 +1797,8 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     $arrayFuncao                = explode( "\|", $aonde );
     $quantidadeItemsArrayFuncao = sizeof( $arrayFuncao );
   }
+
+  $result2  = $result->fetchAll();
 
   /********************************/
   /****** escreve o corpo *********/
@@ -1656,13 +1818,15 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
           if( strlen( $arrayFuncao[$cont] ) > 3 ) {
 
-            for( $luup = 0; $luup < pg_NumFields( $result ); $luup ++ ) {
+            for( $luup = 0; $luup < $result->columnCount(); $luup ++ ) {
 
-              if( pg_FieldName( $result, $luup ) == "db_".$arrayFuncao[$cont] ) {
+              if( $result->columnCount($luup) == "db_".$arrayFuncao[$cont] ) {
                 $arrayFuncao[$cont] = "db_".$arrayFuncao[$cont];
               }
             }
           }
+
+
 
           $loop     .= $caracter . "'";
           $loop     .= addslashes( str_replace( '"', '', @pg_result( $result, $i, ( strlen( $arrayFuncao[$cont] ) < 4 ? (int) $arrayFuncao[$cont] : $arrayFuncao[$cont] ) ) ) ) . "'";
@@ -1693,40 +1857,44 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
       $sHtml .= "</td>";
     }
 
+
     for( $j = 0; $j < $NumFields; $j ++ ) {
+      $nomeCampo        = $result->getColumnMeta($j)['name'];
+      $sHtmlCampos      = "";
+      $var_data         = "";
+      $lCampoTipoTexto  = false;
+      $lTipoEspecifico  = true;
+      $lPrefixoDb       = false;
+      
+      //print_r($result2[$i]);
 
-      $sHtmlCampos     = "";
-      $var_data        = "";
-      $lCampoTipoTexto = false;
-      $lTipoEspecifico = true;
-      $lPrefixoDb      = false;
+      if(    strlen( strstr( $result->getColumnMeta($j)['name'], "db_" ) ) == 0
+        || strlen( strstr( $result->getColumnMeta($j)['name'], "db_m_" ) ) != 0 ) {
 
-      if(    strlen( strstr( pg_fieldname( $result, $j ), "db_" ) ) == 0
-        || strlen( strstr( pg_fieldname( $result, $j ), "db_m_" ) ) != 0 ) {
+        if( $result->getColumnMeta($j)['native_type'] == "date") {
+          //  if( $result2[$i]->getColumnMeta($j)['name'] != "" ) {
+          if( $result->getColumnMeta($j)['name'] != "" ) {
 
-        if( pg_fieldtype( $result, $j ) == "date") {
-
-          if( pg_result( $result, $i, $j ) != "" ) {
-
-            $matriz_data = explode( "-", pg_result( $result, $i, $j ) );
+            $matriz_data = explode( "-", $result2[$i]->$nomeCampo );
             $var_data    = $matriz_data[2] . "/" . $matriz_data[1] . "/" . $matriz_data[0];
           } else {
             $var_data = "//";
           }
-        } else if( pg_fieldtype( $result, $j ) == "float8" || pg_fieldtype( $result, $j ) == "float4" || pg_fieldtype( $result, $j ) == "numeric" ) {
-          $var_data = db_formatar( pg_result( $result, $i, $j ), 'f', ' ');
-        } else if( pg_fieldtype( $result, $j ) == "bool" ) {
-          $var_data  = ( pg_result( $result, $i, $j ) == 'f' || pg_result( $result, $i, $j ) == '' ? 'Não' : 'Sim' );
-        } else if( pg_fieldtype( $result, $j ) == "text" ) {
+       
+        } else if( $result->getColumnMeta($j)['native_type'] == "float8" || $result->getColumnMeta($j)['native_type'] == "float4" || $result->getColumnMeta($j)['native_type'] == "numeric" ) {
+          $var_data = self::db_formatar( $result2[$i]->$nomeCampo, 'f', ' ');
+        
+        } else if( $result->getColumnMeta($j)['native_type'] == "bool" ) {
+          $var_data  = ( $result2[$i]->$nomeCampo == 'f' || $result->getColumnMeta($j)['native_type'] == '' ? 'Não' : 'Sim' );
+        } else if( $result->getColumnMeta($j)['native_type'] == "text" ) {
 
           $lCampoTipoTexto = true;
-          $var_data  = substr( pg_result( $result, $i, $j ), 0, 10 ) . "...";
+          $var_data  = substr( $result2[$i]->$nomeCampo, 0, 10 );
         } else {
-
           $lEncontrouResultado = true;
           $sTitulo             = "";
           $sLabel              = "";
-          $sCampo              = pg_fieldname( $result, $j );
+          $sCampo              = $result->getColumnMeta($j)['name'];
           $lTipoEspecifico     = false;
 
           switch( $sCampo ) {
@@ -1808,9 +1976,9 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
           }
 
           if( $lEncontrouResultado ) {
-            $sHtmlCampos = "<td id=\"I".$i.$j."\" class='DBLovrotRegistrosRetornados' bgcolor=\"$cor\"><a title='" . $sTitulo . "' onclick=\"js_JanelaAutomatica('" . $sLabel . "','". (trim(pg_result($result, $i, $j)))."');return false;\">&nbsp;Inf->&nbsp;</a>". ($arquivo != "" ? "<a title=\"$mensagem\" class='DBLovrotRegistrosRetornados' href=\"\" ". ($arquivo == "()" ? "OnClick=\"".$resultadoRetorno.";return false\">" : "onclick=\"JanBrowse = window.open('".$arquivo."?".base64_encode("retorno=". ($BrowSe == 1 ? $i : trim(pg_result($result, $i, 0))))."','$aonde','width=800,height=600');return false\">").trim(pg_result($result, $i, $j))."</a>" : (trim(pg_result($result, $i, $j))))."&nbsp;</td>\n";
+            $sHtmlCampos = "<td id=\"I".$i.$j."\" style=\"padding-top:0;padding-bottom:0;\" bgcolor=\"$cor\"><a title='" . $sTitulo . "' onclick=\"js_JanelaAutomatica('" . $sLabel . "','". (trim(pg_result($result, $i, $j)))."');return false;\">&nbsp;Inf->&nbsp;</a>". ($arquivo != "" ? "<a title=\"$mensagem\" class='DBLovrotRegistrosRetornados' href=\"\" ". ($arquivo == "()" ? "OnClick=\"".$resultadoRetorno.";return false\">" : "onclick=\"JanBrowse = window.open('".$arquivo."?".base64_encode("retorno=". ($BrowSe == 1 ? $i : trim(pg_result($result, $i, 0))))."','$aonde','width=800,height=600');return false\">").trim($result2[$i]->$nomeCampo)."</a>" : (trim($result2[$i]->$nomeCampo)))."&nbsp;</td>\n";
           } else {
-            $sHtmlCampos = "<td id=\"I".$i.$j."\" class='DBLovrotRegistrosRetornados' bgcolor=\"$cor\">". ($arquivo != "" ? "<a title=\"$mensagem\" class='DBLovrotRegistrosRetornados' href=\"\" ". ($arquivo == "()" ? "OnClick=\"".$resultadoRetorno.";return false\">" : "onclick=\"JanBrowse = window.open('".$arquivo."?".base64_encode("retorno=". ($BrowSe == 1 ? $i : trim(pg_result($result, $i, 0))))."','$aonde','width=800,height=600');return false\">").trim(pg_result($result, $i, $j))."</a>" : (trim(pg_result($result, $i, $j))))."&nbsp;</td>\n";
+            $sHtmlCampos = "<td id=\"I".$i.$j."\" style=\"padding-top:0;padding-bottom:0;\" bgcolor=\"$cor\">". ($arquivo != "" ? "<a title=\"$mensagem\" class='DBLovrotRegistrosRetornados' href=\"\" ". ($arquivo == "()" ? "OnClick=\"".$resultadoRetorno.";return false\">" : "onclick=\"JanBrowse = window.open('".$arquivo."?".base64_encode("retorno=". ($BrowSe == 1 ? $i : trim(pg_result($result, $i, 0))))."','$aonde','width=800,height=600');return false\">").trim($result2[$i]->$nomeCampo)."</a>" : (trim($result2[$i]->$nomeCampo)))."&nbsp;</td>\n";
           }
         }
       } else {
@@ -1825,28 +1993,27 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
         if( $lCampoTipoTexto ) {
 
-          $sHtmlCampos = "<td onMouseOver=\"js_mostra_text(true,'div_text_".$i."_".$j."',event);\"
+          $sHtmlCampos = "<td style=\"padding-top:0;padding-bottom:0;\" onMouseOver=\"js_mostra_text(true,'div_text_".$i."_".$j."',event);\"
                               onMouseOut=\"js_mostra_text(false,'div_text_".$i."_".$j."',event)\"
                               id=\"I" . $i . $j . "\"
-                              class='DBLovrotRegistrosRetornados'
                               bgcolor=\"$cor\">";
         } else {
-          $sHtmlCampos = "<td id=\"I".$i.$j."\" class='DBLovrotRegistrosRetornados' bgcolor=\"$cor\">";
+          $sHtmlCampos = "<td style=\"padding-top:0;padding-bottom:0;\" id=\"I".$i.$j."\" bgcolor=\"$cor\">";
         }
       }
 
       $sHtml .= $sHtmlCampos;
 
       if( $arquivo != "" ) {
-
-        $sHtml   .= "<a title=\"$mensagem\" class='DBLovrotRegistrosRetornados' ";
+        $mensagem2 = str_replace( "\n", "<br>", $result2[$i]->$nomeCampo );
+        $sHtml   .= "<a title=\"$mensagem2\" ";
         $sHtml   .= "  href=\"\" ". ($arquivo == "()" ? "OnClick=\"".$resultadoRetorno.";return false\">" : "onclick=\"JanBrowse = window.open('".$arquivo."?".base64_encode("retorno=". ($BrowSe == 1 ? $i : trim(pg_result($result, $i, 0))))."','$aonde','width=800,height=600');return false\">").trim($var_data);
         $sHtml   .= "</a>";
       } else {
         $sHtml .= trim($var_data);
       }
 
-      $sHtml .= "&nbsp;</td>";
+      $sHtml .= "</td>";
     }
 
     $sHtml .= "</tr>";
@@ -1857,32 +2024,30 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     $sHtml .= "<tr>";
     for( $j = 0; $j < $NumFields; $j ++ ) {
 
-      $key_elemento = array_search( pg_fieldname( $result, $j ), $totalizacao );
+      $key_elemento = array_search( $result->getColumnMeta($j)['name'], $totalizacao );
 
-      if(    $key_elemento == true
-        && pg_fieldname( $result, $j ) == $key_elemento
-        && strlen( strstr( pg_fieldname( $result, $j ), "db_" ) ) == 0 ) {
+      if( $key_elemento == true and $result->getColumnMeta($j)['name'] == $key_elemento and strlen( strstr( $result->getColumnMeta($j)['name'], "db_" ) ) == 0 ) {
 
         @$vertotrep = $_POST['totrep_'.$key_elemento];
 
         if( @$vertotrep != "" && !isset( $tot ) ) {
 
-          $sHtml .= "<td class='DBLovrotRegistrosRetornadosTotalizacao'>";
-          $sHtml .= $vertotrep."&nbsp;";
+          $sHtml .= "<td>";
+          $sHtml .= $vertotrep;
           $sHtml .= "</td>";
         } else if( isset( $tot ) ) {
 
-          $sHtml .= "<td class='DBLovrotRegistrosRetornadosTotalizacao'>";
-          $sHtml .= db_formatar( pg_result( $tot, 0, $key_elemento ), 'f' ) . "&nbsp;";
+          $sHtml .= "<td>";
+          $sHtml .= self::db_formatar( $tot->fetch()->$key_elemento, 'f' ) . "&nbsp;";
           $sHtml .= "</td>";
         } else {
-          $sHtml .= "<td class='DBLovrotRegistrosRetornadosTotalizacao'> &nbsp;</td>\n";
+          $sHtml .= "<td></td>\n";
         }
       } else {
 
         if( $key_elemento == 'totalgeral' ) {
-          $sHtml .=  "<td class='DBLovrotTdTotalGeral'> Total Geral : </td>";
-        } else if ( strlen( strstr( pg_fieldname( $result, $j ), "db_" ) ) == 0 ) {
+          $sHtml .=  "<td> Total Geral : </td>";
+        } else if ( strlen( strstr( $result->getColumnMeta($j)['name'], "db_" ) ) == 0 ) {
           $sHtml .=  "<td></td>";
         }
       }
@@ -1899,61 +2064,35 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     $sHtml .= "           type='button' ";
     $sHtml .= "           value='Recomeçar' ";
     $sHtml .= "           onclick=\"js_troca_ordem( 'navega_lov" . $NomeForm . "', 'recomecar', '0' );\">";
-    $sHtml .= "    <label class='DBLovrotBold'>Indique o Conteúdo:</label> ";
+    $sHtml .= "    <label for='indica_codigo' style='cursor:pointer;'>Indique o Conteúdo:</label> ";
     $sHtml .= "    <input title='Digite o valor a pesquisar e clique sobre o campo (cabeçalho) a pesquisar' ";
-    $sHtml .= "           name=indica_codigo ";
+    $sHtml .= "           id=indica_codigo name=indica_codigo ";
     $sHtml .= "           type=text ";
     $sHtml .= "           onchange='js_lanca_codigo_pesquisa( this.value )'";
-    $sHtml .= "           class = 'DBLovrotInputRodape'>";
-    $sHtml .= "    <label class='DBLovrotBold'>Quantidade a Listar:</label>";
+    $sHtml .= "           >";
+    $sHtml .= "    <label for='quant_lista' style='cursor:pointer;'>Quantidade a Listar:</label>";
     $sHtml .= "    <input id=quant_lista ";
     $sHtml .= "           name=quant_lista ";
     $sHtml .= "           type=text ";
     $sHtml .= "           onchange='js_nova_quantidade_linhas( this.value )'";
-    $sHtml .= "           class = 'DBLovrotInputRodape'";
+    $sHtml .= "           ";
     $sHtml .= "           value='$numlinhas' ";
     $sHtml .= "           size='5'>";
-    $sHtml .= "    <label class='DBLovrotBold'>Mostra Diferentes:</label>";
+    $sHtml .= "    <label for='mostra_diferentes' style='cursor:pointer;'>Mostra Diferentes:</label>";
     $sHtml .= "    <input title='Mostra os valores diferentes clicando no cabeçalho a pesquisar' ";
-    $sHtml .= "           name=mostra_diferentes ";
+    $sHtml .= "           id='mostra_diferentes' name=mostra_diferentes ";
     $sHtml .= "           type=checkbox ";
     $sHtml .= "           onchange='js_lanca_distinct_pesquisa()' ";
-    $sHtml .= "           class = 'DBLovrotInputRodape'>";
+    $sHtml .= "           >";
     $sHtml .= "  </td>";
     $sHtml .= "</tr>";
   }
 
   $sHtml .= "</table>";
 
-  for ( $i = 0; $i < $NumRows; $i ++ ) {
-
-    for ( $j = 0; $j < $NumFields; $j ++ ) {
-
-      if ( pg_fieldtype( $result, $j ) == "text" ) {
-
-        $clrotulocab->label( pg_fieldname( $result, $j ) );
-        $sHtml .= "<div id='div_text_".$i."_".$j."' ";
-        $sHtml .=       "class ='DBLovrotDivText' >";
-        $sHtml .= "  <table> ";
-        $sHtml .= "    <tr> ";
-        $sHtml .= "      <td align='left'> ";
-        $sHtml .= "       <label class='DBLovrotLabelDivTextTitulo'> ";
-        $sHtml .=            $clrotulocab->titulo . ":";
-        $sHtml .= "        </label><br> ";
-        $sHtml .= "        <label class='DBLovrotLabelDivTextDescricao'>";
-        $sHtml .=            str_replace( "\n", "<br>", pg_result( $result, $i, $j ) );
-        $sHtml .= "        </font> ";
-        $sHtml .= "      </td> ";
-        $sHtml .= "    </tr> ";
-        $sHtml .= "  </table> ";
-        $sHtml .= "</div>";
-      }
-    }
-  }
-
   if( $automatico == true ) {
 
-    if( pg_numrows( $result ) == 1 && $$offset == 0 ) {
+    if( $result->rowCount() == 1 && $$offset == 0 ) {
       $sHtml .= "<script>".@$resultadoRetorno."</script>";
     }
   }
@@ -2083,8 +2222,8 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
     $codsequen  = self::lastInsertId();
 
     // grava codigo na sessao
-    db_stdlib::db_putsession("DB_itemmenu_acessado",$item);
-    db_stdlib::db_putsession("DB_acessado",$codsequen);
+    self::db_putsession("DB_itemmenu_acessado",$item);
+    self::db_putsession("DB_acessado",$codsequen);
 
 
     $sql = "INSERT INTO db_logsacessa VALUES ($codsequen,

@@ -252,7 +252,7 @@ class db_db_usuarios {
        if(($resaco!=false)||($this->numrows!=0)){
 
          $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
-         $acount = pg_result($resac,0,0);
+         $acount = db_stdlib::lastInsertId();
          $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
          $resac = db_stdlib::db_query("insert into db_acountkey values($acount,568,'$this->id_usuario','I')");
          $resac = db_stdlib::db_query("insert into db_acount values($acount,109,568,'','".AddSlashes(pg_result($resaco,0,'id_usuario'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
@@ -423,7 +423,7 @@ class db_db_usuarios {
          for ($conresaco = 0; $conresaco < $this->numrows; $conresaco++) {
 
            $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
-           $acount = pg_result($resac,0,0);
+           $acount = db_stdlib::lastInsertId();
            $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
            $resac = db_stdlib::db_query("insert into db_acountkey values($acount,568,'$this->id_usuario','A')");
            if (isset($GLOBALS["HTTP_POST_VARS"]["id_usuario"]) || $this->id_usuario != "")
@@ -499,7 +499,7 @@ class db_db_usuarios {
          for ($iresaco = 0; $iresaco < $this->numrows; $iresaco++) {
 
            $resac  = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
-           $acount = pg_result($resac,0,0);
+           $acount = db_stdlib::lastInsertId();
            $resac  = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
            $resac  = db_stdlib::db_query("insert into db_acountkey values($acount,568,'$id_usuario','E')");
            $resac  = db_stdlib::db_query("insert into db_acount values($acount,109,568,'','".AddSlashes(pg_result($resaco,$iresaco,'id_usuario'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");

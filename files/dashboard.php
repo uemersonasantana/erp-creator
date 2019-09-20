@@ -22,11 +22,15 @@ $hora       =   time();
 $Services_Skins->setCookie();
 
 
-//  Converte a string em variáveis
-$sAuth  = $Services_Funcoes->convert_post_string($_GET);
-if (isset($sAuth)) {
+//  Pega um vetor e cria variáveis globais pelo índice do vetor.
+$db_stdlib->db_postmemory($_GET);
+$db_stdlib->db_postmemory($_POST);
+
+//  Converte os valores $_GET em variáveis.
+/*if ( count($_GET) > 0 ) {
+    $sAuth  = $Services_Funcoes->convert_post_string($_GET);
     parse_str($sAuth);
-}
+}*/
 
 /**
  * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
@@ -44,7 +48,7 @@ $result = $db_stdlib->db_query("SELECT nome, login, administrador FROM db_usuari
 $oDadosUsuario = $result->fetch();
 
 /**
- *  Converte a string em variáveis.
+ *  Converte a string $get em variáveis.
  *  Focado nas páginas: Instituições, Áreas, Módulos e Módulo.
  */ 
 if ( isset($get) ) {
@@ -73,6 +77,7 @@ if ( $pagina != 'instituicoes' ) {
     if ( !isset($area_de_acesso) and isset($_SESSION['DB_Area']) ) {
         $area_de_acesso = $_SESSION['DB_Area'];
     }
+    //print_r(base64_decode($get)); exit();
 
     $Services_Funcoes->cabecalho_pagina($pagina, (isset($instit) ? $instit : null), (isset($area_de_acesso) ? $area_de_acesso : null) );
 }
@@ -92,14 +97,6 @@ if(isset($modulo) and is_numeric($modulo)){
 }
 
 $db_stdlib->db_putsession( "DB_datausu",time() );
-
-if ( count($_POST) > 0 ) {
-    //  Converte $_POST string em variáveis
-    $sPOST  = $Services_Funcoes->convert_post_string($_POST);
-    if (isset($sPOST)) {
-        parse_str($sPOST);
-    }
-}
 
 if( !isset($formAnousu) and isset($modulo) ) {
     $db_stdlib->db_putsession("DB_modulo"           ,   $modulo);

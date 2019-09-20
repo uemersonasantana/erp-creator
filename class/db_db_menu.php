@@ -36,11 +36,11 @@ class db_db_menu {
                  menusequencia = int4 = Seqüência 
                  modulo = int4 = Módulo 
                  ";
-   //funcao construtor da classe 
-   function cl_db_menu() { 
+   // Funcao construtor da classe 
+   function __construct() { 
      //classes dos rotulos dos campos
-     $this->rotulo = new \std\rotulo("db_menu"); 
-     $this->pagina_retorno =  basename($_SERVER["PHP_SELF"]);
+     $this->rotulo          =   new \std\rotulo("db_menu"); 
+     $this->pagina_retorno  =   basename($_SERVER["PHP_SELF"]);
    }
    //funcao erro 
    function erro($mostra,$retorna) { 

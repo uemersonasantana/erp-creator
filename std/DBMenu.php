@@ -10,6 +10,7 @@ namespace std;
 
 use libs\db_stdlib;
 use libs\db_utils;
+use libs\Services_Funcoes;
 
 /**
  * Classe que realiza o
@@ -329,6 +330,7 @@ class DBMenu {
         $this->sHtmlMenu .= "<li data-menu=\"\">\n";
         $this->sHtmlMenu .= "<li class=\"dropdown dropdown-submenu\" data-menu=\"dropdown-submenu\"><a class=\"dropdown-item dropdown-toggle\" href=\"#\" data-toggle=\"dropdown\">{$oMenu->descricao}</a>\n";
       } else {
+        $oMenu->funcao    = Services_Funcoes::url_acesso_in().str_replace('.php', '', $oMenu->funcao);
         $this->sHtmlMenu .= "<li data-menu=\"\">\n";
         $this->sHtmlMenu .= "<a class=\"dropdown-item\" href=\"{$oMenu->funcao}\" data-toggle=\"dropdown\">{$oMenu->descricao}</a>\n";
 

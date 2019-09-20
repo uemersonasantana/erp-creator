@@ -83,6 +83,11 @@ $sSqlUsuarioLogado = "select login, nome from db_usuarios where id_usuario = ".$
 $rsUsuarioLogado   = $db_stdlib->db_query($sSqlUsuarioLogado)->fetch();
 $sLogin            = $rsUsuarioLogado->login;
 $sNome             = $rsUsuarioLogado->nome;
+
+//  Avisa o usuário que o exercício está diferente do exercício da data.
+if( $db_stdlib->db_getsession("DB_anousu")!= date("Y",$db_stdlib->db_getsession("DB_datausu")) ) {
+  echo "<script>alert('Exercício diferente do exercício da data. Verifique!');</script>";
+}
 ?>
 
 <form name="modulo" method="post">
@@ -373,7 +378,7 @@ $sNome             = $rsUsuarioLogado->nome;
 
 <script language="JavaScript" type="text/javascript" src="scripts/Services_Funcoes.js"></script>
 <script language="JavaScript" type="text/javascript" src="scripts/Services_md5.js"></script>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
   function js_mostramodulo(chave1,chave2){
     parametros = btoa("coddepto="+chave1+"&retorno=true&nomedepto="+chave2);
     

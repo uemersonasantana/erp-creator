@@ -958,7 +958,7 @@ function db_select($nome, $db_matriz, $dbcadastro, $db_opcao = 3, $js_script = "
 
 	if ($db_opcao != 3 && $db_opcao != 5 && $db_opcao != 22 && $db_opcao != 33) {
 		?>
-		<select name="<?=$nome?>" id="<?=$nome?>"
+		<select class="form-control" name="<?=$nome?>" id="<?=$nome?>"
 			<?
 
 
@@ -1057,7 +1057,7 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 
 	global $DataJavaScript;
 
-	if ($db_opcao == 3 || $db_opcao == 22 || $db_opcao == 33) {
+	if ( $db_opcao == 3 || $db_opcao == 22 || $db_opcao == 33 ) {
 		$bgcolor = "style='background-color:#DEB887'";
 	}
 
@@ -1066,7 +1066,7 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 	}
 
 
-	if(isset($dia) && $dia != "" && isset($mes) && $mes != '' && isset($ano) && $ano != ""){
+	if( isset($dia) && $dia != "" && isset($mes) && $mes != '' && isset($ano) && $ano != "" ){
 		$diamesano = $dia."/".$mes."/".$ano;
 		$anomesdia = $ano."/".$mes."/".$dia;
 	}
@@ -1074,7 +1074,7 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 	$sButtonType = "button";
 	?>
 
-	<input name="<?=($nomevar==""?$nome:$nomevar).""?>" <?=$bgcolor?>   type="<?=$dbtype?>" id="<?=($nomevar==""?$nome:$nomevar).""?>" <?=($db_opcao==3 || $db_opcao==33 || $db_opcao==22 ?'readonly':($db_opcao==5?'disabled':''))?> value="<?=@$diamesano?>" size="10" maxlength="10" autocomplete="off" onBlur='js_validaDbData(this);' onKeyUp="return js_mascaraData(this,event)"  onFocus="js_validaEntrada(this);" onpaste="return false" ondrop="return false" <?=$js_script?> >
+	<input class="form-control" name="<?=($nomevar==""?$nome:$nomevar).""?>" <?=$bgcolor?>   type="<?=$dbtype?>" id="<?=($nomevar==""?$nome:$nomevar).""?>" <?=($db_opcao==3 || $db_opcao==33 || $db_opcao==22 ?'readonly':($db_opcao==5?'disabled':''))?> value="<?=@$diamesano?>" size="10" maxlength="10" autocomplete="off" onBlur='js_validaDbData(this);' onKeyUp="return js_mascaraData(this,event)"  onFocus="js_validaEntrada(this);" onpaste="return false" ondrop="return false" <?=$js_script?> >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_dia"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_dia"?>" value="<?=@$dia?>" size="2"  maxlength="2" >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_mes"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_mes"?>" value="<?=@$mes?>" size="2"  maxlength="2" >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_ano"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_ano"?>" value="<?=@$ano?>" size="4"  maxlength="4" >
