@@ -1985,13 +1985,13 @@ function js_JanelaAutomatica(qjanela,qchave,anousu){
 
 }
 
+//#01#//js_OpenJanelaIframe
 //#20#//aondeJanela   : Objeto (local) onde será gerada a janela, normalmente "CurrentWindow.corpo"
 //#20#//arquivoJanela : Nome do arquivo com os parâmetros necessários para apresentar no iframe
 //#20#//tituloJanela  : Título que será mostrado na janela
 //#20#//heigthFrame  : Valor da altura da janela a ser apresentada
-function js_OpenJanelaIframe(aondeJanela,arquivoJanela,tituloJanela,heigthFrame) {
+function js_OpenJanelaIframe(aondeJanela,arquivoJanela,heigthFrame) {
   $(''+aondeJanela+'').empty();
-  $('#modal1_titulo').html(''+tituloJanela+'');
 
   $('<iframe src="'+arquivoJanela+'" frameborder="0" scrolling="yes" style="width:100%;height:'+heigthFrame+'px;"></iframe>')
      .appendTo(''+aondeJanela+'');

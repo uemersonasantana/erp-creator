@@ -7,9 +7,11 @@ if( isset($retorno) ) {
                   ,to_char(dataincl,'YYYY') as dataincl_ano
               FROM 
                 db_sysmodulo
-	            WHERE 
-                codmod = $retorno";
-  $result = $db_stdlib->db_query($sql)->fetch();
+	            WHERE codmod = $retorno";
+
+  $result = $db_stdlib->db_query($sql);
+
+  $db_stdlib->db_fieldsmemory($result,0);
 }
 
 //////////INCLUIR/////////////
@@ -102,7 +104,7 @@ if( isset($_REQUEST["procurar"]) || isset($_REQUEST["priNoMe"]) || isset($_REQUE
           <i class="ft-flag"></i> Dados do Módulo</h4>
       <div class="form-group">
           <label for="nomemod"><?php echo $Lnomemod; ?></label>
-          <input class="form-control" name="nomemod" title="<?php echo $Tnomemod; ?>" type="text" id="nomemod" value="<?php echo $nomemod; ?>">
+          <input class="form-control" id="nomemod" name="nomemod" title="<?php echo $Tnomemod; ?>" type="text" id="nomemod" value="<?php echo $nomemod; ?>">
       </div>
       <div class="form-group">
           <label for="descricao"><?php echo $Ldescricao; ?></label>
@@ -169,29 +171,32 @@ function js_submeter(obj) {
   }
   return true;
 }
+
 function js_iniciar() {
 if(document.form1)
   document.form1.nomemod.focus();
 }
 
-function js_Voltar(iCodMod){
-
-  location.href = 'sys1_modulos001/retorno='+iCodMod;
-
-}
-
-
 function js_pesquisa() {
-  js_OpenJanelaIframe('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_sysmodulo.php?funcao_js=parent.js_alteracampo|0','Pesquisa',580);
+  js_OpenJanelaIframe('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_sysmodulo.php?funcao_js=parent.js_retornopesquisa|0',580);
 }
-</script>
 
-<script type="text/javascript">
-// self executing function here
-(function() {
-   // your page initialization code here
-   // the DOM will be available here
-   js_iniciar();
+function js_retornopesquisa(chave) {
+  url       = '<?php echo $Services_Funcoes->url_acesso_in(); ?>';
+  pagina    = '<?php echo $pagina; ?>';
+  get       = btoa('retorno='+chave);
+
+  link      = url+pagina+'/'+get;
+
+  location.href = ''+link+'';
 }
-})();
+
+function js_fecharModal(modal) {
+  $(modal).modal('hide');
+  $('body').removeClass('modal-open');
+  $('.modal-backdrop').remove();
+}
+
+js_iniciar();
+
 </script>
