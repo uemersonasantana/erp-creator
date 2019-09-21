@@ -30,6 +30,7 @@
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="<?php echo $Services_Skins->getSkinLink(); ?>assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo $Services_Skins->getSkinLink(); ?>custom-css/style.css">
     <!-- END: Custom CSS-->
 </head>
 <!-- END: Head-->

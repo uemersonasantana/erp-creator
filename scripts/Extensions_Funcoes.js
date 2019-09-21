@@ -1990,14 +1990,14 @@ function js_JanelaAutomatica(qjanela,qchave,anousu){
 //#20#//arquivoJanela : Nome do arquivo com os parâmetros necessários para apresentar no iframe
 //#20#//tituloJanela  : Título que será mostrado na janela
 //#20#//heigthFrame  : Valor da altura da janela a ser apresentada
-function js_OpenJanelaIframe(aondeJanela,arquivoJanela,heigthFrame) {
+function js_OpenJanelaIframe_Novo(aondeJanela,arquivoJanela, widthFrame, heigthFrame) {
   $(''+aondeJanela+'').empty();
 
-  $('<iframe src="'+arquivoJanela+'" frameborder="0" scrolling="yes" style="width:100%;height:'+heigthFrame+'px;"></iframe>')
+  $('<iframe src="'+arquivoJanela+'" frameborder="0" scrolling="yes" style="width:'+widthFrame+';height:'+heigthFrame+';"></iframe>')
      .appendTo(''+aondeJanela+'');
 }
 
-function js_OpenJanelaIframe2(aondeJanela,nomeJanela,arquivoJanela,tituloJanela,mostraJanela,topoJanela,leftJanela,widthJanela,heigthJanela){
+function js_OpenJanelaIframe(aondeJanela,nomeJanela,arquivoJanela,tituloJanela,mostraJanela,topoJanela,leftJanela,widthJanela,heigthJanela){
 //#01#//js_OpenJanelaIframe
 //#10#//Funcão para gerar uma janela de iframe automática
 //#15#//js_OpenJanelaIframe(aondeJanela,nomeJanela,arquivoJanela,tituloJanela,mostraJanela,topoJanela,leftJanela,widthJanela,heigthJanela);
@@ -2155,22 +2155,9 @@ function pegaPosMouse(evt) {
  * @param {String} obj - id do elemento
  * @param {Function} shutdown_function -  função ao ser executada no final da execução do calendário
  */
-function show_calendar(obj, shutdown_function) {
-  var x = PosMouseX - window.scrollX;
-  var y = PosMouseY - window.scrollY;
-
-  if (window.innerWidth - x <= 200) {
-    PosMouseX = PosMouseX - 230;
-  }
-
-  if (window.innerHeight - y <= 230) {
-    PosMouseY = PosMouseY - 230;
-  }
-
-  if ( PosMouseY < 0 ) {
-    PosMouseY = 50;
-  }
-  js_OpenJanelaIframe('','iframe_data_'+obj,'func_calendario.php?nome_objeto_data='+obj+'&shutdown_function='+shutdown_function,'Calendário',true,PosMouseY,PosMouseX,200,230);
+function show_calendar(obj, shutdown_function, pagina) {
+  parent.document.getElementById('div_calendario').style.display='block';
+  js_OpenJanelaIframe_Novo('#div_calendario', pagina+'?nome_objeto_data='+obj+'&shutdown_function='+shutdown_function, '180px','160px');
 }
 
 function showCalendarioSaudeTodosDias(obj,shutdown_function, especmed) {
@@ -4532,8 +4519,8 @@ function criaJanela(nomeJan,arquivo,cabecalho,visivel,topo,esquerda,altura,largu
   tab1Coluna2.appendChild(quadro);
   camada.appendChild(tabela1);
 
-  document.getElementById('modal1_conteudo').appendChild(camada);
-  //document.body.appendChild(camada);
+  //document.getElementById('modal1_conteudo').appendChild(camada);
+  document.body.appendChild(camada);
 
   eval(nomeJan + " = new janela(document.getElementById('Jan" + nomeJan + "'),document.getElementById('CF" + nomeJan + "'),IF" + nomeJan + ")");
   

@@ -11,7 +11,6 @@ $db_stdlib          =   new libs\db_stdlib;
 $Services_Funcoes   =   new libs\Services_Funcoes;
 $Services_Skins     =   new libs\Services_Skins;
 
-
 //  Variáveis que serão usadas no sistema.
 $DB_SELLER  =   DB_SELLER;
 $hora       =   time();
@@ -21,22 +20,13 @@ $hora       =   time();
  */
 $Services_Skins->setCookie();
 
-
 //  Pega um vetor e cria variáveis globais pelo índice do vetor.
-$db_stdlib->db_postmemory($_GET);
-$db_stdlib->db_postmemory($_POST);
-
-//  Converte os valores $_GET em variáveis.
-/*if ( count($_GET) > 0 ) {
-    $sAuth  = $Services_Funcoes->convert_post_string($_GET);
-    parse_str($sAuth);
-}*/
+$db_stdlib->db_postmemory($_REQUEST);
 
 /**
  * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
  */
 $db_stdlib->log_db_usuariosonline('insert','Entrou no sistema');
-
 
 $db_stdlib->db_putsession("DB_uol_hora", $hora);
 
@@ -81,7 +71,6 @@ if ( $pagina != 'instituicoes' ) {
 
     $Services_Funcoes->cabecalho_pagina($pagina, (isset($instit) ? $instit : null), (isset($area_de_acesso) ? $area_de_acesso : null) );
 }
-
 
 if(isset($modulo) and is_numeric($modulo)){
 

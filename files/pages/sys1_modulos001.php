@@ -24,7 +24,7 @@ if( isset($_REQUEST["incluir"]) ) {
   $db_stdlib->db_query("INSERT INTO 
                   db_sysmodulo 
                 VALUES (nextval('db_sysmodulo_codmod_seq'),'$nomemod','$descricao','$data','$ativo')");
-  $db_stdlib->db_redireciona();
+  $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina);
 
 ////////////////ALTERAR////////////////  
 } else if( isset($_REQUEST["alterar"]) ) {
@@ -43,7 +43,7 @@ if( isset($_REQUEST["incluir"]) ) {
                             ,ativo = '$ativo'
 	      	                WHERE 
                             codmod  =  $codmod");
-  $db_stdlib->db_redireciona();
+  $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina);
 ////////////////EXCLUIR//////////////
 } else if( isset($_REQUEST["excluir"]) ) {
 
@@ -51,7 +51,7 @@ if( isset($_REQUEST["incluir"]) ) {
                                 db_sysmodulo 
                               WHERE 
                                 codmod = ".$_REQUEST["codmod"]);
- $db_stdlib->db_redireciona();
+ $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina);
 }
 
 $cl_modulo = new std\rotulo("db_sysmodulo");
@@ -96,21 +96,18 @@ if( isset($_REQUEST["procurar"]) || isset($_REQUEST["priNoMe"]) || isset($_REQUE
   //echo '<input class="btn btn-dark" type="button" name="voltar" value="Voltar" onClick="js_Voltar();">';
 } else {
 ?>
-
 <div class="card-content collapse show">
-<form class="form" method="post" name="form1" id="form1" onSubmit="return js_submeter(this)">
+<form class="form" method="post" name="form1" id="form1" action="<?php echo $Services_Funcoes->url_acesso_in().$pagina; ?>" onSubmit="return js_submeter(this)">
   <div class="form-body">
       <h4 class="form-section">
-          <i class="ft-flag"></i> Dados do Módulo</h4>
+        <i class="ft-flag"></i> Dados do Módulo</h4>
       <div class="form-group">
-          <label for="nomemod"><?php echo $Lnomemod; ?></label>
-          <input class="form-control" id="nomemod" name="nomemod" title="<?php echo $Tnomemod; ?>" type="text" id="nomemod" value="<?php echo $nomemod; ?>">
+        <label for="nomemod"><?php echo $Lnomemod; ?></label>
+        <input class="form-control" id="nomemod" name="nomemod" title="<?php echo $Tnomemod; ?>" type="text" id="nomemod" value="<?php echo $nomemod; ?>">
       </div>
       <div class="form-group">
-          <label for="descricao"><?php echo $Ldescricao; ?></label>
-          <textarea class="form-control" name="descricao" cols="50" title="<?php echo $Tdescricao; ?>" rows="7" id="descricao">
-            <?php echo $descricao; ?>
-          </textarea>
+        <label for="descricao"><?php echo $Ldescricao; ?></label>
+        <textarea class="form-control" name="descricao" cols="50" title="<?php echo $Tdescricao; ?>" rows="7" id="descricao"><?php echo $descricao; ?></textarea>
       </div>
       <div class="form-group">
         <label for="dataincl"><?php echo $Ldataincl; ?></label>
@@ -123,11 +120,11 @@ if( isset($_REQUEST["procurar"]) || isset($_REQUEST["priNoMe"]) || isset($_REQUE
         ?>
       </div>
       <div class="form-group">
-          <label for="ativo"><b>Ativo</b></label>
-          <?php
-          $xx = array("t"=>"SIM","f"=>"NAO");
-          $db_funcoes->db_select('ativo',$xx,true,1,"");
-          ?>
+        <label for="ativo"><b>Ativo</b></label>
+        <?php
+        $xx = array("t"=>"SIM","f"=>"NAO");
+        $db_funcoes->db_select('ativo',$xx,true,1,"");
+        ?>
       </div>
   </div>
 
@@ -178,7 +175,7 @@ if(document.form1)
 }
 
 function js_pesquisa() {
-  js_OpenJanelaIframe('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_sysmodulo.php?funcao_js=parent.js_retornopesquisa|0',580);
+  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_sysmodulo.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');
 }
 
 function js_retornopesquisa(chave) {
@@ -197,6 +194,9 @@ function js_fecharModal(modal) {
   $('.modal-backdrop').remove();
 }
 
-js_iniciar();
+function js_calendario() {
+  
+}
 
+js_iniciar();
 </script>

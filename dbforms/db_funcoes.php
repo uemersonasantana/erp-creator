@@ -8,6 +8,8 @@
 
 namespace dbforms;
 
+use libs\Services_Funcoes;
+
 /**
  * db_funcoes
  */
@@ -1098,8 +1100,10 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 
 		?>
 
-		<input value="D" type="<?=$sButtonType?>" id="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" name="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" onclick="<?=$onclickBT?>pegaPosMouse(event);show_calendar('<?=($nomevar==""?$nome:$nomevar)?>','<?=$shutdown_function?>')"  >
-		<?
+		<input value="D" type="<?=$sButtonType?>" id="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" name="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" onclick="<?=$onclickBT?>pegaPosMouse(event);show_calendar('<?=($nomevar==""?$nome:$nomevar)?>','<?=$shutdown_function?>', '<?php echo Services_Funcoes::url_acesso(); ?>files/pages/func_calendario.php')"  >
+
+		<div id="div_calendario"></div>
+		<?php
 
 	}
 

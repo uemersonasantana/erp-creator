@@ -15,13 +15,13 @@ class Services_Funcoes
 {
 
 //  Retorna url atual
-public function url_atual() {
+static public function url_atual() {
   $url  = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
   return $url;
 }
 
 // Retorna url do Sistema
-public function url_acesso() {
+static public function url_acesso() {
 	if ( $_SERVER['SERVER_NAME'] == 'uas.lan' ) {
 		return 'http://uas.lan/';
 	} else {

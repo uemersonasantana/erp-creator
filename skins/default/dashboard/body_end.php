@@ -12,9 +12,16 @@
 	<!-- END: Theme JS-->
 
 	<!-- BEGIN: Page JS-->
-	<script src="<?php echo $Services_Skins->getSkinLink(); ?>app-assets/js/scripts/modal/components-modal.js" type="text/javascript"></script>
+
+
+	<script src="<?php echo $Services_Skins->getSkinLink(); ?>app-assets/js/scripts/popover/popover.js" type="text/javascript"></script>	
+
+	<script src="<?php echo $Services_Funcoes->url_acesso(); ?>scripts/Services_Funcoes.js" type="text/javascript"></script>
+	
+	<!--<script src="<?php echo $Services_Skins->getSkinLink(); ?>app-assets/js/scripts/modal/components-modal.js" type="text/javascript"></script>-->
 
 	<!--<script src="<?php echo $Services_Funcoes->url_acesso(); ?>scripts/Services_md5.js" type="text/javascript"></script>-->
-	<script src="<?php echo $Services_Funcoes->url_acesso(); ?>scripts/Services_Funcoes.js" type="text/javascript"></script>
+
+	<!--<script language="JavaScript" type="text/javascript" src="<?php echo $Services_Funcoes->url_acesso(); ?>scripts/prototype.js"></script>-->
 	<!-- END: Page JS-->
 </body>
