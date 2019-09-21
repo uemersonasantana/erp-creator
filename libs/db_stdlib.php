@@ -977,7 +977,7 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
     $aux = $result[$indice]->$nomeCampo;
 
     if ( ($formatar != '') ) {
-      switch ( $recordset->getColumnMeta($nomeCampo)['native_type'] ) {
+      switch ( $recordset->getColumnMeta($i)['native_type'] ) {
         case "float8" :
         case "float4" :
         case "float" :
@@ -1006,7 +1006,7 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
           break;
       }
     } else {
-      switch ( $recordset->getColumnMeta($nomeCampo)['native_type'] ) {
+      switch ( $recordset->getColumnMeta($i)['native_type'] ) {
         case "date" :
           $datav = explode("-", $aux);
           
@@ -1016,7 +1016,7 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
           
           $GLOBALS[ $nomeCampo."_mes" ]  =  @$datav[1];
           if ($mostravar == true)
-            echo $split_data."->".$$split_data."<br>";
+            echo $nomeCampo."->".@$datav[1]."<br>";
 
           $GLOBALS[ $nomeCampo."_ano" ]  =  @$datav[0];
           if ($mostravar == true)
@@ -1027,10 +1027,16 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
             echo $nomeCampo."->".$aux."<br>";
           
           break;
+        case "bool" :
+          $GLOBALS[ $nomeCampo ]  = (int)$aux;
+          echo $nomeCampo."->".(int)$aux."<br>";
+
+          break;
         default :
           $GLOBALS[ $nomeCampo ]  = stripslashes($aux);
+          
           if ($mostravar == true)
-            echo $nomeCampo."->".stripslashes($aux)."<br>";
+            echo $nomeCampo."[".$recordset->getColumnMeta($i)['native_type']."]->".stripslashes($aux)."<br>";
           break;
       }
     }
