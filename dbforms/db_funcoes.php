@@ -961,7 +961,7 @@ function db_select($nome, $db_matriz, $dbcadastro, $db_opcao = 3, $js_script = "
 	if ($db_opcao != 3 && $db_opcao != 5 && $db_opcao != 22 && $db_opcao != 33) {
 		?>
 		<select class="form-control" name="<?=$nome?>" id="<?=$nome?>"
-			<?
+			<?php
 
 
 			if ($dbcadastro == true) {
@@ -977,7 +977,7 @@ function db_select($nome, $db_matriz, $dbcadastro, $db_opcao = 3, $js_script = "
 			echo $js_script;
 			?>
 		>
-			<?
+			<?php
 
 			$nomevar = $nomevar == "" ? $nome : $nomevar;
 
@@ -1080,7 +1080,7 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_dia"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_dia"?>" value="<?=@$dia?>" size="2"  maxlength="2" >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_mes"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_mes"?>" value="<?=@$mes?>" size="2"  maxlength="2" >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_ano"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_ano"?>" value="<?=@$ano?>" size="4"  maxlength="4" >
-	<?
+	<?php
 	if (($db_opcao < 3) || ($db_opcao == 4)) {
 		?>
 		<script>
@@ -1093,7 +1093,7 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 			}
 
 		</script>
-		<?
+		<?php
 		if (isset($dbtype) && strtolower($dbtype) == strtolower('hidden')) {
 			$sButtonType = "hidden";
 		}

@@ -2156,7 +2156,12 @@ function pegaPosMouse(evt) {
  * @param {Function} shutdown_function -  função ao ser executada no final da execução do calendário
  */
 function show_calendar(obj, shutdown_function, pagina) {
-  parent.document.getElementById('div_calendario').style.display='block';
+  if ( parent.document.getElementById('div_calendario').style.display == '' || parent.document.getElementById('div_calendario').style.display == 'none' )
+    parent.document.getElementById('div_calendario').style.display='block';
+  else
+    parent.document.getElementById('div_calendario').style.display='none';
+  
+  
   js_OpenJanelaIframe_Novo('#div_calendario', pagina+'?nome_objeto_data='+obj+'&shutdown_function='+shutdown_function, '180px','160px');
 }
 

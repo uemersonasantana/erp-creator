@@ -20,7 +20,7 @@ if( isset($_REQUEST["incluir"]) ) {
     $db_stdlib->db_erro("Data inválida(insert)");
   else
     $data = $dataincl_ano."-".$dataincl_mes."-".$dataincl_dia;
-  
+  alert();
   $db_stdlib->db_query("INSERT INTO 
                   db_sysmodulo 
                 VALUES (nextval('db_sysmodulo_codmod_seq'),'$nomemod','$descricao','$data','$ativo')");
@@ -192,10 +192,6 @@ function js_fecharModal(modal) {
   $(modal).modal('hide');
   $('body').removeClass('modal-open');
   $('.modal-backdrop').remove();
-}
-
-function js_calendario() {
-  
 }
 
 js_iniciar();
