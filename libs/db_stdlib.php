@@ -1029,7 +1029,8 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
           break;
         case "bool" :
           $GLOBALS[ $nomeCampo ]  = (int)$aux;
-          echo $nomeCampo."->".(int)$aux."<br>";
+          if ($mostravar == true)
+            echo $nomeCampo."->".(int)$aux."<br>";
 
           break;
         default :
