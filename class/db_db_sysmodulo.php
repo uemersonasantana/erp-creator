@@ -43,7 +43,7 @@ class db_db_sysmodulo {
                  ativo = bool = Ativo 
                  ";
    // Funcao construtor da classe 
-   function __construct() { 
+   function __construct() {  
      //classes dos rotulos dos campos
      $this->rotulo          =   new \std\rotulo("db_sysmodulo"); 
      $this->pagina_retorno  =   basename($_SERVER["PHP_SELF"]);
@@ -77,9 +77,9 @@ class db_db_sysmodulo {
      }
    }
    // funcao para inclusao
-   function incluir ($codmod){ 
+   function incluir ($codmod = ''){ 
       $this->atualizacampos();
-     if($this->nomemod == null ){ 
+     if($this->nomemod == null ){  
        $this->erro_sql = " Campo Nome Módulo nao Informado.";
        $this->erro_campo = "nomemod";
        $this->erro_banco = "";
@@ -147,6 +147,7 @@ class db_db_sysmodulo {
        $this->erro_status = "0";
        return false;
      }
+
      $sql = "insert into db_sysmodulo(
                                        codmod 
                                       ,nomemod 

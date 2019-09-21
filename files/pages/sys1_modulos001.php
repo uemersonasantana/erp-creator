@@ -1,5 +1,8 @@
 <?php
 
+$db_funcoes       = new dbforms\db_funcoes;
+$db_db_sysmodulo  = new classes\db_db_sysmodulo;
+
 if( isset($retorno) ) {
   $sql = "SELECT *
                   ,to_char(dataincl,'DD') as dataincl_dia
@@ -16,16 +19,23 @@ if( isset($retorno) ) {
 
 //////////INCLUIR/////////////
 if( isset($_REQUEST["incluir"]) ) {
-  if(!checkdate($dataincl_mes,$dataincl_dia,$dataincl_ano))
-    $db_stdlib->db_erro("Data inválida(insert)");
-  else
-    $data = $dataincl_ano."-".$dataincl_mes."-".$dataincl_dia;
-  alert();
-  $db_stdlib->db_query("INSERT INTO 
-                  db_sysmodulo 
-                VALUES (nextval('db_sysmodulo_codmod_seq'),'$nomemod','$descricao','$data','$ativo')");
-  $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina);
+  $db_funcoes->db_inicio_transacao();
 
+  $db_db_sysmodulo->nomemod       = $nomemod;
+  $db_db_sysmodulo->descricao     = $descricao;
+  $db_db_sysmodulo->data          = $dataincl;
+  $db_db_sysmodulo->dataincl_dia  = $dataincl_dia;
+  $db_db_sysmodulo->dataincl_mes  = $dataincl_mes;
+  $db_db_sysmodulo->dataincl_ano  = $dataincl_ano;
+  $db_db_sysmodulo->ativo         = $ativo;
+
+  $db_db_sysmodulo->incluir();
+  
+  if ( $db_db_sysmodulo->erro_status != 0 ) {
+    $db_stdlib->db_erro($db_db_sysmodulo->erro_status);
+  }   
+
+  $db_funcoes->db_fim_transacao();
 ////////////////ALTERAR////////////////  
 } else if( isset($_REQUEST["alterar"]) ) {
 
@@ -129,11 +139,11 @@ if( isset($_REQUEST["procurar"]) || isset($_REQUEST["priNoMe"]) || isset($_REQUE
   </div>
 
   <div class="form-actions">
-      <input class="btn btn-dark" onClick="Botao = 'incluir'" accesskey="i" type="submit" id="incluir2" value="Incluir" <?php echo isset($retorno)?"disabled":"" ?>>
+      <input class="btn btn-dark" onClick="Botao = 'incluir'" accesskey="i" type="submit" name="incluir" id="incluir2" value="Incluir" <?php echo isset($retorno)?"disabled":"" ?>>
 
-      <input class="btn btn-dark" name="alterar" accesskey="a" type="submit" id="alterar2" value="Alterar" <?php echo !isset($retorno)?"disabled":"" ?>>
+      <input class="btn btn-dark" name="alterar" accesskey="a" type="submit" id="alterar2" name="alterar" value="Alterar" <?php echo !isset($retorno)?"disabled":"" ?>>
 
-      <input class="btn btn-dark" name="excluir" accesskey="e" type="submit" id="excluir2" value="Excluir" onClick="return confirm('Quer realmente excluir este registro?')" <?php echo !isset($retorno)?"disabled":"" ?>> 
+      <input class="btn btn-dark" name="excluir" accesskey="e" type="submit" id="excluir2" name="excluir" value="Excluir" onClick="return confirm('Quer realmente excluir este registro?')" <?php echo !isset($retorno)?"disabled":"" ?>> 
       <input class="btn btn-dark" type="button" data-toggle="modal" data-target="#xlarge" onclick="js_pesquisa();" value="Procurar">
 
       <input class="btn btn-dark" type="button"  onClick="location.href='sys3_tabelas001.php?<?php echo base64_encode("codmod=$retorno&manutabela=true") ?>'" value="Ver Tabelas" <?php echo !isset($retorno)?"disabled":"" ?>>

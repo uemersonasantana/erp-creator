@@ -8,6 +8,7 @@
 
 namespace dbforms;
 
+use libs\db_stdlib;
 use libs\Services_Funcoes;
 
 /**
@@ -45,7 +46,7 @@ function db_inicio_transacao() {
 	//#99#//Uma transação é um conjunto de execuções no banco de dados que deverão ser gravadas somente
 	//#99#//se todas as execuções tiverem sucesso, caso contrário, nenhuma das execuções deverá ser
 	//#99#//confirmada
-	db_query('BEGIN');
+	db_stdlib::db_query('BEGIN');
 	return;
 }
 function db_fim_transacao($erro = false) {
@@ -54,9 +55,9 @@ function db_fim_transacao($erro = false) {
 	//#20#//false : Finaliza transação com sucesso (commit)
 	//#20#//true  : Transação com erro, desfaz os procedimentos executados (rollback)
 	if ($erro == true) {
-		db_query('ROLLBACK');
+		db_stdlib::db_query('ROLLBACK');
 	} else {
-		db_query('COMMIT');
+		db_stdlib::db_query('COMMIT');
 	}
 	return;
 }
