@@ -268,6 +268,11 @@ if( $rsVersao->db30_codversao != $db_fonte_codversao || $rsVersao->db30_codrelea
   echo $sMsg;
   exit;
 }
+/**
+ * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
+ */
+$db_stdlib->log_db_usuariosonline('insert','Entrou no sistema');
+$db_stdlib->db_putsession("DB_uol_hora", time());
 
 $db_stdlib->db_logsmanual_demais("Acesso Liberado ao sistema - Login: " . $db_stdlib->db_getsession("DB_login"), $db_stdlib->db_getsession("DB_id_usuario"));
 

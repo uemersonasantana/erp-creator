@@ -969,12 +969,12 @@ function db_fieldsmemory($recordset, $indice, $formatar = "", $mostravar = false
   // }
   // exit;
   // }
-  $result = $recordset->fetchAll();
-
+  $result = $recordset->fetch();
+  
   for ($i = 0; $i < $fm_numfields; $i ++) {
     $nomeCampo  = $recordset->getColumnMeta($i)['name'];
 
-    $aux = $result[$indice]->$nomeCampo;
+    $aux = $result->$nomeCampo;
 
     if ( ($formatar != '') ) {
       switch ( $recordset->getColumnMeta($i)['native_type'] ) {

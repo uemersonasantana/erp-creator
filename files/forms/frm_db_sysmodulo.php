@@ -37,7 +37,7 @@
       <input class="btn btn-dark" name="excluir" accesskey="e" type="submit" id="excluir2" name="excluir" value="Excluir" onClick="return confirm('Quer realmente excluir este registro?')" <?php echo !isset($retorno)?"disabled":"" ?>> 
       <input class="btn btn-dark" type="button" data-toggle="modal" data-target="#xlarge" onclick="js_pesquisa();" value="Procurar">
 
-      <input class="btn btn-dark" type="button"  onClick="location.href='sys3_tabelas001.php?<?php echo base64_encode("codmod=$retorno&manutabela=true") ?>'" value="Ver Tabelas" <?php echo !isset($retorno)?"disabled":"" ?>>
+      <input class="btn btn-dark" type="button"  onClick="location.href='<?php echo $Services_Funcoes->url_acesso_in(); ?>sys3_tabelas001/<?php echo base64_encode("codmod=$retorno&manutabela=true") ?>'" value="Ver Tabelas" <?php echo !isset($retorno)?"disabled":"" ?>>
       <input type="hidden" name="codmod" value="<?=@$codmod?>">
 
   </div>

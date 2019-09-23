@@ -8,12 +8,13 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 
 $db_conecta         =   new libs\db_conecta; 
 $db_stdlib          =   new libs\db_stdlib;
+$db_usuariosonline  =   new libs\db_usuariosonline;
 $Services_Funcoes   =   new libs\Services_Funcoes;
 $Services_Skins     =   new libs\Services_Skins;
 
 //  Variáveis que serão usadas no sistema.
 $DB_SELLER  =   DB_SELLER;
-$hora       =   time();
+//$hora       =   time();
 
 /**
  * Salva o skin no cookie
@@ -22,13 +23,6 @@ $Services_Skins->setCookie();
 
 //  Pega um vetor e cria variáveis globais pelo índice do vetor.
 $db_stdlib->db_postmemory($_REQUEST);
-
-/**
- * Funções de cabeçalho para as páginas: Instituições, Áreas, Módulos e Módulo.
- */
-$db_stdlib->log_db_usuariosonline('insert','Entrou no sistema');
-
-$db_stdlib->db_putsession("DB_uol_hora", $hora);
 
 /**
  * Carrega informações do usuário.

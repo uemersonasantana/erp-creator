@@ -64,7 +64,7 @@ $cl_modulo->label();
 <div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $db_db_sysmodulo->erro_msg; ?></div>
 <?php } 
 
-include 'forms/db_sysmodulo.php';
+include 'forms/frm_db_sysmodulo.php';
 
 ?>
 </div>

@@ -9,7 +9,7 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 $db_conecta             =   new libs\db_conecta(1); 
 $db_stdlib              =   new libs\db_stdlib;
 $db_funcoes             =   new dbforms\db_funcoes; 
-$Services_Skins                  =   new libs\Services_Skins;
+$Services_Skins             =   new libs\Services_Skins;
 $Services_Funcoes       =   new libs\Services_Funcoes;
 $db_valida_requisitos   =   new libs\db_valida_requisitos(DB_VALIDA_REQUISITOS);
 
