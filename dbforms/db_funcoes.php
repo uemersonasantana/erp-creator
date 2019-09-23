@@ -181,7 +181,7 @@ function db_input($nome, $dbsize, $dbvalidatipo, $dbcadastro, $dbhidden = 'text'
 	}
 	?>
 
-	<inpu class="form-control" title="<?=@$GLOBALS['T'.$nome]?>" name="<?=($nomevar==""?$nome:$nomevar)?>"  type="<?=$dbhidden?>" <?=($dbhidden=="checkbox"?(@$GLOBALS[($nomevar==""?$nome:$nomevar)]=="t"?"checked":""):"")?>
+	<input class="form-control" title="<?=@$GLOBALS['T'.$nome]?>" name="<?=($nomevar==""?$nome:$nomevar)?>"  type="<?=$dbhidden?>" <?=($dbhidden=="checkbox"?(@$GLOBALS[($nomevar==""?$nome:$nomevar)]=="t"?"checked":""):"")?>
 				 id="<?=($nomevar==""?$nome:$nomevar)?>"  value="<?=@$GLOBALS[($nomevar==""?$nome:$nomevar)]?>"  size="<?=$dbsize?>"
 				 maxlength="<?=@$iMax?>"
 		<?php
