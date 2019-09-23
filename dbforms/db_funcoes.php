@@ -181,15 +181,15 @@ function db_input($nome, $dbsize, $dbvalidatipo, $dbcadastro, $dbhidden = 'text'
 	}
 	?>
 
-	<input title="<?=@$GLOBALS['T'.$nome]?>" name="<?=($nomevar==""?$nome:$nomevar)?>"  type="<?=$dbhidden?>" <?=($dbhidden=="checkbox"?(@$GLOBALS[($nomevar==""?$nome:$nomevar)]=="t"?"checked":""):"")?>
+	<input class="form-control" title="<?=@$GLOBALS['T'.$nome]?>" name="<?=($nomevar==""?$nome:$nomevar)?>"  type="<?=$dbhidden?>" <?=($dbhidden=="checkbox"?(@$GLOBALS[($nomevar==""?$nome:$nomevar)]=="t"?"checked":""):"")?>
 				 id="<?=($nomevar==""?$nome:$nomevar)?>"  value="<?=@$GLOBALS[($nomevar==""?$nome:$nomevar)]?>"  size="<?=$dbsize?>"
 				 maxlength="<?=@$iMax?>"
-		<?
+		<?php
 
 		echo $js_script;
 		if ($dbcadastro == true) {
 
-			if ($db_opcao == 3 || $db_opcao == 22 || $db_opcao == 33 || $db_opcao == 11) {
+			if ($db_opcao == 3 or $db_opcao == 22 or $db_opcao == 33 or $db_opcao == 11) {
 				echo " readonly ";
 				if ($bgcolor == "")
 					$bgcolor = "#DEB887";
@@ -226,11 +226,11 @@ function db_input($nome, $dbsize, $dbvalidatipo, $dbcadastro, $dbhidden = 'text'
 			onblur="js_ValidaMaiusculo(this,'<?=@$GLOBALS['G'.$nome]?>',event);"
 			onInput="js_ValidaCampos(this,<?=($dbvalidatipo==''?0:$dbvalidatipo)?>,'<?=@$GLOBALS['S'.$nome]?>','<?=($db_opcao==4?"t":@$GLOBALS['U'.$nome])?>','<?=@$GLOBALS['G'.$nome]?>',event);"
 			onKeyDown="return js_controla_tecla_enter(this,event);"
-			<?
+			<?php
 		}
 		?>
 				 autocomplete='<?=@$GLOBALS['A'.$nome]?>'>
-	<?
+	<?php
 
 
 
@@ -257,16 +257,16 @@ function db_textarea($nome, $dbsizelinha = 1, $dbsizecoluna = 1, $dbvalidatipo, 
 
 	$sOnInput = "";
 	?>
-	<textarea title="<?=@$GLOBALS['T'.$nome]?>" name="<?=($nomevar==""?$nome:$nomevar)?>"  type="<?=$dbhidden?>"
+	<textarea class="form-control" title="<?=@$GLOBALS['T'.$nome]?>" name="<?=($nomevar==""?$nome:$nomevar)?>"  type="<?=$dbhidden?>"
 						id="<?=($nomevar==""?$nome:$nomevar)?>" rows="<?=$dbsizelinha?>" cols="<?=$dbsizecoluna?>"
-		<?
+		<?php
 		echo $js_script;
 		if ($dbcadastro == true) {
 
 			/*
-           if ($db_opcao==3 || $db_opcao==22){só coloquei a opcao 11...  dia 28-10-2004
+           if ($db_opcao==3 or $db_opcao==22){só coloquei a opcao 11...  dia 28-10-2004
       */
-			if ($db_opcao == 3 || $db_opcao == 22 || $db_opcao == 11 || $db_opcao == 33) {
+			if ($db_opcao == 3 or $db_opcao == 22 or $db_opcao == 11 or $db_opcao == 33) {
 				echo " readonly ";
 				if ($bgcolor == "")
 					$bgcolor = "#DEB887";
@@ -275,6 +275,7 @@ function db_textarea($nome, $dbsizelinha = 1, $dbsizecoluna = 1, $dbvalidatipo, 
 				echo " disabled ";
 			}
 		}
+
 		//começa a colocas CSS
 		$db_style = '';
 		if ($bgcolor != "") {
@@ -305,7 +306,7 @@ function db_textarea($nome, $dbsizelinha = 1, $dbsizecoluna = 1, $dbvalidatipo, 
 		<?=@$GLOBALS['N'.$nome]?>
 
 						autocomplete='<?=@$GLOBALS['A'.$nome]?>'><?php echo $sValue; ?></textarea>
-	<?
+	<?php
 	if ( $maxlength != "") {
 		echo "<br>";
 		echo "<div align='right'>";
@@ -326,7 +327,7 @@ function db_ancora($nome, $js_script, $db_opcao, $style = "", $varnome="") {
 	//#20#//Script : Função JAVASCRIPT que será executado no onclik do objeto label
 	//#20#//Opcao : *db_opcao* do programa a ser executado neste objeto input, inclusão(1) alteração(2) exclusão(3)
 	//#20#//Style : Opção para programador mudar o estilo da âncora
-	if (($db_opcao < 3) || ($db_opcao == 4)) {
+	if (($db_opcao < 3) or ($db_opcao == 4)) {
 		if($varnome	!=""){
 			?>
 			<a href='#' id="<?=$varnome?>" class='dbancora' style='text-decoration:underline;<?=trim($style) != "" ? ";$style" : ""?>' onclick="<?=$js_script?>"><?=$nome?></a>
@@ -674,7 +675,7 @@ function db_selectrecord($nomeFormulario, $nome, $record, $dbcadastro, $db_opcao
 				else
 					echo "onchange=\"$onchange\"";
 				if ( $dbcadastro == true ) {
-					if ( $db_opcao == 3 || $db_opcao == 22 || $db_opcao == 11 ) {
+					if ( $db_opcao == 3 or $db_opcao == 22 or $db_opcao == 11 ) {
 						echo " readonly ";
 						if ($bgcolor == "")
 							$bgcolor = "#DEB887";
@@ -723,7 +724,7 @@ function db_selectrecord($nomeFormulario, $nome, $record, $dbcadastro, $db_opcao
 				<?php
 
 				if ( $dbcadastro == true ) {
-					if ( $db_opcao == 3 || $db_opcao == 22 ) {
+					if ( $db_opcao == 3 or $db_opcao == 22 ) {
 						echo " readonly ";
 						if ( $bgcolor == "" )
 							$bgcolor = "#DEB887";
@@ -737,7 +738,7 @@ function db_selectrecord($nomeFormulario, $nome, $record, $dbcadastro, $db_opcao
 				?>
 			>
 				<?php
-				if ( is_array($todos) || $todos != "" ) {
+				if ( is_array($todos) or $todos != "" ) {
 					?>
 					<option value="<?php echo $todos[0]; ?>" ><?php echo $todos[1]; ?></option>
 					<?php
@@ -847,7 +848,7 @@ function db_selectmultiple($nome, $record, $size, $db_opcao = 3, $js_script = ""
 			<?
 
 
-			if ($db_opcao == 3 || $db_opcao == 22) {
+			if ($db_opcao == 3 or $db_opcao == 22) {
 				echo " readonly ";
 				if ($bgcolor == "")
 					$bgcolor = "#DEB887";
@@ -966,7 +967,7 @@ function db_select($nome, $db_matriz, $dbcadastro, $db_opcao = 3, $js_script = "
 
 
 			if ($dbcadastro == true) {
-				if ($db_opcao == 3 || $db_opcao == 22) {
+				if ($db_opcao == 3 or $db_opcao == 22) {
 					echo " readonly ";
 					if ($bgcolor == "")
 						$bgcolor = "#DEB887";
@@ -1060,7 +1061,7 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 
 	global $DataJavaScript;
 
-	if ( $db_opcao == 3 || $db_opcao == 22 || $db_opcao == 33 ) {
+	if ( $db_opcao == 3 or $db_opcao == 22 or $db_opcao == 33 ) {
 		$bgcolor = "style='background-color:#DEB887'";
 	}
 
@@ -1077,12 +1078,12 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 	$sButtonType = "button";
 	?>
 
-	<input class="form-control" name="<?=($nomevar==""?$nome:$nomevar).""?>" <?=$bgcolor?>   type="<?=$dbtype?>" id="<?=($nomevar==""?$nome:$nomevar).""?>" <?=($db_opcao==3 || $db_opcao==33 || $db_opcao==22 ?'readonly':($db_opcao==5?'disabled':''))?> value="<?=@$diamesano?>" size="10" maxlength="10" autocomplete="off" onBlur='js_validaDbData(this);' onKeyUp="return js_mascaraData(this,event)"  onFocus="js_validaEntrada(this);" onpaste="return false" ondrop="return false" <?=$js_script?> >
+	<input class="form-control" name="<?=($nomevar==""?$nome:$nomevar).""?>" <?=$bgcolor?> type="<?=$dbtype?>" id="<?=($nomevar==""?$nome:$nomevar).""?>" <?=($db_opcao==3 or $db_opcao==33 or $db_opcao==22 ?'readonly':($db_opcao==5?'disabled':''))?> value="<?=@$diamesano?>" size="10" maxlength="10" autocomplete="off" onBlur='js_validaDbData(this);' onKeyUp="return js_mascaraData(this,event)"  onFocus="js_validaEntrada(this);" onpaste="return false" ondrop="return false" style="width:120px;" <?=$js_script?> >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_dia"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_dia"?>" value="<?=@$dia?>" size="2"  maxlength="2" >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_mes"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_mes"?>" value="<?=@$mes?>" size="2"  maxlength="2" >
 	<input name="<?=($nomevar==""?$nome:$nomevar)."_ano"?>"   type="hidden" title="" id="<?=($nomevar==""?$nome:$nomevar)."_ano"?>" value="<?=@$ano?>" size="4"  maxlength="4" >
 	<?php
-	if (($db_opcao < 3) || ($db_opcao == 4)) {
+	if (($db_opcao < 3) or ($db_opcao == 4)) {
 		?>
 		<script>
 			var PosMouseY, PosMoudeX;
@@ -1487,7 +1488,7 @@ function assinaturas(&$pdf,&$classinatura,$tipo='LRF', $lVerificaQuebra = true, 
 	$ass_controle = $classinatura->assinatura(1009,$controle);
 
 
-	if ($tipo=='LRF' || $tipo =='BG') {
+	if ($tipo=='LRF' or $tipo =='BG') {
 
 		if ($lVerificaQuebra && ($pdf->gety() > ($pdf->h - 30))){
 			$pdf->addPage($pdf->CurOrientation);
@@ -1507,7 +1508,7 @@ function assinaturas(&$pdf,&$classinatura,$tipo='LRF', $lVerificaQuebra = true, 
 		$pdf->multicell($largura,3,$ass_cont,0,"C",0,0);
 
 
-		if ($db21_idtribunal==6  || $db21_idtribunal==7   ){
+		if ($db21_idtribunal==6  or $db21_idtribunal==7   ){
 			//  não tem esse campo 6-RPPS(Autarquia) , 7-RPPS (Exceto Autarquia )
 		} else {
 			$pdf->setxy($largura*2,$pos);

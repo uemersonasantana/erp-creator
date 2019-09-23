@@ -75,7 +75,7 @@ static function db_query($param1, $param2=null, $param3="SQL"){
   $lExecutaAccount = true;
   $lSessaoDesativarAccount = self::db_getsession("DB_desativar_account", false);
 
-  if (isset($lSessaoDesativarAccount) && $lSessaoDesativarAccount === true) {
+  if (isset($lSessaoDesativarAccount) and $lSessaoDesativarAccount === true) {
     $lExecutaAccount = false;
   }
 
@@ -449,7 +449,7 @@ function db_verfPostGet($post) {
   reset($post);
   for ($i = 0; $i < $tam_vetor; $i ++) {
 
-    if (key($post) != 'triggerfuncao' && key($post) != 'corpofuncao' && key($post) != 'eventotrigger' && key($post) != 'codigoclass' && key($post) != 'db33_obs' && key($post) != 'db33_obscpd' && key($post) != 'descricao' && key($post) != 'descr') {
+    if (key($post) != 'triggerfuncao' and key($post) != 'corpofuncao' and key($post) != 'eventotrigger' and key($post) != 'codigoclass' and key($post) != 'db33_obs' and key($post) != 'db33_obscpd' and key($post) != 'descricao' and key($post) != 'descr') {
       $dbarraypost = (gettype($post[key($post)]) != "array" ? $post[key($post)] : "");
     } else {
       $dbarraypost = "";
@@ -1120,7 +1120,7 @@ static function db_msgbox($sMensagem) {
 }
 
 //redireciona para uma url
-function db_redireciona($url = "0") {
+function db_redireciona($url = "0",$alert = null) {
   //#00#//db_redireciona
   //#10#//Esta funcao executa um redrecionamento de página utilizando o javascript
   //#15#//db_redireciona($url="0")
@@ -1128,6 +1128,9 @@ function db_redireciona($url = "0") {
   //#99#//Exemplo:
   //#99#//db_redireciona("index.php");
   //#99#//Irá abrir a página index.php
+  if ( isset($alert) )
+    echo "<script>alert('$alert');</script>\n";
+
   if ($url == "0")
     $url = $_SERVER["PHP_SELF"];
   echo "<script>location.href='$url'</script>\n";
@@ -1323,7 +1326,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   }
 
   // se for a primeira vez que é rodado, pega o total de registros e guarda no campo hidden
-  if( ( empty ($$tot_registros) && !empty ($query) ) || isset($recomecar)) {
+  if( ( empty ($$tot_registros) and !empty ($query) ) || isset($recomecar)) {
 
     if( isset( $recomecar ) ) {
       $query = self::db_getsession("dblov_query_inicial");
@@ -1364,7 +1367,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     }
   }
   
-  if( isset( $_POST["nova_quantidade_linhas"] ) && $_POST["nova_quantidade_linhas"] != '' ) {
+  if( isset( $_POST["nova_quantidade_linhas"] ) and $_POST["nova_quantidade_linhas"] != '' ) {
 
     $_POST["nova_quantidade_linhas"] = $_POST["nova_quantidade_linhas"] + 0;
     $numlinhas                       = $_POST["nova_quantidade_linhas"];
@@ -1452,7 +1455,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
           $sSqlDaoDbSysCampo = $oDaoDbSysCampo->sql_query_file( null, 'conteudo', null, $sWhere );
           $rsDaoDbSysCampo   = self::db_query( $sSqlDaoDbSysCampo );
 
-          if( $rsDaoDbSysCampo && pg_num_rows( $rsDaoDbSysCampo ) > 0 ) {
+          if( $rsDaoDbSysCampo and pg_num_rows( $rsDaoDbSysCampo ) > 0 ) {
 
             $sConteudo = db_utils::fieldsMemory( $rsDaoDbSysCampo, 0 )->conteudo;
 
@@ -1578,7 +1581,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
   $NumFields = $result->columnCount();
 
-  if( ( $NumRows < $numlinhas ) && ( $numlinhas < ( $$tot_registros - $$offset - $numlinhas ) ) ) {
+  if( ( $NumRows < $numlinhas ) and ( $numlinhas < ( $$tot_registros - $$offset - $numlinhas ) ) ) {
     $Dd1 = @ $Dd2 = "disabled";
   }
 
@@ -1670,17 +1673,17 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     }
   }
 
-  if( isset( $ordem_lov ) && ( isset( $ordem_ordenacao ) && $ordem_ordenacao == '' ) ) {
+  if( isset( $ordem_lov ) and ( isset( $ordem_ordenacao ) and $ordem_ordenacao == '' ) ) {
     $sHtml .= "<input type=\"hidden\" name=\"ordem_lov_anterior\" value=\"".$_POST[key($_POST)]."\">\n";
   }
 
-  if( isset( $_POST['nova_quantidade_linhas'] ) && $_POST['nova_quantidade_linhas'] == '' ) {
+  if( isset( $_POST['nova_quantidade_linhas'] ) and $_POST['nova_quantidade_linhas'] == '' ) {
     $numlinhas = $_POST['nova_quantidade_linhas'];
   }
 
   $sHtml .= "<input type=\"hidden\" name=\"nova_quantidade_linhas\" value=\"$numlinhas\" >\n";
 
-  if( isset( $totalizacao ) && isset( $tot ) ) {
+  if( isset( $totalizacao ) and isset( $tot ) ) {
 
     if( count( $totalizacao ) > 0 ) {
 
@@ -2036,7 +2039,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
         @$vertotrep = $_POST['totrep_'.$key_elemento];
 
-        if( @$vertotrep != "" && !isset( $tot ) ) {
+        if( @$vertotrep != "" and !isset( $tot ) ) {
 
           $sHtml .= "<td>";
           $sHtml .= $vertotrep;
@@ -2098,7 +2101,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
   if( $automatico == true ) {
 
-    if( $result->rowCount() == 1 && $$offset == 0 ) {
+    if( $result->rowCount() == 1 and $$offset == 0 ) {
       $sHtml .= "<script>".@$resultadoRetorno."</script>";
     }
   }
@@ -2157,7 +2160,7 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
   // executa a query e cria a tabela
   $query .= " limit $numlinhas offset ".$$offset;
   $result = self::db_query($query);
-  $NumRows = pg_numrows($result);
+  $NumRows = $result->rowCount();
   $NumFields = pg_numfields($result);
   if ($NumRows < $numlinhas)
     $Dd1 = $Dd2 = "disabled";
@@ -2209,18 +2212,21 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
 //  Insere um registro de log
 function db_logs($string = '', $codcam = 0, $chave = 0) {
   $wheremod="";
-  if(isset($_SESSION["DB_modulo"])){
+  if( isset($_SESSION["DB_modulo"]) ) {
     $wheremod =  "and modulo = ".self::db_getsession("DB_modulo");
   }
+
+  /* Buscando o nome da página */ 
+
   $sql = "select db_itensmenu.id_item
                   from configuracoes.db_itensmenu
             inner join configuracoes.db_menu  on  db_menu.id_item_filho = db_itensmenu.id_item
-                  where trim(funcao) = '".trim(addslashes( basename( $_SERVER["REQUEST_URI"] ) ))."'
+                  where trim(funcao) = '".$_REQUEST['pagina'].".php'
             $wheremod limit 1 ";
 
   $result = self::db_query($sql);
 
-  if ($result != false && $result->rowCount() > 0) {
+  if ($result != false and $result->rowCount() > 0) {
     $item = $result->fetch()->id_item;
 
     $sql        = "select nextval('db_logsacessa_codsequen_seq')";
@@ -2315,7 +2321,7 @@ function db_menu($usuario = null, $modulo = null, $anousu = null, $instit = null
       $iCodigoDepartamento = self::db_getsession("DB_coddepto");
       $result = @ self::db_query("select descrdepto from db_depart where coddepto = ".self::db_getsession("DB_coddepto"));
 
-      if ($result != false && pg_numrows($result) > 0) {
+      if ($result != false and $result->rowCount() > 0) {
         $descrdep = "[<strong>".self::db_getsession("DB_coddepto")."-".substr(pg_result($result, 0, 'descrdepto'), 0, 40)."</strong>]";
       } else {
         $descrdep = "";
@@ -2404,21 +2410,21 @@ function db_extenso($valor = 0, $maiusculas = false) {
   $fim = count($inteiro) - ($inteiro[count($inteiro) - 1] > 0 ? 1 : 2);
   for ($i = 0; $i < count($inteiro); $i ++) {
     $valor = $inteiro[$i];
-    $rc = (($valor > 100) && ($valor < 200)) ? "cento" : $c[$valor[0]];
+    $rc = (($valor > 100) and ($valor < 200)) ? "cento" : $c[$valor[0]];
     $rd = ($valor[1] < 2) ? "" : $d[$valor[1]];
     $ru = ($valor > 0) ? (($valor[1] == 1) ? $d10[$valor[2]] : $u[$valor[2]]) : "";
 
-    $r = $rc. (($rc && ($rd || $ru)) ? " e " : "").$rd. (($rd && $ru) ? " e " : "").$ru;
+    $r = $rc. (($rc and ($rd || $ru)) ? " e " : "").$rd. (($rd and $ru) ? " e " : "").$ru;
     $t = count($inteiro) - 1 - $i;
     $r .= $r ? " ". ($valor > 1 ? $plural[$t] : $singular[$t]) : "";
     if ($valor == "000")
       $z ++;
     elseif ($z > 0) $z --;
-    if (($t == 1) && ($z > 0) && ($inteiro[0] > 0))
+    if (($t == 1) and ($z > 0) and ($inteiro[0] > 0))
       $r .= (($z > 1) ? " de " : "").$plural[$t];
     //        $rt = '';
     if ($r)
-      $rt = $rt. ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ").$r;
+      $rt = $rt. ((($i > 0) and ($i <= $fim) and ($inteiro[0] > 0) and ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ").$r;
   }
 
   if (!$maiusculas) {
@@ -2513,7 +2519,7 @@ function db_criatermometro($dbnametermo='termometro',$dbtexto='Concluído',$dbco
   //#20#//dbacao      = Texto para acao executada ex: Aguarde Processando...
   //#99#//Essa função apenas cria o termometro, para atualizar o valor do termometro deve usar a funcao db_atutermometro
 
-  if($dbborda !=1 && $dbborda !=0){
+  if($dbborda !=1 and $dbborda !=0){
     $dbborda=1;
   }
   /*
@@ -3341,7 +3347,7 @@ function analiseQueryPlanoOrcamento($sQuery, $iAnoUsu = null)  {
    * ativamos para 't' no RPC que chama o metodo getQuadroEstimativa
    * @todo remover || $_SESSION["DB_use_pcasp"] == 't'  do if abaixo
    */
-  if ( $_SESSION["DB_use_pcasp"] == "t" || (USE_PCASP && $iAnoUsu > 2012) ) {
+  if ( $_SESSION["DB_use_pcasp"] == "t" || (USE_PCASP and $iAnoUsu > 2012) ) {
     $sQuery = str_replace($aTablesFrom, $aTablesTo, $sQuery);
   }
 

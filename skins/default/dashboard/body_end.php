@@ -12,8 +12,6 @@
 	<!-- END: Theme JS-->
 
 	<!-- BEGIN: Page JS-->
-
-
 	<script src="<?php echo $Services_Skins->getSkinLink(); ?>app-assets/js/scripts/popover/popover.js" type="text/javascript"></script>	
 
 	<script src="<?php echo $Services_Funcoes->url_acesso(); ?>scripts/Services_Funcoes.js" type="text/javascript"></script>

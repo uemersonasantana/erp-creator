@@ -30,7 +30,7 @@
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="<?php echo $Services_Skins->getSkinLink(); ?>assets/css/style.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo $Services_Skins->getSkinLink(); ?>custom-css/style.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo $Services_Skins->getSkinLink(); ?>custom-css/style.css?n=<?php echo rand(0,1000); ?>">
     <!-- END: Custom CSS-->
 </head>
 <!-- END: Head-->

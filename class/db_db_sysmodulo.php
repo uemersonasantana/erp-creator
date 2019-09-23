@@ -50,7 +50,7 @@ class db_db_sysmodulo {
    }
    //funcao erro 
    function erro($mostra,$retorna) { 
-     if(($this->erro_status == "0") || ($mostra == true && $this->erro_status != null )){
+     if(($this->erro_status == "0") or ($mostra == true and $this->erro_status != null )){
         echo "<script>alert(\"".$this->erro_msg."\");</script>";
         if($retorna==true){
            echo "<script>location.href='".$this->pagina_retorno."'</script>";
@@ -60,27 +60,27 @@ class db_db_sysmodulo {
    // funcao para atualizar campos
    function atualizacampos($exclusao=false) {
      if($exclusao==false){
-       $this->codmod = ($this->codmod == ""?@$GLOBALS["HTTP_POST_VARS"]["codmod"]:$this->codmod);
-       $this->nomemod = ($this->nomemod == ""?@$GLOBALS["HTTP_POST_VARS"]["nomemod"]:$this->nomemod);
-       $this->descricao = ($this->descricao == ""?@$GLOBALS["HTTP_POST_VARS"]["descricao"]:$this->descricao);
+       $this->codmod    = ($this->codmod    == "" ? @$GLOBALS["codmod"]   : $this->codmod);
+       $this->nomemod   = ($this->nomemod   == "" ? @$GLOBALS["nomemod"]  : $this->nomemod);
+       $this->descricao = ($this->descricao == "" ? @$GLOBALS["descricao"]: $this->descricao);
        if($this->dataincl == ""){
-         $this->dataincl_dia = ($this->dataincl_dia == ""?@$GLOBALS["HTTP_POST_VARS"]["dataincl_dia"]:$this->dataincl_dia);
-         $this->dataincl_mes = ($this->dataincl_mes == ""?@$GLOBALS["HTTP_POST_VARS"]["dataincl_mes"]:$this->dataincl_mes);
-         $this->dataincl_ano = ($this->dataincl_ano == ""?@$GLOBALS["HTTP_POST_VARS"]["dataincl_ano"]:$this->dataincl_ano);
+         $this->dataincl_dia = ($this->dataincl_dia == ""?@$GLOBALS["dataincl_dia"]:$this->dataincl_dia);
+         $this->dataincl_mes = ($this->dataincl_mes == ""?@$GLOBALS["dataincl_mes"]:$this->dataincl_mes);
+         $this->dataincl_ano = ($this->dataincl_ano == ""?@$GLOBALS["dataincl_ano"]:$this->dataincl_ano);
          if($this->dataincl_dia != ""){
             $this->dataincl = $this->dataincl_ano."-".$this->dataincl_mes."-".$this->dataincl_dia;
          }
        }
-       $this->ativo = ($this->ativo == "f"?@$GLOBALS["HTTP_POST_VARS"]["ativo"]:$this->ativo);
+       $this->ativo     = ($this->ativo   == "f"  ? @$GLOBALS["ativo"]    : $this->ativo);
      }else{
-       $this->codmod = ($this->codmod == ""?@$GLOBALS["HTTP_POST_VARS"]["codmod"]:$this->codmod);
+       $this->codmod    = ($this->codmod  == ""   ? @$GLOBALS["codmod"]   : $this->codmod);
      }
    }
    // funcao para inclusao
-   function incluir ($codmod = ''){ 
-      $this->atualizacampos();
+   function incluir (){ 
+    $this->atualizacampos(); 
      if($this->nomemod == null ){  
-       $this->erro_sql = " Campo Nome Módulo nao Informado.";
+       $this->erro_sql = " Campo Nome Módulo não Informado.";
        $this->erro_campo = "nomemod";
        $this->erro_banco = "";
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -89,7 +89,7 @@ class db_db_sysmodulo {
        return false;
      }
      if($this->descricao == null ){ 
-       $this->erro_sql = " Campo Descrição nao Informado.";
+       $this->erro_sql = " Campo Descrição não Informado.";
        $this->erro_campo = "descricao";
        $this->erro_banco = "";
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -98,7 +98,7 @@ class db_db_sysmodulo {
        return false;
      }
      if($this->dataincl == null ){ 
-       $this->erro_sql = " Campo Data Inclusão nao Informado.";
+       $this->erro_sql = " Campo Data Inclusão não Informado.";
        $this->erro_campo = "dataincl_dia";
        $this->erro_banco = "";
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -115,7 +115,7 @@ class db_db_sysmodulo {
        $this->erro_status = "0";
        return false;
      }
-     if($codmod == "" || $codmod == null ){
+     if($this->codmod == "" or $this->codmod == null ){
        $result = db_stdlib::db_query("select nextval('db_sysmodulo_codmod_seq')"); 
        if($result==false){
          $this->erro_banco = str_replace("\n","",@pg_last_error());
@@ -128,7 +128,7 @@ class db_db_sysmodulo {
        $this->codmod = db_stdlib::lastInsertId(); 
      }else{
        $result = db_stdlib::db_query("select last_value from db_sysmodulo_codmod_seq");
-       if(($result != false) && (pg_result($result,0,0) < $codmod)){
+       if(($result != false) and (pg_result($result,0,0) < $this->codmod)){
          $this->erro_sql = " Campo codmod maior que último número da sequencia.";
          $this->erro_banco = "Sequencia menor que este número.";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -139,7 +139,7 @@ class db_db_sysmodulo {
          $this->codmod = $codmod; 
        }
      }
-     if(($this->codmod == null) || ($this->codmod == "") ){ 
+     if(($this->codmod == null) or ($this->codmod == "") ){ 
        $this->erro_sql = " Campo codmod nao declarado.";
        $this->erro_banco = "Chave Primaria zerada.";
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -159,9 +159,10 @@ class db_db_sysmodulo {
                                 $this->codmod 
                                ,'$this->nomemod' 
                                ,'$this->descricao' 
-                               ,".($this->dataincl == "null" || $this->dataincl == ""?"null":"'".$this->dataincl."'")." 
+                               ,'$this->dataincl' 
                                ,'$this->ativo' 
                       )";
+
      $result = db_stdlib::db_query($sql); 
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
@@ -185,7 +186,7 @@ class db_db_sysmodulo {
      $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
      $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
      $this->erro_status = "1";
-     $this->numrows_incluir= pg_affected_rows($result);
+     $this->numrows_incluir= $result->rowCount();
      $resaco = $this->sql_record($this->sql_query_file($this->codmod));
      if(($resaco!=false)||($this->numrows!=0)){
        $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
@@ -201,11 +202,13 @@ class db_db_sysmodulo {
      return true;
    } 
    // funcao para alteracao
-   function alterar ($codmod=null) { 
-      $this->atualizacampos();
+   function alterar () { 
+     self::atualizacampos();
+
      $sql = " update db_sysmodulo set ";
      $virgula = "";
-     if(trim($this->codmod)!="" || isset($GLOBALS["HTTP_POST_VARS"]["codmod"])){ 
+
+     if( trim($this->codmod) != "" ) {  
        $sql  .= $virgula." codmod = $this->codmod ";
        $virgula = ",";
        if(trim($this->codmod) == null ){ 
@@ -218,7 +221,7 @@ class db_db_sysmodulo {
          return false;
        }
      }
-     if(trim($this->nomemod)!="" || isset($GLOBALS["HTTP_POST_VARS"]["nomemod"])){ 
+     if( trim($this->nomemod) != "" ) { 
        $sql  .= $virgula." nomemod = '$this->nomemod' ";
        $virgula = ",";
        if(trim($this->nomemod) == null ){ 
@@ -231,7 +234,7 @@ class db_db_sysmodulo {
          return false;
        }
      }
-     if(trim($this->descricao)!="" || isset($GLOBALS["HTTP_POST_VARS"]["descricao"])){ 
+     if( trim($this->descricao) != "" ) { 
        $sql  .= $virgula." descricao = '$this->descricao' ";
        $virgula = ",";
        if(trim($this->descricao) == null ){ 
@@ -244,7 +247,7 @@ class db_db_sysmodulo {
          return false;
        }
      }
-     if(trim($this->dataincl)!="" || isset($GLOBALS["HTTP_POST_VARS"]["dataincl_dia"]) &&  ($GLOBALS["HTTP_POST_VARS"]["dataincl_dia"] !="") ){ 
+     if( trim($this->dataincl) != "" ) { 
        $sql  .= $virgula." dataincl = '$this->dataincl' ";
        $virgula = ",";
        if(trim($this->dataincl) == null ){ 
@@ -256,22 +259,8 @@ class db_db_sysmodulo {
          $this->erro_status = "0";
          return false;
        }
-     }     else{ 
-       if(isset($GLOBALS["HTTP_POST_VARS"]["dataincl_dia"])){ 
-         $sql  .= $virgula." dataincl = null ";
-         $virgula = ",";
-         if(trim($this->dataincl) == null ){ 
-           $this->erro_sql = " Campo Data Inclusão nao Informado.";
-           $this->erro_campo = "dataincl_dia";
-           $this->erro_banco = "";
-           $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
-           $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
-           $this->erro_status = "0";
-           return false;
-         }
-       }
-     }
-     if(trim($this->ativo)!="" || isset($GLOBALS["HTTP_POST_VARS"]["ativo"])){ 
+     } 
+     if( trim($this->ativo) != "" ) { 
        $sql  .= $virgula." ativo = '$this->ativo' ";
        $virgula = ",";
        if(trim($this->ativo) == null ){ 
@@ -284,29 +273,32 @@ class db_db_sysmodulo {
          return false;
        }
      }
-     $sql .= " where ";
-     if($codmod!=null){
-       $sql .= " codmod = $this->codmod";
-     }
-     $resaco = $this->sql_record($this->sql_query_file($this->codmod));
-     if($this->numrows>0){
-       for($conresaco=0;$conresaco<$this->numrows;$conresaco++){
-         $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
-         $acount = db_stdlib::lastInsertId();
-         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
-         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$this->codmod','A')");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["codmod"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,148,748,'".AddSlashes(pg_result($resaco,$conresaco,'codmod'))."','$this->codmod',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["nomemod"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,148,749,'".AddSlashes(pg_result($resaco,$conresaco,'nomemod'))."','$this->nomemod',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["descricao"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,148,750,'".AddSlashes(pg_result($resaco,$conresaco,'descricao'))."','$this->descricao',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["dataincl"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,148,751,'".AddSlashes(pg_result($resaco,$conresaco,'dataincl'))."','$this->dataincl',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["ativo"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,148,8975,'".AddSlashes(pg_result($resaco,$conresaco,'ativo'))."','$this->ativo',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-       }
-     }
+
+    $sql .= " where ";
+    $sql .= " codmod = $this->codmod";
+     
+    $resaco = self::sql_record(self::sql_query_file($this->codmod));
+
+    if( $this->numrows > 0 ) {
+      foreach ( $resaco as $linha) {
+        $resac  = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
+        $acount = db_stdlib::lastInsertId();
+        $resac  = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
+        $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$this->codmod','A')");
+        
+        if(isset($GLOBALS["codmod"]))
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,748,'".addslashes($linha->codmod)."','$this->codmod',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        if(isset($GLOBALS["nomemod"]))
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,749,'".addslashes($linha->nomemod)."','$this->nomemod',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        if(isset($GLOBALS["descricao"]))
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,750,'".addslashes($linha->descricao)."','$this->descricao',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        if(isset($GLOBALS["dataincl"]))
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,751,'".addslashes($linha->dataincl)."','$this->dataincl',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        if(isset($GLOBALS["ativo"]))
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,8975,'".addslashes($linha->ativo)."','$this->ativo',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+      }
+    }
+
      $result = db_stdlib::db_query($sql);
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
@@ -318,7 +310,7 @@ class db_db_sysmodulo {
        $this->numrows_alterar = 0;
        return false;
      }else{
-       if(pg_affected_rows($result)==0){
+       if( $result->rowCount() == 0 ){
          $this->erro_banco = "";
          $this->erro_sql = "Modulos da documentacao do Sistema nao foi Alterado. Alteracao Executada.\\n";
          $this->erro_sql .= "Valores : ".$this->codmod;
@@ -334,59 +326,64 @@ class db_db_sysmodulo {
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_alterar = pg_affected_rows($result);
+         $this->numrows_alterar = $result->rowCount();
          return true;
        } 
      } 
    } 
    // funcao para exclusao 
-   function excluir ($codmod=null,$dbwhere=null) { 
-     if($dbwhere==null || $dbwhere==""){
-       $resaco = $this->sql_record($this->sql_query_file($codmod));
+   function excluir ($dbwhere=null) {
+      $this->atualizacampos();
+     if($dbwhere==null or $dbwhere==""){
+       $resaco = $this->sql_record($this->sql_query_file($this->codmod));
      }else{ 
        $resaco = $this->sql_record($this->sql_query_file(null,"*",null,$dbwhere));
      }
-     if(($resaco!=false)||($this->numrows!=0)){
-       for($iresaco=0;$iresaco<$this->numrows;$iresaco++){
-         $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
-         $acount = db_stdlib::lastInsertId();
-         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
-         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$codmod','E')");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,748,'','".AddSlashes(pg_result($resaco,$iresaco,'codmod'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,749,'','".AddSlashes(pg_result($resaco,$iresaco,'nomemod'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,750,'','".AddSlashes(pg_result($resaco,$iresaco,'descricao'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,751,'','".AddSlashes(pg_result($resaco,$iresaco,'dataincl'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,148,8975,'','".AddSlashes(pg_result($resaco,$iresaco,'ativo'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-       }
+     if ( $resaco!=false || $this->numrows!=0 ) {
+      foreach ( $resaco as $linha) {
+        $resac  = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
+        $acount = db_stdlib::lastInsertId();
+        $resac  = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
+
+        $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$this->codmod','E')");
+        $resac = db_stdlib::db_query("insert into db_acount values($acount,148,748,'','".addslashes($linha->codmod)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        $resac = db_stdlib::db_query("insert into db_acount values($acount,148,749,'','".addslashes($linha->nomemod)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        $resac = db_stdlib::db_query("insert into db_acount values($acount,148,750,'','".addslashes($linha->descricao)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        $resac = db_stdlib::db_query("insert into db_acount values($acount,148,751,'','".addslashes($linha->dataincl)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+        $resac = db_stdlib::db_query("insert into db_acount values($acount,148,8975,'','".addslashes($linha->ativo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+      }
      }
      $sql = " delete from db_sysmodulo
                     where ";
      $sql2 = "";
-     if($dbwhere==null || $dbwhere ==""){
-        if($codmod != ""){
+
+     if($dbwhere==null or $dbwhere ==""){
+        if($this->codmod != ""){
           if($sql2!=""){
             $sql2 .= " and ";
           }
-          $sql2 .= " codmod = $codmod ";
+          $sql2 .= " codmod = $this->codmod ";
         }
      }else{
        $sql2 = $dbwhere;
      }
+
      $result = db_stdlib::db_query($sql.$sql2);
+
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
        $this->erro_sql   = "Modulos da documentacao do Sistema nao Excluído. Exclusão Abortada.\\n";
-       $this->erro_sql .= "Valores : ".$codmod;
+       $this->erro_sql  .= "Valores : ".$codmod;
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
-       $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
+       $this->erro_msg  .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        $this->numrows_excluir = 0;
        return false;
      }else{
-       if(pg_affected_rows($result)==0){
+       if($result->rowCount()==0){
          $this->erro_banco = "";
          $this->erro_sql = "Modulos da documentacao do Sistema nao Encontrado. Exclusão não Efetuada.\\n";
-         $this->erro_sql .= "Valores : ".$codmod;
+         $this->erro_sql .= "Valores : ".$this->codmod;
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
@@ -395,11 +392,11 @@ class db_db_sysmodulo {
        }else{
          $this->erro_banco = "";
          $this->erro_sql = "Exclusão efetuada com Sucesso\\n";
-         $this->erro_sql .= "Valores : ".$codmod;
+         $this->erro_sql .= "Valores : ".$this->codmod;
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_excluir = pg_affected_rows($result);
+         $this->numrows_excluir = $result->rowCount();
          return true;
        } 
      } 
@@ -416,7 +413,7 @@ class db_db_sysmodulo {
        $this->erro_status = "0";
        return false;
      }
-     $this->numrows = pg_numrows($result);
+     $this->numrows = $result->rowCount();
       if($this->numrows==0){
         $this->erro_banco = "";
         $this->erro_sql   = "Record Vazio na Tabela:db_sysmodulo";
