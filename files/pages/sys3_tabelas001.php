@@ -1,41 +1,11 @@
 <script>
-  function js_Relatorio(codarq){
-    jan = window.open('sys3_modulos002.php?xarquivo='+codarq,'','width='+(screen.availWidth-5)+',height='+(screen.availHeight-40)+',scrollbars=1,location=0 ');
-        jan.moveTo(0,0);
+  function js_Relatorio(cod){
+    get = 'xarquivo='+cod,'','width='+(screen.availWidth-5)+',height='+(screen.availHeight-40)+',scrollbars=1,location=0';
+    
+    jan = window.open('<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/sys3_modulos002.php?'+get);
+    jan.moveTo(0,0);
   }
 </script>
-
-
-
-<style type="text/css">
-#estrutura {
-	color:black;
-}
-
-#estrutura tr:hover {
-  background-color: #ffff99;
-}
-
-#estrutura td {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	padding:0;
-	padding-left:5px;
-}
-#estrutura th {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	padding:5px;
-}
-
-input {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	height: 17px;
-	border: 1px solid #999999;
-}
-
-</style>
 
 <div class="btn-group mr-1 mb-1" role="group" aria-label="Basic example">
 	<button type="button" class="btn btn-light" onClick="history.back()">Voltar</button>
@@ -44,7 +14,6 @@ input {
 	?>
 	<button type="button" class="btn btn-dark">Módulo: <?=$nomemod?></button>
 </div>
-
 
 <?php
 $sql_mod = "select db_sysmodulo.nomemod,
@@ -68,7 +37,7 @@ $sql_mod = "select db_sysmodulo.nomemod,
 
 $result 	=	$db_stdlib->db_query($sql_mod);
 ?>
-<table id="estrutura" class="table table-responsive" border="1" cellspacing="0" cellpadding="0">
+<table class="table table-responsive estrutura" border="1" cellspacing="0" cellpadding="0">
 	<tr bgcolor="#8AF96A">
 	  <th><u>Nome</u></th>
 	      <th><u></u></th>

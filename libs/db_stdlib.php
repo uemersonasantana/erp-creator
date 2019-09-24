@@ -673,7 +673,7 @@ function db_translate($db_transforma = null,$expresAdicional = "",$stringAdicion
 //                         direita        "d"
 //                         ambos os lados "a"
 
-function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreenchimento = "e", $casasdecimais = 2) {
+static function db_formatar($str, $tipo, $caracter = " ", $quantidade = 0, $TipoDePreenchimento = "e", $casasdecimais = 2) {
   //#00#//db_formatar
   //#10#//Esta funcao coloca a mascara no numpre SEM os pontos entre os número
   //#15#//db_formatar($str,$tipo,$caracter=" ",$quantidade=0,$TipoDePreenchimento="e",$casasdecimais=2) {
@@ -1175,6 +1175,10 @@ static function db_getsession($var = "0", $alertarExistencia = true) {
   //#99#//Exemplo:
   //#99#//self::db_getsession("DB_datausu");
   //#99#//Irá abrir a página index.php
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+
   if ($var == "0") {
     reset($_SESSION);
     $str = "";
@@ -1204,6 +1208,10 @@ static function db_putsession($var, $valor) {
   //#15#//self::db_putsession($var,$valor)
   //#20#//Var   : Nome da variável que será incluida na sessão
   //#20#//valor : Valor da variável incluída
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+
   $_SESSION[$var] = $valor;
 }
 
@@ -2211,6 +2219,12 @@ function db_lov($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_sel
 
 //  Insere um registro de log
 function db_logs($string = '', $codcam = 0, $chave = 0) {
+  if ( isset($_REQUEST['pagina']) ) {
+    $pagina =   $_REQUEST['pagina'].'.php';
+  } else {
+    $pagina = basename($_SERVER['PHP_SELF']);
+  }
+
   $wheremod="";
   if( isset($_SESSION["DB_modulo"]) ) {
     $wheremod =  "and modulo = ".self::db_getsession("DB_modulo");
@@ -2221,11 +2235,10 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
   $sql = "select db_itensmenu.id_item
                   from configuracoes.db_itensmenu
             inner join configuracoes.db_menu  on  db_menu.id_item_filho = db_itensmenu.id_item
-                  where trim(funcao) = '".$_REQUEST['pagina'].".php'
+                  where trim(funcao) = '".$pagina."'
             $wheremod limit 1 ";
 
   $result = self::db_query($sql);
-
   if ($result != false and $result->rowCount() > 0) {
     $item = $result->fetch()->id_item;
 
@@ -2236,7 +2249,6 @@ function db_logs($string = '', $codcam = 0, $chave = 0) {
     // grava codigo na sessao
     self::db_putsession("DB_itemmenu_acessado",$item);
     self::db_putsession("DB_acessado",$codsequen);
-
 
     $sql = "INSERT INTO db_logsacessa VALUES ($codsequen,
                                               '".self::db_getsession("DB_ip")."',

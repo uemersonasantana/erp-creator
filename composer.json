@@ -7,7 +7,9 @@
             "email": "uemerson@icloud.com"
         }
     ],
-    "require": {}
+    "require": {
+        "fpdf/fpdf": "^1.81"
+    }
     ,"autoload": {
         "psr-4": { 
             "libs\\": [  

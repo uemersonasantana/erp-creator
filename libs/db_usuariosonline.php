@@ -15,11 +15,17 @@ class db_usuariosonline extends db_stdlib
 {
 
 function __construct() {
-	$result = parent::db_query("select descricao from db_itensmenu where funcao = '".$_REQUEST['pagina']."'");
+	if ( isset($_REQUEST['pagina']) ) {
+		$pagina = 	$_REQUEST['pagina'].'.php';
+	} else {
+		$pagina	=	basename($_SERVER['PHP_SELF']);
+	}
+
+	$result = parent::db_query("select descricao from db_itensmenu where funcao = '".$pagina."'");
 	if($result->rowCount() > 0)
 	  $str = $result->fetch()->descricao;
 	else
-	  $str = $_REQUEST['pagina'].'.php';
+	  $str = $pagina;
 
 	$result = parent::db_query("select uol_id from db_usuariosonline 
 	  where uol_id = ".parent::db_getsession("DB_id_usuario")."

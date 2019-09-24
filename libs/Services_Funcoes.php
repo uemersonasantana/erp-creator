@@ -149,7 +149,9 @@ public function convert_post_string($valores) {
  */
 public function cabecalho_pagina($pagina, $instit, $area_de_acesso) {
   
-  $_SESSION["DB_itemmenu_acessado"] = "0";
+  if ( !isset($_SESSION["DB_itemmenu_acessado"]) ) {
+    $_SESSION["DB_itemmenu_acessado"] = "0";
+  }
 
   if( !isset($_SESSION["DB_instit"]) ) {
     
