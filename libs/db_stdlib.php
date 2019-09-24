@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains common functions used throughout the application.
  *
@@ -1906,7 +1907,12 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
         } else if( $result->getColumnMeta($j)['native_type'] == "text" ) {
 
           $lCampoTipoTexto = true;
-          $var_data  = substr( $result2[$i]->$nomeCampo, 0, 10 );
+
+          // Este método estada dando erro de caractere ao exibir no navegador.
+          //$var_data  = substr( $result2[$i]->$nomeCampo, 0, 10 );
+
+          $var_tmp = explode(' ', $result2[$i]->$nomeCampo);
+          $var_data  = ucfirst($var_tmp[0]).' '.$var_tmp[1].'...';
         } else {
           $lEncontrouResultado = true;
           $sTitulo             = "";
