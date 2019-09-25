@@ -9,9 +9,9 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 $db_stdlib        = new libs\db_stdlib; 
 $db_funcoes       = new dbforms\db_funcoes;
 
-$db_db_sysarquivo  = new classes\db_db_sysarquivo;
-$db_db_sysarquivo->rotulo->label("codarq");
-$db_db_sysarquivo->rotulo->label("nomearq");
+$db_db_syscampo  = new classes\db_db_syscampo;
+$db_db_syscampo->rotulocl->label("codcam");
+$db_db_syscampo->rotulocl->label("nomecam");
 
 $Services_Skins   = new libs\Services_Skins;
 
@@ -39,17 +39,17 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
         </div>
         <div class="form-body">
             <div class="form-group row" style="margin-bottom:0;">
-                <label class="col-md-3 label-control" for="codarq" title="<?=$Tcodmod?>"><?=$Lcodarq?></label>
+                <label class="col-md-3 label-control" for="codcam" title="<?=$Tcodcam?>"><?=$Lcodcam?></label>
                 <div class="col-md-9">
-                  <?php $db_funcoes->db_input("codarq",4,$Icodarq,true,"text",4,"","chave_codarq"); ?>
+                  <?php $db_funcoes->db_input("codcam",4,$Icodcam,true,"text",4,"","chave_codcam"); ?>
                 </div>
             </div>
         </div>
         <div class="form-body">
             <div class="form-group row" style="margin-bottom:0;">
-                <label class="col-md-3 label-control" for="nomearq" title="<?=$Tnomemod?>"><?=$Lnomearq?></label>
+                <label class="col-md-3 label-control" for="nomecam" title="<?=$Tnomecam?>"><?=$Lnomecam?></label>
                 <div class="col-md-9">
-                  <?php $db_funcoes->db_input("nomearq",40,$Inomearq,true,"text",4,"","chave_nomearq"); ?>
+                  <?php $db_funcoes->db_input("nomecam",40,$Inomecam,true,"text",4,"","chave_nomecam"); ?>
                 </div>
             </div>
         </div>
@@ -67,26 +67,26 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
         <?php
           if( !isset($pesquisa_chave) ) {
             if( isset($campos)==false ) {
-                if( file_exists($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_sysarquivo.php") == true ) {
-                  include($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_sysarquivo.php");
+                if( file_exists($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_syscampo.php") == true ) {
+                  include($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_syscampo.php");
                 } else {
-                  $campos = "db_sysarquivo.*";
+                  $campos = "db_syscampo.*";
                 }
             }
-            if( isset($chave_codarq) and (trim($chave_codarq)!="") ) {
-               $sql = $db_db_sysarquivo->sql_query($chave_codarq,$campos,"codarq");
-            }else if(isset($chave_nomearq) and (trim($chave_nomearq)!="") ){
-               $sql = $db_db_sysarquivo->sql_query("",$campos,"nomearq"," nomearq like '$chave_nomearq%' ");
+            if( isset($chave_codcam) and (trim($chave_codcam)!="") ) {
+               $sql = $db_db_syscampo->sql_query($chave_codcam,$campos,"codcam");
+            }else if(isset($chave_nomecam) and (trim($chave_nomecam)!="") ){
+               $sql = $db_db_syscampo->sql_query("",$campos,"nomecam"," nomecam like '$chave_nomecam%' ");
             }else{
-               $sql = $db_db_sysarquivo->sql_query("",$campos,"codarq","");
+               $sql = $db_db_syscampo->sql_query("",$campos,"codcam","");
             }
             $db_stdlib->db_lovrot($sql,15,"()","",( isset($funcao_js) ? $funcao_js : null ) );
           }else{
             if( $pesquisa_chave != null and $pesquisa_chave != "" ) {
-              $result = $db_db_sysarquivo->sql_record($db_db_sysarquivo->sql_query($pesquisa_chave));
-              if($db_db_sysarquivo->numrows!=0){
+              $result = $db_db_syscampo->sql_record($db_db_syscampo->sql_query($pesquisa_chave));
+              if($db_db_syscampo->numrows!=0){
                 $db_stdlib->db_fieldsmemory($result,0);
-                echo "<script>".$funcao_js."('$nomearq',false);</script>";
+                echo "<script>".$funcao_js."('$nomecam',false);</script>";
               }else{
                echo "<script>".$funcao_js."('Chave(".$pesquisa_chave.") não Encontrado',true);</script>";
               }

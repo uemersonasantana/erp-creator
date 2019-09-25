@@ -43,32 +43,33 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
   </style>
   <div class="card-body">
       <form class="form form-horizontal" name="form2">
-          <div class="form-body center">
-            <h5></h5>
-          </div>
-          <div class="form-body">
-              <div class="form-group row" style="margin-bottom:0;">
-                  <label class="col-md-3 label-control" for="projectinput5" title="<?=$Tcodmod?>"><?=$Lcodmod?></label>
-                  <div class="col-md-9">
-                    <?php $db_funcoes->db_input("codmod",4,$Icodmod,true,"text",4,"","chave_codmod"); ?>
-                  </div>
-              </div>
-          </div>
-          <div class="form-body">
-              <div class="form-group row" style="margin-bottom:0;">
-                  <label class="col-md-3 label-control" for="projectinput5" title="<?=$Tnomemod?>"><?=$Lnomemod?></label>
-                  <div class="col-md-9">
-                    <?php $db_funcoes->db_input("nomemod",40,$Inomemod,true,"text",4,"","chave_nomemod"); ?>
-                  </div>
-              </div>
-          </div>
+        <input type="hidden" name="funcao_js" value="<?php echo $funcao_js; ?>" />
+        <div class="form-body center">
+          <h5></h5>
+        </div>
+        <div class="form-body">
+            <div class="form-group row" style="margin-bottom:0;">
+                <label class="col-md-3 label-control" for="projectinput5" title="<?=$Tcodmod?>"><?=$Lcodmod?></label>
+                <div class="col-md-9">
+                  <?php $db_funcoes->db_input("codmod",4,$Icodmod,true,"text",4,"","chave_codmod"); ?>
+                </div>
+            </div>
+        </div>
+        <div class="form-body">
+            <div class="form-group row" style="margin-bottom:0;">
+                <label class="col-md-3 label-control" for="projectinput5" title="<?=$Tnomemod?>"><?=$Lnomemod?></label>
+                <div class="col-md-9">
+                  <?php $db_funcoes->db_input("nomemod",40,$Inomemod,true,"text",4,"","chave_nomemod"); ?>
+                </div>
+            </div>
+        </div>
 
-          <div class="form-actions center" style="margin-top:0;padding:0;padding-top:10px;">
-            <input class="btn btn-sm btn-info" name="pesquisar" type="submit" id="pesquisar2" value="Pesquisar"> 
-            <input class="btn btn-sm btn-info" name="limpar" type="reset" id="limpar" value="Limpar" />
-            <input type="button" name="fechar" id="fechar" class="btn btn-sm btn-info" onclick="parent.js_fecharModal('#xlarge');return false" value="Fechar" />
-          </div>
-      </form>
+        <div class="form-actions center" style="margin-top:0;padding:0;padding-top:10px;">
+          <input class="btn btn-sm btn-info" name="pesquisar" type="submit" id="pesquisar2" value="Pesquisar"> 
+          <input class="btn btn-sm btn-info" name="limpar" type="reset" id="limpar" value="Limpar" />
+          <input type="button" name="fechar" id="fechar" class="btn btn-sm btn-info" onclick="parent.js_fecharModal('#xlarge');return false" value="Fechar" />
+        </div>
+    </form>
   </div>
   <table class="table table-responsive-lg">
     <tr> 

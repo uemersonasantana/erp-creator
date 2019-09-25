@@ -1335,7 +1335,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   }
 
   // se for a primeira vez que é rodado, pega o total de registros e guarda no campo hidden
-  if( ( empty ($$tot_registros) and !empty ($query) ) || isset($recomecar)) {
+  if( ( empty ($$tot_registros) and !empty ($query) ) or isset($recomecar)) {
 
     if( isset( $recomecar ) ) {
       $query = self::db_getsession("dblov_query_inicial");
@@ -1343,13 +1343,13 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
     $Dd1 = "disabled";
 
-    if( count( $totalizacao ) > 0 || isset( $totalizacao_rep ) ) {
+    if( count( $totalizacao ) > 0 or isset( $totalizacao_rep ) ) {
 
       $total_campos     = "";
       $sep_total_campos = "";
       reset($totalizacao);
 
-      for ( $j = 0; $j < count( $totalizacao ); $j ++) {
+      for ( $j = 0; $j < count( $totalizacao ); $j++ ) {
 
         if( key( $totalizacao ) == $totalizacao[key($totalizacao)] ) {
 

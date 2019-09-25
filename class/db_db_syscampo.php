@@ -9,7 +9,6 @@ namespace classes;
 
 use libs\db_stdlib;
 
-
 //MODULO: configuracoes
 //CLASSE DA ENTIDADE db_syscampo
 class db_db_syscampo { 
@@ -56,15 +55,16 @@ class db_db_syscampo {
                  tipoobj = varchar(20) = Obj. Formulário 
                  rotulorel = varchar(40) = Rótulo relatório 
                  ";
+
    //funcao construtor da classe 
-   function cl_db_syscampo() { 
+   function __construct() { 
      //classes dos rotulos dos campos
-     $this->rotulocl = new rotulo("db_syscampo"); 
-     $this->pagina_retorno =  basename($GLOBALS["HTTP_SERVER_VARS"]["PHP_SELF"]);
+     $this->rotulocl        =   new \std\rotulo("db_syscampo"); 
+     $this->pagina_retorno  =   basename($_SERVER["PHP_SELF"]);
    }
    //funcao erro 
    function erro($mostra,$retorna) { 
-     if(($this->erro_status == "0") || ($mostra == true && $this->erro_status != null )){
+     if(($this->erro_status == "0") or ($mostra == true and $this->erro_status != null )){
         echo "<script>alert(\"".$this->erro_msg."\");</script>";
         if($retorna==true){
            echo "<script>location.href='".$this->pagina_retorno."'</script>";
@@ -74,25 +74,25 @@ class db_db_syscampo {
    // funcao para atualizar campos
    function atualizacampos($exclusao=false) {
      if($exclusao==false){
-       $this->codcam = ($this->codcam == ""?@$GLOBALS["HTTP_POST_VARS"]["codcam"]:$this->codcam);
-       $this->nomecam = ($this->nomecam == ""?@$GLOBALS["HTTP_POST_VARS"]["nomecam"]:$this->nomecam);
-       $this->conteudo = ($this->conteudo == ""?@$GLOBALS["HTTP_POST_VARS"]["conteudo"]:$this->conteudo);
-       $this->descricao = ($this->descricao == ""?@$GLOBALS["HTTP_POST_VARS"]["descricao"]:$this->descricao);
-       $this->valorinicial = ($this->valorinicial == ""?@$GLOBALS["HTTP_POST_VARS"]["valorinicial"]:$this->valorinicial);
-       $this->rotulo = ($this->rotulo == ""?@$GLOBALS["HTTP_POST_VARS"]["rotulo"]:$this->rotulo);
-       $this->tamanho = ($this->tamanho == ""?@$GLOBALS["HTTP_POST_VARS"]["tamanho"]:$this->tamanho);
-       $this->nulo = ($this->nulo == "f"?@$GLOBALS["HTTP_POST_VARS"]["nulo"]:$this->nulo);
-       $this->maiusculo = ($this->maiusculo == "f"?@$GLOBALS["HTTP_POST_VARS"]["maiusculo"]:$this->maiusculo);
-       $this->autocompl = ($this->autocompl == "f"?@$GLOBALS["HTTP_POST_VARS"]["autocompl"]:$this->autocompl);
-       $this->aceitatipo = ($this->aceitatipo == ""?@$GLOBALS["HTTP_POST_VARS"]["aceitatipo"]:$this->aceitatipo);
-       $this->tipoobj = ($this->tipoobj == ""?@$GLOBALS["HTTP_POST_VARS"]["tipoobj"]:$this->tipoobj);
-       $this->rotulorel = ($this->rotulorel == ""?@$GLOBALS["HTTP_POST_VARS"]["rotulorel"]:$this->rotulorel);
+       $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
+       $this->nomecam = ($this->nomecam == ""?@$GLOBALS["nomecam"]:$this->nomecam);
+       $this->conteudo = ($this->conteudo == ""?@$GLOBALS["conteudo"]:$this->conteudo);
+       $this->descricao = ($this->descricao == ""?@$GLOBALS["descricao"]:$this->descricao);
+       $this->valorinicial = ($this->valorinicial == ""?@$GLOBALS["valorinicial"]:$this->valorinicial);
+       $this->rotulo = ($this->rotulo == ""?@$GLOBALS["rotulo"]:$this->rotulo);
+       $this->tamanho = ($this->tamanho == ""?@$GLOBALS["tamanho"]:$this->tamanho);
+       $this->nulo = ($this->nulo == "f"?@$GLOBALS["nulo"]:$this->nulo);
+       $this->maiusculo = ($this->maiusculo == "f"?@$GLOBALS["maiusculo"]:$this->maiusculo);
+       $this->autocompl = ($this->autocompl == "f"?@$GLOBALS["autocompl"]:$this->autocompl);
+       $this->aceitatipo = ($this->aceitatipo == ""?@$GLOBALS["aceitatipo"]:$this->aceitatipo);
+       $this->tipoobj = ($this->tipoobj == ""?@$GLOBALS["tipoobj"]:$this->tipoobj);
+       $this->rotulorel = ($this->rotulorel == ""?@$GLOBALS["rotulorel"]:$this->rotulorel);
      }else{
-       $this->codcam = ($this->codcam == ""?@$GLOBALS["HTTP_POST_VARS"]["codcam"]:$this->codcam);
+       $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
      }
    }
    // funcao para inclusao
-   function incluir ($codcam){ 
+   function incluir ($codcam=null){ 
       $this->atualizacampos();
      if($this->nomecam == null ){ 
        $this->erro_sql = " Campo Nome nao Informado.";
@@ -130,9 +130,19 @@ class db_db_syscampo {
        $this->erro_status = "0";
        return false;
      }
-     if($this->tamanho == null ){ 
+     if( $this->tamanho == null ){ 
        $this->tamanho = "0";
      }
+     if( ( $this->conteudo == 'char' or $this->conteudo == 'varchar') and $this->tamanho == null ) { 
+       $this->erro_sql = " Campo tamanho não pode ser vazio para o tipo: ".$this->conteudo;
+       $this->erro_campo = "rotulo";
+       $this->erro_banco = "";
+       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
+       $this->erro_status = "0";
+       return false;
+     }
+
      if($this->nulo == null ){ 
        $this->erro_sql = " Campo Aceita Nulo nao Informado.";
        $this->erro_campo = "nulo";
@@ -187,7 +197,7 @@ class db_db_syscampo {
        $this->erro_status = "0";
        return false;
      }
-     if($codcam == "" || $codcam == null ){
+     if($codcam == "" or $codcam == null ){
        $result = db_stdlib::db_query("select nextval('db_syscampo_codcam_seq')"); 
        if($result==false){
          $this->erro_banco = str_replace("\n","",@pg_last_error());
@@ -197,10 +207,10 @@ class db_db_syscampo {
          $this->erro_status = "0";
          return false; 
        }
-       $this->codcam = pg_result($result,0,0); 
+       $this->codcam = db_stdlib::lastInsertId(); 
      }else{
        $result = db_stdlib::db_query("select last_value from db_syscampo_codcam_seq");
-       if(($result != false) && (pg_result($result,0,0) < $codcam)){
+       if(($result != false) and ( db_stdlib::lastInsertId() < $codcam)){
          $this->erro_sql = " Campo codcam maior que último número da sequencia.";
          $this->erro_banco = "Sequencia menor que este número.";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -211,7 +221,7 @@ class db_db_syscampo {
          $this->codcam = $codcam; 
        }
      }
-     if(($this->codcam == null) || ($this->codcam == "") ){ 
+     if(($this->codcam == null) or ($this->codcam == "") ){ 
        $this->erro_sql = " Campo codcam nao declarado.";
        $this->erro_banco = "Chave Primaria zerada.";
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -272,26 +282,28 @@ class db_db_syscampo {
      $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
      $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
      $this->erro_status = "1";
-     $this->numrows_incluir= pg_affected_rows($result);
+     $this->numrows_incluir= $result->rowCount();
      $resaco = $this->sql_record($this->sql_query_file($this->codcam));
-     if(($resaco!=false)||($this->numrows!=0)){
+     if(($resaco!=false)or($this->numrows!=0)){
+       $linha = $resaco->fetch();
+
        $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
        $acount = db_stdlib::lastInsertId();
-       $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
+       $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
        $resac = db_stdlib::db_query("insert into db_acountkey values($acount,752,'$this->codcam','I')");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,752,'','".AddSlashes(pg_result($resaco,0,'codcam'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,753,'','".AddSlashes(pg_result($resaco,0,'nomecam'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,754,'','".AddSlashes(pg_result($resaco,0,'conteudo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,750,'','".AddSlashes(pg_result($resaco,0,'descricao'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,755,'','".AddSlashes(pg_result($resaco,0,'valorinicial'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,756,'','".AddSlashes(pg_result($resaco,0,'rotulo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,757,'','".AddSlashes(pg_result($resaco,0,'tamanho'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,758,'','".AddSlashes(pg_result($resaco,0,'nulo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2252,'','".AddSlashes(pg_result($resaco,0,'maiusculo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2253,'','".AddSlashes(pg_result($resaco,0,'autocompl'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2256,'','".AddSlashes(pg_result($resaco,0,'aceitatipo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2438,'','".AddSlashes(pg_result($resaco,0,'tipoobj'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,4792,'','".AddSlashes(pg_result($resaco,0,'rotulorel'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,752,'','".addslashes($linha->codcam)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,753,'','".addslashes($linha->nomecam)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,754,'','".addslashes($linha->conteudo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,750,'','".addslashes($linha->descricao)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,755,'','".addslashes($linha->valorinicial)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,756,'','".addslashes($linha->rotulo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,757,'','".addslashes($linha->tamanho)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,758,'','".addslashes($linha->nulo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2252,'','".addslashes($linha->maiusculo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2253,'','".addslashes($linha->autocompl)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2256,'','".addslashes($linha->aceitatipo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2438,'','".addslashes($linha->tipoobj)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,144,4792,'','".addslashes($linha->rotulorel)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
      }
      return true;
    } 
@@ -300,7 +312,7 @@ class db_db_syscampo {
       $this->atualizacampos();
      $sql = " update db_syscampo set ";
      $virgula = "";
-     if(trim($this->codcam)!="" || isset($GLOBALS["HTTP_POST_VARS"]["codcam"])){ 
+     if(trim($this->codcam)!="" or isset($GLOBALS["codcam"])){ 
        $sql  .= $virgula." codcam = $this->codcam ";
        $virgula = ",";
        if(trim($this->codcam) == null ){ 
@@ -313,7 +325,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->nomecam)!="" || isset($GLOBALS["HTTP_POST_VARS"]["nomecam"])){ 
+     if(trim($this->nomecam)!="" or isset($GLOBALS["nomecam"])){ 
        $sql  .= $virgula." nomecam = '$this->nomecam' ";
        $virgula = ",";
        if(trim($this->nomecam) == null ){ 
@@ -326,7 +338,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->conteudo)!="" || isset($GLOBALS["HTTP_POST_VARS"]["conteudo"])){ 
+     if(trim($this->conteudo)!="" or isset($GLOBALS["conteudo"])){ 
        $sql  .= $virgula." conteudo = '$this->conteudo' ";
        $virgula = ",";
        if(trim($this->conteudo) == null ){ 
@@ -339,7 +351,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->descricao)!="" || isset($GLOBALS["HTTP_POST_VARS"]["descricao"])){ 
+     if(trim($this->descricao)!="" or isset($GLOBALS["descricao"])){ 
        $sql  .= $virgula." descricao = '$this->descricao' ";
        $virgula = ",";
        if(trim($this->descricao) == null ){ 
@@ -352,11 +364,11 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->valorinicial)!="" || isset($GLOBALS["HTTP_POST_VARS"]["valorinicial"])){ 
+     if(trim($this->valorinicial)!="" or isset($GLOBALS["valorinicial"])){ 
        $sql  .= $virgula." valorinicial = '$this->valorinicial' ";
        $virgula = ",";
      }
-     if(trim($this->rotulo)!="" || isset($GLOBALS["HTTP_POST_VARS"]["rotulo"])){ 
+     if(trim($this->rotulo)!="" or isset($GLOBALS["rotulo"])){ 
        $sql  .= $virgula." rotulo = '$this->rotulo' ";
        $virgula = ",";
        if(trim($this->rotulo) == null ){ 
@@ -369,14 +381,14 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->tamanho)!="" || isset($GLOBALS["HTTP_POST_VARS"]["tamanho"])){ 
-        if(trim($this->tamanho)=="" && isset($GLOBALS["HTTP_POST_VARS"]["tamanho"])){ 
+     if(trim($this->tamanho)!="" or isset($GLOBALS["tamanho"])){ 
+        if(trim($this->tamanho)=="" and isset($GLOBALS["tamanho"])){ 
            $this->tamanho = "0" ; 
         } 
        $sql  .= $virgula." tamanho = $this->tamanho ";
        $virgula = ",";
      }
-     if(trim($this->nulo)!="" || isset($GLOBALS["HTTP_POST_VARS"]["nulo"])){ 
+     if(trim($this->nulo)!="" or isset($GLOBALS["nulo"])){ 
        $sql  .= $virgula." nulo = '$this->nulo' ";
        $virgula = ",";
        if(trim($this->nulo) == null ){ 
@@ -389,7 +401,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->maiusculo)!="" || isset($GLOBALS["HTTP_POST_VARS"]["maiusculo"])){ 
+     if(trim($this->maiusculo)!="" or isset($GLOBALS["maiusculo"])){ 
        $sql  .= $virgula." maiusculo = '$this->maiusculo' ";
        $virgula = ",";
        if(trim($this->maiusculo) == null ){ 
@@ -402,7 +414,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->autocompl)!="" || isset($GLOBALS["HTTP_POST_VARS"]["autocompl"])){ 
+     if(trim($this->autocompl)!="" or isset($GLOBALS["autocompl"])){ 
        $sql  .= $virgula." autocompl = '$this->autocompl' ";
        $virgula = ",";
        if(trim($this->autocompl) == null ){ 
@@ -415,7 +427,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->aceitatipo)!="" || isset($GLOBALS["HTTP_POST_VARS"]["aceitatipo"])){ 
+     if(trim($this->aceitatipo)!="" or isset($GLOBALS["aceitatipo"])){ 
        $sql  .= $virgula." aceitatipo = $this->aceitatipo ";
        $virgula = ",";
        if(trim($this->aceitatipo) == null ){ 
@@ -428,7 +440,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->tipoobj)!="" || isset($GLOBALS["HTTP_POST_VARS"]["tipoobj"])){ 
+     if(trim($this->tipoobj)!="" or isset($GLOBALS["tipoobj"])){ 
        $sql  .= $virgula." tipoobj = '$this->tipoobj' ";
        $virgula = ",";
        if(trim($this->tipoobj) == null ){ 
@@ -441,7 +453,7 @@ class db_db_syscampo {
          return false;
        }
      }
-     if(trim($this->rotulorel)!="" || isset($GLOBALS["HTTP_POST_VARS"]["rotulorel"])){ 
+     if(trim($this->rotulorel)!="" or isset($GLOBALS["rotulorel"])){ 
        $sql  .= $virgula." rotulorel = '$this->rotulorel' ";
        $virgula = ",";
        if(trim($this->rotulorel) == null ){ 
@@ -460,37 +472,37 @@ class db_db_syscampo {
      }
      $resaco = $this->sql_record($this->sql_query_file($this->codcam));
      if($this->numrows>0){
-       for($conresaco=0;$conresaco<$this->numrows;$conresaco++){
+       foreach ( $resaco as $linha) {
          $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
          $acount = db_stdlib::lastInsertId();
-         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
+         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
          $resac = db_stdlib::db_query("insert into db_acountkey values($acount,752,'$this->codcam','A')");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["codcam"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,752,'".AddSlashes(pg_result($resaco,$conresaco,'codcam'))."','$this->codcam',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["nomecam"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,753,'".AddSlashes(pg_result($resaco,$conresaco,'nomecam'))."','$this->nomecam',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["conteudo"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,754,'".AddSlashes(pg_result($resaco,$conresaco,'conteudo'))."','$this->conteudo',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["descricao"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,750,'".AddSlashes(pg_result($resaco,$conresaco,'descricao'))."','$this->descricao',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["valorinicial"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,755,'".AddSlashes(pg_result($resaco,$conresaco,'valorinicial'))."','$this->valorinicial',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["rotulo"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,756,'".AddSlashes(pg_result($resaco,$conresaco,'rotulo'))."','$this->rotulo',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["tamanho"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,757,'".AddSlashes(pg_result($resaco,$conresaco,'tamanho'))."','$this->tamanho',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["nulo"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,758,'".AddSlashes(pg_result($resaco,$conresaco,'nulo'))."','$this->nulo',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["maiusculo"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2252,'".AddSlashes(pg_result($resaco,$conresaco,'maiusculo'))."','$this->maiusculo',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["autocompl"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2253,'".AddSlashes(pg_result($resaco,$conresaco,'autocompl'))."','$this->autocompl',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["aceitatipo"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2256,'".AddSlashes(pg_result($resaco,$conresaco,'aceitatipo'))."','$this->aceitatipo',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["tipoobj"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2438,'".AddSlashes(pg_result($resaco,$conresaco,'tipoobj'))."','$this->tipoobj',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["HTTP_POST_VARS"]["rotulorel"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,4792,'".AddSlashes(pg_result($resaco,$conresaco,'rotulorel'))."','$this->rotulorel',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["codcam"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,752,'".addslashes($linha->codcam)."','$this->codcam',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["nomecam"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,753,'".addslashes($linha->nomecam)."','$this->nomecam',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["conteudo"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,754,'".addslashes($linha->conteudo)."','$this->conteudo',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["descricao"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,750,'".addslashes($linha->descricao)."','$this->descricao',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["valorinicial"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,755,'".addslashes($linha->valorinicial)."','$this->valorinicial',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["rotulo"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,756,'".addslashes($linha->rotulo)."','$this->rotulo',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["tamanho"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,757,'".addslashes($linha->tamanho)."','$this->tamanho',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["nulo"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,758,'".addslashes($linha->nulo)."','$this->nulo',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["maiusculo"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2252,'".addslashes($linha->maiusculo)."','$this->maiusculo',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["autocompl"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2253,'".addslashes($linha->autocompl)."','$this->autocompl',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["aceitatipo"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2256,'".addslashes($linha->aceitatipo)."','$this->aceitatipo',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["tipoobj"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2438,'".addslashes($linha->tipoobj)."','$this->tipoobj',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["rotulorel"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,144,4792,'".addslashes($linha->rotulorel)."','$this->rotulorel',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
        }
      }
      $result = db_stdlib::db_query($sql);
@@ -504,7 +516,7 @@ class db_db_syscampo {
        $this->numrows_alterar = 0;
        return false;
      }else{
-       if(pg_affected_rows($result)==0){
+       if($result->rowCount()==0){
          $this->erro_banco = "";
          $this->erro_sql = "Campos das tabelas nao foi Alterado. Alteracao Executada.\\n";
          $this->erro_sql .= "Valores : ".$this->codcam;
@@ -520,43 +532,43 @@ class db_db_syscampo {
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_alterar = pg_affected_rows($result);
+         $this->numrows_alterar = $result->rowCount();
          return true;
        } 
      } 
    } 
    // funcao para exclusao 
    function excluir ($codcam=null,$dbwhere=null) { 
-     if($dbwhere==null || $dbwhere==""){
+     if($dbwhere==null or $dbwhere==""){
        $resaco = $this->sql_record($this->sql_query_file($codcam));
      }else{ 
        $resaco = $this->sql_record($this->sql_query_file(null,"*",null,$dbwhere));
      }
-     if(($resaco!=false)||($this->numrows!=0)){
-       for($iresaco=0;$iresaco<$this->numrows;$iresaco++){
+     if(($resaco!=false)or($this->numrows!=0)){
+       foreach ( $resaco as $linha) {
          $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
          $acount = db_stdlib::lastInsertId();
-         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
+         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
          $resac = db_stdlib::db_query("insert into db_acountkey values($acount,752,'$codcam','E')");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,752,'','".AddSlashes(pg_result($resaco,$iresaco,'codcam'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,753,'','".AddSlashes(pg_result($resaco,$iresaco,'nomecam'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,754,'','".AddSlashes(pg_result($resaco,$iresaco,'conteudo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,750,'','".AddSlashes(pg_result($resaco,$iresaco,'descricao'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,755,'','".AddSlashes(pg_result($resaco,$iresaco,'valorinicial'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,756,'','".AddSlashes(pg_result($resaco,$iresaco,'rotulo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,757,'','".AddSlashes(pg_result($resaco,$iresaco,'tamanho'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,758,'','".AddSlashes(pg_result($resaco,$iresaco,'nulo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2252,'','".AddSlashes(pg_result($resaco,$iresaco,'maiusculo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2253,'','".AddSlashes(pg_result($resaco,$iresaco,'autocompl'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2256,'','".AddSlashes(pg_result($resaco,$iresaco,'aceitatipo'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2438,'','".AddSlashes(pg_result($resaco,$iresaco,'tipoobj'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,4792,'','".AddSlashes(pg_result($resaco,$iresaco,'rotulorel'))."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,752,'','".addslashes($linha->codcam)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,753,'','".addslashes($linha->nomecam)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,754,'','".addslashes($linha->conteudo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,750,'','".addslashes($linha->descricao)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,755,'','".addslashes($linha->valorinicial)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,756,'','".addslashes($linha->rotulo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,757,'','".addslashes($linha->tamanho)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,758,'','".addslashes($linha->nulo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2252,'','".addslashes($linha->maiusculo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2253,'','".addslashes($linha->autocompl)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2256,'','".addslashes($linha->aceitatipo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,2438,'','".addslashes($linha->tipoobj)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,144,4792,'','".addslashes($linha->rotulorel)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
        }
      }
      $sql = " delete from db_syscampo
                     where ";
      $sql2 = "";
-     if($dbwhere==null || $dbwhere ==""){
+     if($dbwhere==null or $dbwhere ==""){
         if($codcam != ""){
           if($sql2!=""){
             $sql2 .= " and ";
@@ -577,7 +589,7 @@ class db_db_syscampo {
        $this->numrows_excluir = 0;
        return false;
      }else{
-       if(pg_affected_rows($result)==0){
+       if($result->rowCount()==0){
          $this->erro_banco = "";
          $this->erro_sql = "Campos das tabelas nao Encontrado. Exclusão não Efetuada.\\n";
          $this->erro_sql .= "Valores : ".$codcam;
@@ -593,7 +605,7 @@ class db_db_syscampo {
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
-         $this->numrows_excluir = pg_affected_rows($result);
+         $this->numrows_excluir = $result->rowCount();
          return true;
        } 
      } 
@@ -610,7 +622,7 @@ class db_db_syscampo {
        $this->erro_status = "0";
        return false;
      }
-     $this->numrows = pg_numrows($result);
+     $this->numrows = $result->rowCount();
       if($this->numrows==0){
         $this->erro_banco = "";
         $this->erro_sql   = "Record Vazio na Tabela:db_syscampo";
