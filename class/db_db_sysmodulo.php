@@ -128,7 +128,7 @@ class db_db_sysmodulo {
        $this->codmod = db_stdlib::lastInsertId(); 
      }else{
        $result = db_stdlib::db_query("select last_value from db_sysmodulo_codmod_seq");
-       if(($result != false) and (pg_result($result,0,0) < $this->codmod)){
+       if(($result != false) and ($result->fetch()->last_value < $this->codmod)){
          $this->erro_sql = " Campo codmod maior que último número da sequencia.";
          $this->erro_banco = "Sequencia menor que este número.";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
@@ -188,16 +188,17 @@ class db_db_sysmodulo {
      $this->erro_status = "1";
      $this->numrows_incluir= $result->rowCount();
      $resaco = $this->sql_record($this->sql_query_file($this->codmod));
-     if(($resaco!=false)||($this->numrows!=0)){
-       $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
-       $acount = db_stdlib::lastInsertId();
-       $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
+     if( ($resaco!=false) or ($this->numrows!=0) ) {
+       $resac   = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
+       $acount  = db_stdlib::lastInsertId();
+       $resac   = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
+       
        $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$this->codmod','I')");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,748,'','".AddSlashes(pg_result($resaco,0,'codmod'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,749,'','".AddSlashes(pg_result($resaco,0,'nomemod'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,750,'','".AddSlashes(pg_result($resaco,0,'descricao'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,751,'','".AddSlashes(pg_result($resaco,0,'dataincl'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,8975,'','".AddSlashes(pg_result($resaco,0,'ativo'))."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,748,'','".addslashes($resaco->fetch()->codmod)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,749,'','".addslashes($resaco->fetch()->nomemod)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,750,'','".addslashes($resaco->fetch()->descricao)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,751,'','".addslashes($resaco->fetch()->dataincl)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,148,8975,'','".addslashes($resaco->fetch()->ativo)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
      }
      return true;
    } 

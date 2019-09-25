@@ -33,7 +33,7 @@ function __construct() {
 	  and uol_hora = ".parent::db_getsession("DB_uol_hora"));
 	if($result->rowCount() == 0) {
 	  $hora = time();
-	  parent::db_query($conn,"insert into db_usuariosonline 
+	  parent::db_query("insert into db_usuariosonline 
 	    values(".parent::db_getsession("DB_id_usuario").",
 	      ".$hora.",
 	      '".$_SERVER['REMOTE_ADDR']."',            

@@ -139,7 +139,7 @@ if ( $iNumRowsModulos == 0 ) {
 
             echo "
                     <div class=\"col-xl-3 col-md-6 col-sm-12\">
-                        <a title='".$linha->help."' href=\"".$Services_Funcoes->url_acesso_in()."modulo/".base64_encode("instit=".$db_stdlib->db_getsession("DB_instit")."&area_de_acesso=".$db_stdlib->db_getsession("DB_Area"). "&anousu=".$linha->anousu."&modulo=".$linha->id_item."&nomemod=".$linha->nome_modulo)."\">
+                        <a title='".$linha->help."' href=\"".$Services_Funcoes->url_acesso_in()."modulo/".base64_encode("instit=".$db_stdlib->db_getsession("DB_instit")."&area_de_acesso=".$db_stdlib->db_getsession("DB_Area"). "&anousu=".$linha->anousu."&get_modulo=".$linha->id_item."&nomemod=".$linha->nome_modulo)."\">
                             <div class=\"card text-white box-shadow-0 bg-info\">
                                 <div class=\"card-content collapse show\">
                                     <div class=\"card-body text-center\">

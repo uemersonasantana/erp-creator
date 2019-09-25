@@ -66,9 +66,9 @@ if ( $pagina != 'instituicoes' ) {
     $Services_Funcoes->cabecalho_pagina($pagina, (isset($instit) ? $instit : null), (isset($area_de_acesso) ? $area_de_acesso : null) );
 }
 
-if(isset($modulo) and is_numeric($modulo)){
+if(isset($get_modulo) and is_numeric($get_modulo)){
 
-  $sSqlAreaModulo   =   " SELECT at26_codarea FROM atendcadareamod WHERE at26_id_item = $modulo ";
+  $sSqlAreaModulo   =   " SELECT at26_codarea FROM atendcadareamod WHERE at26_id_item = $get_modulo ";
   $rsSqlAreaModulo  =   $db_stdlib->db_query($sSqlAreaModulo);
 
   $iNumAreaModulo   =   $rsSqlAreaModulo->rowCount();
@@ -81,8 +81,8 @@ if(isset($modulo) and is_numeric($modulo)){
 
 $db_stdlib->db_putsession( "DB_datausu",time() );
 
-if( !isset($formAnousu) and isset($modulo) ) {
-    $db_stdlib->db_putsession("DB_modulo"           ,   $modulo);
+if( !isset($formAnousu) and isset($get_modulo) ) {
+    $db_stdlib->db_putsession("DB_modulo"           ,   $get_modulo);
     $db_stdlib->db_putsession("DB_nome_modulo"      ,   $nomemod);
     $db_stdlib->db_putsession("DB_anousu"           ,   $anousu);
 } else if(  isset($formAnousu) and $formAnousu != "" ) {
@@ -90,7 +90,7 @@ if( !isset($formAnousu) and isset($modulo) ) {
 }
 
 //  Se o exercício não for selecionado no módulo, está acessando o módulo.
-if( !isset($formAnousu) and isset($modulo) ) {
+if( !isset($formAnousu) and isset($get_modulo) ) {
   //  Se o ano da data do exercício for diferente do anousu registrado, o sistema utiliza como padrão o anousu da data.
   if( $db_stdlib->db_getsession("DB_anousu") != date("Y",$db_stdlib->db_getsession("DB_datausu")) ){
     $db_stdlib->db_putsession("DB_anousu" , date("Y",$db_stdlib->db_getsession("DB_datausu")) );

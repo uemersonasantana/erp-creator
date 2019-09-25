@@ -6,7 +6,7 @@ $db_db_sysmodulo  = new classes\db_db_sysmodulo;
 $erro     = false;
 $db_opcao = 1;
 
-if( isset($retorno) ) {
+if ( isset($retorno) ) {
   $sql = "SELECT *
                   ,to_char(dataincl,'DD') as dataincl_dia
                   ,to_char(dataincl,'MM') as dataincl_mes
