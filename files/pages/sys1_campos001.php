@@ -30,6 +30,7 @@ if ( isset($retorno) ) {
   if( isset($campodefault) ) {
     $campdes    = $nomecam;
     $codcampai  = $retorno;
+    
     unset($retorno,$nomecam);
   }
 }
@@ -40,8 +41,17 @@ if(isset($_REQUEST["incluir"])) {
 
   $db_funcoes->db_inicio_transacao();
   $db_db_syscampo->incluir();
-  $db_db_sycampodep->incluir(0,0);
-  $db_db_syscampodef->incluir(0,0);
+  if ( $codcampai > 0 ) {
+    $db_db_sycampodep->incluir($db_db_syscampo->codcam,$codcampai);
+  }
+  if ( isset($itensdef) ) {
+    $numArray = sizeof($itensdef);
+    for( $i = 0;$i < $numArray;$i++ ) {
+      $aux = explode("#&",$itensdef[$i]);
+
+      $db_db_syscampodef->incluir($codcam, $aux[0], ( !empty($aux[1]) ? $aux[1] : ' ' ) );
+    }
+  }
   $db_funcoes->db_fim_transacao($erro);
 
 ////////////////ALTERAR////////////////  
@@ -50,8 +60,21 @@ if(isset($_REQUEST["incluir"])) {
 
   $db_funcoes->db_inicio_transacao();
   $db_db_syscampo->alterar();
-  $db_db_sycampodep->alterar(0,0);
-  $db_db_syscampodef->alterar(0,0);
+
+  $db_db_sycampodep->excluir($codcam);
+  if ( $codcampai > 0 ) {
+    $db_db_sycampodep->incluir($codcam,$codcampai);
+  }
+  $db_db_syscampodef->excluir($codcam);
+
+  if ( isset($itensdef) ) {
+    $numArray = sizeof($itensdef);
+    for( $i = 0;$i < $numArray;$i++ ) {
+      $aux = explode("#&",$itensdef[$i]);
+
+      $db_db_syscampodef->incluir($codcam, $aux[0], ( !empty($aux[1]) ? $aux[1] : ' ' ) );
+    }
+  } 
   $db_funcoes->db_fim_transacao($erro);
 
 ////////////////EXCLUIR//////////////
@@ -59,9 +82,9 @@ if(isset($_REQUEST["incluir"])) {
   $db_opcao = 3;
 
   $db_funcoes->db_inicio_transacao();
-  $db_db_sycampodep->excluir(null,0);
-  $db_db_syscampodef->excluir(null,0);
-  $db_db_syscampo->excluir();
+  $db_db_sycampodep->excluir($codcam);
+  $db_db_syscampodef->excluir($codcam);
+  $db_db_syscampo->excluir($codcam);
   $db_funcoes->db_fim_transacao($erro);
 }
 

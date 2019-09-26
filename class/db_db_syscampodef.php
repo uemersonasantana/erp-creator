@@ -62,8 +62,20 @@ class db_db_syscampodef {
      }
    }
    // funcao para inclusao
-   function incluir ($codcam,$defcampo){
+   function incluir($codcam=null,$defcampo=null,$defdescr=null){
       $this->atualizacampos();
+
+      if( $codcam != null ) {
+        $this->codcam = $codcam;
+      } 
+      if( $defcampo != null ) {
+        $this->defcampo = $defcampo;
+      }
+      //  Usando isset porque o valor por vim vazio.
+      if( $defdescr != null ) {
+        $this->defdescr = $defdescr;
+      }
+
      if($this->defdescr == null ){
        $this->erro_sql = " Campo Descrição Valor nao Informado.";
        $this->erro_campo = "defdescr";

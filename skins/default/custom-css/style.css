@@ -234,11 +234,12 @@ form .form-control {
   padding: 0.50rem 0.7rem;
 }
 
+/*
 #invoice-template {
   padding:3rem;
   padding-top:2rem;
 }
-
+*/
 .estrutura {
   color:black;
 }
@@ -264,4 +265,24 @@ form .form-control {
   font-size: 12px;
   height: 17px;
   border: 1px solid #999999;
+}
+
+.horizontal-menu #main-menu-navigation ul.dropdown-menu {
+  padding: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.horizontal-menu .navbar-horizontal .dropdown .dropdown-menu .dropdown-item {
+  padding: 2px;
+  padding-left: 10px;
+}
+
+.horizontal-menu .navbar-horizontal .dropdown .dropdown-menu .dropdown-item:hover {
+  background-color: #21273d;
+  color:white;
+}
+
+.navbar-horizontal .dropdown-toggle::after {
+  top: 4px !important;
 }

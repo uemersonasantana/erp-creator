@@ -74,25 +74,38 @@ class db_db_syscampo {
    // funcao para atualizar campos
    function atualizacampos($exclusao=false) {
      if($exclusao==false){
-       $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
-       $this->nomecam = ($this->nomecam == ""?@$GLOBALS["nomecam"]:$this->nomecam);
-       $this->conteudo = ($this->conteudo == ""?@$GLOBALS["conteudo"]:$this->conteudo);
-       $this->descricao = ($this->descricao == ""?@$GLOBALS["descricao"]:$this->descricao);
-       $this->valorinicial = ($this->valorinicial == ""?@$GLOBALS["valorinicial"]:$this->valorinicial);
-       $this->rotulo = ($this->rotulo == ""?@$GLOBALS["rotulo"]:$this->rotulo);
-       $this->tamanho = ($this->tamanho == ""?@$GLOBALS["tamanho"]:$this->tamanho);
-       $this->nulo = ($this->nulo == "f"?@$GLOBALS["nulo"]:$this->nulo);
-       $this->maiusculo = ($this->maiusculo == "f"?@$GLOBALS["maiusculo"]:$this->maiusculo);
-       $this->autocompl = ($this->autocompl == "f"?@$GLOBALS["autocompl"]:$this->autocompl);
-       $this->aceitatipo = ($this->aceitatipo == ""?@$GLOBALS["aceitatipo"]:$this->aceitatipo);
-       $this->tipoobj = ($this->tipoobj == ""?@$GLOBALS["tipoobj"]:$this->tipoobj);
-       $this->rotulorel = ($this->rotulorel == ""?@$GLOBALS["rotulorel"]:$this->rotulorel);
+       $this->codcam        = ($this->codcam        == ""     ?   @$GLOBALS["codcam"]       : $this->codcam);
+       $this->nomecam       = ($this->nomecam       == ""     ?   @$GLOBALS["nomecam"]      : $this->nomecam);
+       $this->conteudo      = ($this->conteudo      == ""     ?   @$GLOBALS["conteudo"]     : $this->conteudo);
+       $this->descricao     = ($this->descricao     == ""     ?   @$GLOBALS["descricao"]    : $this->descricao);
+       $this->valorinicial  = ($this->valorinicial  == ""     ?   @$GLOBALS["valorinicial"] : $this->valorinicial);
+       $this->rotulo        = ($this->rotulo        == ""     ?   @$GLOBALS["rotulo"]       : $this->rotulo);
+       $this->tamanho       = ($this->tamanho       == ""     ?   @$GLOBALS["tamanho"]      : $this->tamanho);
+       $this->nulo          = ( isset($GLOBALS["nulo"])       ?  't'  : $this->nulo);
+       $this->maiusculo     = ( isset($GLOBALS["maiusculo"])  ?  't'  : $this->maiusculo);
+       $this->autocompl     = ( isset($GLOBALS["autocompl"])  ?  't'  : $this->autocompl);
+       $this->aceitatipo    = ($this->aceitatipo    == ""     ?   @$GLOBALS["aceitatipo"]   : $this->aceitatipo);
+       $this->tipoobj       = ($this->tipoobj       == ""     ?   @$GLOBALS["tipoobj"]      : $this->tipoobj);
+       $this->rotulorel     = ($this->rotulorel     == ""     ?   @$GLOBALS["rotulorel"]    : $this->rotulorel);
+       
+        if((substr($this->conteudo,0,4) == "date") and empty($this->valorinicial)){
+          $this->valorinicial = "null";
+        } 
+        if((substr($this->conteudo,0,3) == "int") and empty($this->valorinicial)){
+          $this->valorinicial = "0";
+        } 
+        if((substr($this->conteudo,0,5) == "float") and empty($this->valorinicial)){
+          $this->valorinicial = "0";
+        } 
+        if((substr($this->conteudo,0,3) == "boo") and empty($this->valorinicial)){
+          $this->valorinicial = "f";
+        } 
      }else{
        $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
      }
    }
    // funcao para inclusao
-   function incluir ($codcam=null){ 
+   function incluir($codcam=null){ 
       $this->atualizacampos();
      if($this->nomecam == null ){ 
        $this->erro_sql = " Campo Nome nao Informado.";
@@ -229,6 +242,16 @@ class db_db_syscampo {
        $this->erro_status = "0";
        return false;
      }
+
+    if ( db_stdlib::db_query("SELECT nomecam FROM db_syscampo WHERE nomecam ='$this->nomecam'")->rowCount() > 0 ) { 
+       $this->erro_sql = " Inclusão abortada! \\n O campo $this->nomecam já foi incluido!";
+       $this->erro_banco = "";
+       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
+       $this->erro_status = "0";
+       return false;
+     }
+
      $sql = "insert into db_syscampo(
                                        codcam 
                                       ,nomecam 
@@ -308,7 +331,7 @@ class db_db_syscampo {
      return true;
    } 
    // funcao para alteracao
-   function alterar ($codcam=null) { 
+   function alterar($codcam=null) { 
       $this->atualizacampos();
      $sql = " update db_syscampo set ";
      $virgula = "";
@@ -466,8 +489,18 @@ class db_db_syscampo {
          return false;
        }
      }
+
+     if ( db_stdlib::db_query("SELECT nomecam FROM db_syscampo WHERE codcam != $this->codcam and nomecam ='$this->nomecam'")->rowCount() > 0 ) { 
+       $this->erro_sql = " Inclusão abortada! \\n O campo $this->nomecam já foi incluido!";
+       $this->erro_banco = "";
+       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
+       $this->erro_status = "0";
+       return false;
+     }
+
      $sql .= " where ";
-     if($codcam!=null){
+     if($this->codcam!=null){
        $sql .= " codcam = $this->codcam";
      }
      $resaco = $this->sql_record($this->sql_query_file($this->codcam));

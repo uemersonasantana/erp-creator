@@ -58,8 +58,16 @@ class db_db_syscampodep {
      }
    }
    // funcao para inclusao
-   function incluir ($codcam){ 
+   function incluir ($codcam=null,$codcampai=null){ 
       $this->atualizacampos();
+
+      if( $codcam != null ) {
+        $this->codcam = $codcam;
+      } 
+      if( $codcampai != null) {
+        $this->codcampai = $codcampai;
+      }
+
      if($this->codcampai == null ){ 
        $this->erro_sql = " Campo Código Campo Pai nao Informado.";
        $this->erro_campo = "codcampai";
