@@ -110,8 +110,7 @@ $cl_rotulo->label();
 <div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $db_db_syscampo->erro_msg; ?></div>
 <?php } 
 
-include 'forms/frm_db_syscampo.php';
+include 'forms/frm_db_syscampo001.php';
 
 ?>
-
 </div>

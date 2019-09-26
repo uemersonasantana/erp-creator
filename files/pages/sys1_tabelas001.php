@@ -75,7 +75,7 @@ $cl_rotulo->label();
 <div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $db_db_sysarquivo->erro_msg; ?></div>
 <?php } 
 
-include 'forms/frm_db_sysarquivo.php';
+include 'forms/frm_db_sysarquivo001.php';
 
 ?>
 
