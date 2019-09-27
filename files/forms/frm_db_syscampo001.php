@@ -165,7 +165,7 @@
                   <div class="row">
                     <div class="col-md-5">
                       <div class="form-group">
-                        <select multiple name="itensdef[]" onChange="js_mostradef(this)" size="13" id="itensdef" style="width:100%;">
+                        <select multiple name="itensdef[]" class="form-control" onChange="js_mostradef(this)" size="13" id="itensdef" style="width:100%;">
                           <?php
                           if(isset($retorno)){
                             $result = $db_stdlib->db_query("SELECT * FROM db_syscampodef WHERE codcam = ".$retorno);

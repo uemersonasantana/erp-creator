@@ -11,7 +11,32 @@ if (isset($_REQUEST["atualizar"])) {
   $db_opcao = 1;
 
   $db_funcoes->db_inicio_transacao();
-  $db_sysarqcamp->incluir();
+
+  $tam = sizeof($campos);
+  
+  $result = $db_stdlib->db_query("SELECT codcam, codsequencia FROM db_sysarqcamp where codsequencia != 0 and codarq = $dbh_tabela");
+  
+  if( $result->rowCount() > 0 ) {
+    for ( $i=0; $i < $result->rowCount(); $i++ ) {
+      $db_stdlib->db_fieldsmemory($result,$i);
+      $matcam[$i] = $codcam;
+      $matseq[$i] = $codsequencia;
+    }
+  }
+
+  $db_sysarqcamp->excluir($dbh_tabela);
+
+  for($i = 0;$i < $tam;$i++){
+    $codseq = 0;
+    if(isset($matcam)){
+      for($x=0;$x<sizeof($matcam);$x++){
+        if($matcam[$x]==$campos[$i]){
+          $codseq = $matseq[$x];
+        }
+      }
+    }
+    $db_sysarqcamp->incluir($dbh_tabela, $campos[$i], ($i + 1), $codseq);
+  }
   $db_funcoes->db_fim_transacao($erro);
 }
 

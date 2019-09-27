@@ -80,7 +80,7 @@
 	        	<div class="form-group">
 	        		<label for="dbh_modulo"><strong>Campos já relacionados:</strong></label>
 	        		<input type="text" name="procuracampo" class="form-control" id="procuracampo5">
-              		<input type="button" name="procurarcampo" class="btn btn-info btn-min-width mr-1 mb-1" onClick="return js_procurar()" id="procurarcampo6" value="Procurar">
+              		<input type="button" name="procurarcampo" class="btn btn-info btn-min-width mr-1 mb-1" data-toggle="modal" data-target="#xlarge" onClick="return js_procurar()" id="procurarcampo6" value="Procurar">
 	        	</div>
 
 	        	<div class="row">
@@ -117,7 +117,11 @@
 	</div>
 </section>
 </form>
+<script language="JavaScript" type="text/javascript" src="<?php echo $Services_Funcoes->url_acesso(); ?>scripts/Extensions_Funcoes.js?n=<?php echo rand(0,1000); ?>"></script>
 <script>
+
+js_trocacordeselect();
+
 function js_naoorganizados() {
   var F = document.form1;
   var SI = F.naoorganizados.selectedIndex;
@@ -175,7 +179,8 @@ function js_procurar() {
   	document.form1.procuracampo.focus();
   	return false;
   }
-  js_OpenJanelaIframe('top.corpo','db_iframe_pesquisa','sys1_campos003.php?campo=' + document.form1.procuracampo.value);
+  
+  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_syscampo002.php?campo='+document.form1.procuracampo.value, '100%', '370px');
 
   //jan = window.open('sys1_campos003.php?campo=' + document.form1.procuracampo.value,'','width=220,height=310,location=0');
   //jan.moveTo(450,150);
@@ -192,4 +197,11 @@ function js_selecionar() {
   }
   return true;
 }
+
+function js_fecharModal(modal) {
+  $(modal).modal('hide');
+  $('body').removeClass('modal-open');
+  $('.modal-backdrop').remove();
+}
+
 </script>
