@@ -32,6 +32,10 @@ if( isset($_REQUEST["incluir"]) ) {
   $db_opcao = 3;
   $db_funcoes->db_inicio_transacao();
   $db_db_sysfuncoes->excluir($codfuncao);
+  // Remove a função caso ela já exista no sistema.
+  if ( $db_stdlib->db_query("SELECT '$nomefuncao'::regproc;")->rowCount() > 0 ) {
+    $db_stdlib->db_exec("DROP FUNCTION ".$nomefuncao);
+  }
   $db_funcoes->db_fim_transacao($erro);
 }
 

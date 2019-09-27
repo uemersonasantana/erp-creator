@@ -21,11 +21,11 @@ if ( !isset($gerar) ) {
 
   //  Durante o cadastro, coloquei "Aspas duplas" no lugar de 'aspas simples', porque estava acontecendo 
   $corpofuncao  = str_replace('"',"'", $corpofuncao);
-  
-  $result = $db_stdlib->db_exec("$corpofuncao");
+
+  $result = $db_stdlib->db_query("$corpofuncao");
   if ( $result == false ) {
     $erro     = true;
-    $erro_msg = "Erro ao criar a funcao: $funcao";
+    $erro_msg = "Erro ao processar à funcao: $funcao";
   }
 
   if ( !$erro ) {

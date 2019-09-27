@@ -23,14 +23,18 @@
             </div>
 
             <div class="form-group">
-              <label for="nomefuncao"><strong>Nome:</strong></label>
+              <label for="nomefuncao" title="<?php echo $Tnomefuncao; ?>"><strong><?php echo $Lnomefuncao; ?></strong></label>
               <?php $db_funcoes->db_input('nomefuncao', 100, '', true, 'text', $db_opcao); ?>
             </div>
             <div class="form-group">
+              <label for="nomearquivo" title="<?php echo $Tnomearquivo; ?>"><?php echo $Lnomearquivo; ?></label>
+              <?php $db_funcoes->db_input('nomearquivo', 100, '', true, 'text', $db_opcao); ?>
+            </div>
+            <div class="form-group" title="<?php echo $Tobsfuncao; ?>">
               <label for="obsfuncao"><?php echo $Lobsfuncao; ?></label>
               <?php $db_funcoes->db_textarea('obsfuncao', 3, 50, '', true, 'text', $db_opcao); ?>
             </div>
-            <div class="form-group">
+            <div class="form-group" title="<?php echo $Tcorpofuncao; ?>">
               <label for="corpofuncao"><?php echo $Lcorpofuncao; ?></label>
               <?php $db_funcoes->db_textarea('corpofuncao', 10, 50, '', true, 'text', $db_opcao); ?>
             </div>

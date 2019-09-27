@@ -130,10 +130,10 @@ class db_db_sysfuncoes {
          $this->erro_status = "0";
          return false; 
        }
-       $this->codfuncao = pg_result($result,0,0); 
+       $this->codfuncao = db_stdlib::lastInsertId(); 
      }else{
        $result = db_stdlib::db_query("select last_value from db_sysfuncoes_codfuncao_seq");
-       if(($result != false) && (pg_result($result,0,0) < $codfuncao)){
+       if(($result != false) and (db_stdlib::lastInsertId() < $this->codfuncao)){
          $this->erro_sql = " Campo codfuncao maior que último número da sequencia.";
          $this->erro_banco = "Sequencia menor que este número.";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
