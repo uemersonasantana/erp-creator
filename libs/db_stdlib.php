@@ -59,10 +59,21 @@ static function db_debug_backtrace() {
   return $sBacktrace;
 }
 
+/***
+ *
+ * Funcao wrapper para executar a pdo:exec (PostgreSQL)
+ *
+ */
+static function db_exec($param1){
+  $dbresult = db_conecta::exec($param1);
+
+  return $dbresult;
+}
+
 
 /***
  *
- * Funcao wrapper para executar a pg_query (PostgreSQL)
+ * Funcao wrapper para executar a pdo:prepare (PostgreSQL)
  *
  */
 static function db_query($param1, $param2=null, $param3="SQL"){
@@ -99,11 +110,13 @@ static function db_query($param1, $param2=null, $param3="SQL"){
     }
 
     $dbresult = db_conecta::prepare($dbsql);
+
+    if (!$dbresult) {
+      echo print_r($dbresult->errorInfo()); exit();
+    }
+
     $dbresult->execute();
     
-    if (!$dbresult) {
-      $dbresult = $dbresult->errorInfo();
-    }
   }else{
 
     $dbsql    = $sBackTrace . $param2;

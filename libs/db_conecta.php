@@ -56,7 +56,7 @@ class db_conecta extends db_stdlib
     if (!isset(self::$instance)) { 
       try { 
         self::$instance = new PDO('pgsql:host='.DB_SERVIDOR.';port='.DB_PORTA.';dbname='.DB_BASE, DB_USUARIO, DB_SENHA);
-        self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         self::$instance->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
       } catch (PDOException $e) {
         echo $e->getMessage();
@@ -64,6 +64,10 @@ class db_conecta extends db_stdlib
     }
 
     return self::$instance;
+  }
+
+  public static function exec($sql) {
+    return self::getInstance()->exec($sql);
   }
 
   public static function prepare($sql) {
