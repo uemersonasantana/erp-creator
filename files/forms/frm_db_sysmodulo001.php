@@ -53,7 +53,7 @@
 document.form1.nomemod.focus();
 
 function js_pesquisa() {
-  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_sysmodulo.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');
+  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_sysmodulo001.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');
 }
 
 function js_retornopesquisa(chave) {

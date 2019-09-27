@@ -225,7 +225,7 @@ function js_buscadefault(valor){
 }
 
 function js_pesquisa() {
-  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_syscampo.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');
+  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_syscampo001.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');
 }
 
 function js_retornopesquisa(chave) {
@@ -305,7 +305,7 @@ function js_verifica(){
 }
 
 function js_documentacao_iframe() {
-  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_syscampo.php?funcao_js=parent.js_recebecampo|codcam|nomecam', '100%', '580px');
+  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_syscampo001.php?funcao_js=parent.js_recebecampo|codcam|nomecam', '100%', '580px');
 }
 
 function js_recebecampo(chave,nome){ 
