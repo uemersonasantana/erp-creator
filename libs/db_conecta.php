@@ -20,9 +20,9 @@ define("DB_FONTE_CODVERSAO"   , "4");
 define("DB_FONTE_CODRELEASE"  , "850");
 
 // Usuário do PostgreSQL
-define("DB_USUARIO"           , "postgres");
+define("DB_USUARIO"           , "uas");
 // Senha do usuário do PostgreSQL
-define("DB_SENHA"             , "postgres");
+define("DB_SENHA"             , "uas");
 // Ip do servidor para a conexão com a base de dados
 define("DB_SERVIDOR"          , "localhost");
 // Porta para conexao com o banco de dados (porta do Pool de Conexoes quando utilizado)

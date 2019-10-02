@@ -1733,11 +1733,11 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     }
   } else if( isset( $_POST["totalizacao_repas"] ) ) {
 
-    $totalizacao_split = explode( "\|", $_POST["totalizacao_repas"] );
+    $totalizacao_split = explode( "|", $_POST["totalizacao_repas"] );
 
     for( $totrep = 0; $totrep < count( $totalizacao_split ); $totrep++ ) {
 
-      $totalizacao_sep                  = explode( "\=", $totalizacao_split[$totrep] );
+      $totalizacao_sep                  = explode( "=", $totalizacao_split[$totrep] );
       $totalizacao[$totalizacao_sep[0]] = $totalizacao_sep[1];
 
       if( isset( $_POST["totrep_".$totalizacao_sep[0]] ) ) {
@@ -1779,7 +1779,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
     // se foi passado funcao
     if ( $campos_layer != "" ) {
 
-      $campo_layerexe = explode( "\|", $campos_layer );
+      $campo_layerexe = explode( "|", $campos_layer );
       $sHtml .= "<td bgcolor=\"$db_corcabec\" title=\"Executa Procedimento Específico.\">";
       $sHtml .= "  Clique";
       $sHtml .= "</td>";
@@ -1828,11 +1828,6 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
   $result2  = $result->fetchAll();
 
 
-  for( $j = 0; $j < $NumFields; $j ++ ) {
-    $campoCodigo  = $result->getColumnMeta($j)['name'];
-    break;
-  }
-
   /********************************/
   /****** escreve o corpo *********/
   /********************************/
@@ -1848,19 +1843,17 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
       if( $quantidadeItemsArrayFuncao > 1 ) {
 
         for( $cont = 1; $cont < $quantidadeItemsArrayFuncao; $cont ++ ) {
-
           if( strlen( $arrayFuncao[$cont] ) > 3 ) {
-
             for( $luup = 0; $luup < $result->columnCount(); $luup ++ ) {
-
               if( $result->columnCount($luup) == "db_".$arrayFuncao[$cont] ) {
                 $arrayFuncao[$cont] = "db_".$arrayFuncao[$cont];
               }
             }
           }
 
+          $nomeCampo = $result->getColumnMeta( ($cont-1) )['name'];
           $loop     .= $caracter . "'";
-          $loop     .= $result2[$i]->$campoCodigo . "'";
+          $loop     .= $result2[$i]->$nomeCampo . "'";
           $caracter  = ",";
         }
 
@@ -1878,7 +1871,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
 
     if( $campos_layer != "" ) {
 
-      $campo_layerexe = explode( "\|", $campos_layer );
+      $campo_layerexe = explode( "|", $campos_layer );
       $sHtml .= "<td id=\"funcao_aux" . $i . "\" ";
       $sHtml .= "    class = 'DBLovrotTdFuncaoAuxiliar' ";
       $sHtml .= "    bgcolor=\"$cor\"> ";
@@ -2686,7 +2679,7 @@ function db_separainstrucao($texto, $comeca=0, &$layout, $linha, $separador, $ma
 
   $texto = db_geratexto($texto);
 
-  $textos = explode("\|", $texto);
+  $textos = explode("|", $texto);
 
   //        for ($xxx=0; $xxx < sizeof($textos); $xxx++) {
   //                echo "$xxx: " . $textos[$xxx] . "<br>";

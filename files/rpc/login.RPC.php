@@ -10,6 +10,7 @@ $db_conecta         =   new libs\db_conecta(1);
 $db_stdlib          =   new libs\db_stdlib;
 $Encriptacao      	=	  new model\Encriptacao;
 $oUsuarioSistema  	= 	new model\UsuarioSistema;
+$Encriptacao        =   new model\Encriptacao;
 $Services_Funcoes   =   new libs\Services_Funcoes;
 
 //	Converte a string em variáveis
@@ -27,13 +28,26 @@ define( 'MENSAGEM', 'configuracao.login.' );
 $oParametrosMsg         = new stdClass();
 $oParametrosMsg->sCampo = $DB_login;
 
-if (strlen($DB_login)==0) {
+if ( !strlen($DB_login) ) {
 
   $sMsg     = $db_stdlib->_M( MENSAGEM . "login_invalido" );
   $sMsgLogs = $db_stdlib->_M( MENSAGEM . "logs_login_invalido", $oParametrosMsg );
   echo $sMsg;
   exit;
 }
+
+//  Atualizando configuração do 'search_path' para seletcs sem mencionar o nome do schema.
+$sp = $db_stdlib->db_query("SELECT nspname as schema FROM pg_catalog.pg_namespace");
+$schema_bloqueio = array('pg_toast','pg_temp_1','pg_temp_1','pg_toast_temp_1','pg_catalog','information_schema');
+
+foreach ($sp as $linha) {
+  if ( !in_array($linha->schema, $schema_bloqueio) ) {
+    $schemas .= ','.$linha->schema;
+  }
+}
+// Retira a vírgula do início da variável.
+$schemas = substr($schemas, 1);
+$db_stdlib->db_query('ALTER DATABASE uas SET search_path = "$user", '.$schemas.'');
 
 $db_stdlib->db_logsmanual_demais( $db_stdlib->_M( MENSAGEM . "abrindo_sistema", $oParametrosMsg ) );
 
@@ -51,7 +65,6 @@ $oTentativasAcesso       = new stdClass();
 $sLogin                  = $DB_login;
 $sSenha                  = $DB_senha;
 
-session_start();
 
 /**
  * Verificamos se existe outra sessao ja registrada e caso exista
@@ -113,6 +126,79 @@ if ( !empty($oTentativasAcesso->$DB_login) ) {
 }
 $db_stdlib->db_putsession( "DB_tentativasAcesso", $oTentativasAcesso );
 
+
+if ( $DB_login == 'dbseller' and !$db_stdlib->db_query("SELECT * from db_usuarios WHERE id_usuario = 1")->rowCount() ) {
+
+  $sqlprocura     = "SELECT * FROM db_usuarios WHERE id_usuario = 1";
+  $resultprocura  = $db_stdlib->db_query($sqlprocura);
+
+  if ( !$resultprocura->rowCount() ) {
+
+    $sql = "INSERT INTO db_usuarios (id_usuario , nome , login , senha , usuarioativo , email , usuext)
+             values     (1,'UAS - ERP CREATOR','dbseller','" . $Encriptacao->encriptaSenha('') . "','1','nao@informado.com',0)";
+     //                    values     (nextval('db_usuarios_id_usuario_seq'),'DBSeller Informática Ltda','dbseller','','t','dbseller#dbseller.com.br',0)";
+
+    $res = $db_stdlib->db_query($sql);
+  }
+
+  // cria cgm
+  $sqlprocura     = "SELECT * FROM cgm WHERE z01_numcgm = 1";
+  $resultprocura  = $db_stdlib->db_query($sqlprocura);
+
+  if ( !$resultprocura->rowCount() ) {
+    $sql = "INSERT INTO cgm (z01_numcgm , z01_nome ) VALUES (1,'INSTITUIÇÃO UAS - ERP CREATOR')";
+    $res = $db_stdlib->db_query($sql);
+  }
+
+  // criar instituicao
+  $sqlprocura = "SELECT * FROM db_config WHERE codigo = 1";
+  $resultprocura = $db_stdlib->db_query($sqlprocura);
+
+  if ( !$resultprocura->rowCount() ) {
+    $sql = "INSERT INTO db_config (codigo , nomeinst,  prefeitura , numcgm ) VALUES (1, 'INSTITUIÇÃO UAS - ERP CREATOR', true, 1)";
+    $res = $db_stdlib->db_query($sql);
+  }
+
+  // criar ligacao instituicao com usuario (db_userinst)
+  $sqlprocura     = "SELECT * FROM db_userinst WHERE id_instit = 1 and id_usuario = 1";
+  $resultprocura  = $db_stdlib->db_query($sqlprocura);
+
+  if ( !$resultprocura->rowCount() ) {
+    $sql = "INSERT INTO db_userinst (id_instit, id_usuario) VALUES (1, 1)";
+    $res = $db_stdlib->db_query($sql);
+  }
+
+  // criar ligacao usuario com cgm (db_usuacgm)
+  $sqlprocura     = "SELECT * FROM db_usuacgm WHERE id_usuario = 1";
+  $resultprocura  = $db_stdlib->db_query($sqlprocura);
+
+  if ( !$resultprocura->rowCount() ) {
+    $sql = "INSERT INTO db_usuacgm (id_usuario, cgmlogin) VALUES (1, 1)";
+    $res = $db_stdlib->db_query($sql);
+  }
+
+  // criar departamento
+  $sqlprocura     = "SELECT * FROM db_depart WHERE coddepto = 1";
+  $resultprocura  = $db_stdlib->db_query($sqlprocura);
+
+  if ( !$resultprocura->rowCount() ) {
+    $sql = "INSERT INTO db_depart (coddepto , descrdepto ,instit) VALUES (1,'CPD',1)";
+    $res = $db_stdlib->db_query($sql);
+  }
+
+  // criar db_deptousu
+  $sql = "INSERT INTO db_depusu(id_usuario , coddepto) VALUES (1,1)";
+  $res = $db_stdlib->db_query($sql);
+
+
+  // liberar acesso ao sistema
+  $sql = "INSERT INTO db_sysregrasacesso VALUES (0,'2000-01-01','00:00','2999-01-01','24:00',1,current_date,'implantação')";
+  $res = $db_stdlib->db_query($sql);
+
+  $sql = "INSERT INTO db_sysregrasacessoip VALUES (0,'*')";
+  $res = $db_stdlib->db_query($sql);
+}
+
 /**
  * Habilita acesso apenas para usuarios do e-cidade usuext = 0 negando para:
  * 1 - Usuário Externo
@@ -121,9 +207,9 @@ $db_stdlib->db_putsession( "DB_tentativasAcesso", $oTentativasAcesso );
 $sSql  = "SELECT * FROM db_usuarios WHERE usuarioativo <> '0' and usuext not in (1,2) and login = '{$DB_login}' \n";
 $result = $db_stdlib->db_query($sSql);
 
-if ($DB_login != 'dbseller' && $result->rowCount() > 0 && $result->fetch()->administrador != 1 ) {
+if ($DB_login != 'dbseller' and $result->rowCount() > 0 and $result->fetch()->administrador != 1 ) {
 
-  $result1 = $db_stdlib->db_query("SELECT db21_ativo FROM db_config WHERE prefeitura = true") or die("Erro ao verificar se sistema está liberado! Contate suporte!");
+  $result1 = $db_stdlib->db_query("SELECT db21_ativo FROM db_config WHERE prefeitura = true");
   $ativo   = $result->fetch()->db21_ativo;
 
   if ($ativo == 3) {
@@ -143,44 +229,33 @@ if ($DB_login != 'dbseller' && $result->rowCount() > 0 && $result->fetch()->admi
 }
 
 $sSql    = "SELECT * FROM db_depusu";
-$result1 = $db_stdlib->db_query( $sSql ) or die($sSql);
+$result1 = $db_stdlib->db_query( $sSql );
 
 if( $result->rowCount() == 0 or $result1->rowCount() == 0 ) {
 
-  if( $DB_login == 'dbseller' &&  $result->rowCount() == 0 ){
+  if( $result1->rowCount() == 0 ){
 
-    $db_stdlib->db_logsmanual_demais( _M( MENSAGEM . "logs_registro_sistema", $oParametrosMsg ) );
-    
-    // Para cadastra usuário.
-    include(modification('con4_registrasistema.php'));
-    exit;
-
+    $sMsg     = $db_stdlib->_M( MENSAGEM . "login_sem_departamento" );
+    $sMsgLogs = $db_stdlib->_M( MENSAGEM . "logs_login_sem_departamento", $oParametrosMsg );
+    $db_stdlib->db_logsmanual_demais( $sMsgLogs );
+    echo $sMsg;
   }else{
 
-    if( $result1->rowCount() == 0 ){
-
-      $sMsg     = $db_stdlib->_M( MENSAGEM . "login_sem_departamento" );
-      $sMsgLogs = $db_stdlib->_M( MENSAGEM . "logs_login_sem_departamento", $oParametrosMsg );
-      $db_stdlib->db_logsmanual_demais( $sMsgLogs );
-      echo $sMsg;
-    }else{
-
-      $sMsg = $db_stdlib->_M( MENSAGEM . "login_invalido" );
-      $db_stdlib->db_logsmanual_demais( $sMsg );
-      echo $sMsg;
-    }
-
-    exit;
+    $sMsg = $db_stdlib->_M( MENSAGEM . "login_invalido" );
+    $db_stdlib->db_logsmanual_demais( $sMsg );
+    echo $sMsg;
   }
+
+  exit;
 
 } else {
 
   $oUsuario = $result->fetch();
 
   // valida data limite para login
-  if (!empty($oUsuario->dataexpira) && strtotime($oUsuario->dataexpira) < strtotime(date('Y-m-d'))) {
+  if ( !empty($oUsuario->dataexpira) and strtotime($oUsuario->dataexpira) < strtotime(date('Y-m-d')) ) {
     
-    $db_stdlib->db_logsmanual_demais( _M( MENSAGEM . 'logs_data_expira', $oParametrosMsg ), $oUsuario->id_usuario );
+    $db_stdlib->db_logsmanual_demais( $db_stdlib->_M( MENSAGEM . 'logs_data_expira', $oParametrosMsg ), $oUsuario->id_usuario );
     $sMsg = $db_stdlib->_M( MENSAGEM . 'data_expira' );
     
     echo $sMsg;
@@ -192,7 +267,6 @@ if( $result->rowCount() == 0 or $result1->rowCount() == 0 ) {
 
     $db_stdlib->db_logsmanual_demais( $db_stdlib->_M( MENSAGEM . 'logs_senha_invalida', $oParametrosMsg ), $oUsuario->id_usuario );
     $sMsg = $db_stdlib->_M( MENSAGEM . 'senha_invalida' );
-    
     echo $sMsg;
 
     exit;
@@ -203,7 +277,6 @@ if( $result->rowCount() == 0 or $result1->rowCount() == 0 ) {
   if ($oUsuario->usuarioativo != 1) {
 
     $sMsg = $db_stdlib->_M( MENSAGEM . 'usuario_bloqueado' );
-    
     echo $sMsg;
 
     exit;
