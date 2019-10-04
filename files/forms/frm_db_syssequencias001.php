@@ -62,7 +62,7 @@
               
 
               <div class="form-actions">
-                <input name="atualizar" class="btn btn-dark btn-min-width mr-1 mb-1" onClick="return confirm('Atualizar sequencia?')" accesskey="a" type="submit" value="Atualizar" disabled> 
+                <input name="atualizar" class="btn btn-dark btn-min-width mr-1 mb-1" onClick="return confirm('Atualizar sequencia?')" type="submit" value="Atualizar" disabled> 
                 <input type="button" name="Button" class="btn btn-dark btn-min-width mr-1 mb-1" onClick="js_retsel()" value="Retirar Sele&ccedil;&atilde;o de Campos">
               </div>
           </div>
@@ -79,7 +79,7 @@
 
             <div class="form-group">
               <label for="nomesequencia" title="<?php echo $Tnomesequencia; ?>"><?php echo $Lnomesequencia; ?></label>
-              <?php $db_funcoes->db_input('nomesequencia', 40, '', true, 'text', $db_opcao); ?>
+              <?php $db_funcoes->db_input('nomesequencia', 40, '', true, 'text', 3); ?>
             </div>
 
             <div class="form-group">

@@ -60,7 +60,7 @@ class db_db_sysarqcamp {
        $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
        $this->seqarq = ($this->seqarq == ""?@$GLOBALS["seqarq"]:$this->seqarq);
        $this->codsequencia = ($this->codsequencia == ""?@$GLOBALS["codsequencia"]:$this->codsequencia);
-     }else{
+     } else {
        $this->codarq = ($this->codarq == ""?@$GLOBALS["codarq"]:$this->codarq);
        $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
        $this->seqarq = ($this->seqarq == ""?@$GLOBALS["seqarq"]:$this->seqarq);
@@ -69,18 +69,26 @@ class db_db_sysarqcamp {
    // funcao para inclusao
    function incluir($codarq,$codcam,$seqarq){ 
       $this->atualizacampos();
-     if($this->codsequencia == null ){ 
-       $this->erro_sql = " Campo Código nao Informado.";
+
+      if($codarq!=null){
+        $this->codarq = $codarq;
+      }
+      if($codcam!=null){
+        $this->codcam = $codcam;
+      }
+      if($seqarq!=null){
+        $this->seqarq = $seqarq;
+      }
+
+     /*if ( $this->codsequencia == null ) { 
+       $this->erro_sql = " Campo Código nao Informado.2";
        $this->erro_campo = "codsequencia";
        $this->erro_banco = "";
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
-     }
-       $this->codarq = $codarq; 
-       $this->codcam = $codcam; 
-       $this->seqarq = $seqarq; 
+     }*/
      if(($this->codarq == null) || ($this->codarq == "") ){ 
        $this->erro_sql = " Campo codarq nao declarado.";
        $this->erro_banco = "Chave Primaria zerada.";
@@ -159,8 +167,19 @@ class db_db_sysarqcamp {
      return true;
    } 
    // funcao para alteracao
-   function alterar ($codarq=null,$codcam=null,$seqarq=null) { 
+   function alterar($codarq=null,$codcam=null,$seqarq=null) { 
       $this->atualizacampos();
+
+      if($codarq!=null){
+        $this->codarq = $codarq;
+      }
+      if($codcam!=null){
+        $this->codcam = $codcam;
+      }
+      if($seqarq!=null){
+        $this->seqarq = $seqarq;
+      }
+
      $sql = " update db_sysarqcamp set ";
      $virgula = "";
      if(trim($this->codarq)!="" || isset($GLOBALS["codarq"])){ 
@@ -216,15 +235,16 @@ class db_db_sysarqcamp {
        }
      }
      $sql .= " where ";
-     if($codarq!=null){
+     if($this->codarq!=null){
        $sql .= " codarq = $this->codarq";
      }
-     if($codcam!=null){
+     if($this->codcam!=null){
        $sql .= " and  codcam = $this->codcam";
      }
-     if($seqarq!=null){
+     if($this->seqarq!=null){
        $sql .= " and  seqarq = $this->seqarq";
      }
+     
      $resaco = $this->sql_record($this->sql_query_file($this->codarq,$this->codcam,$this->seqarq));
      if($this->numrows>0){
        foreach ( $resaco as $linha) {

@@ -72,8 +72,13 @@ class db_db_syssequencia {
      }
    }
    // funcao para inclusao
-   function incluir ($codsequencia){ 
+   function incluir ($codsequencia=null){ 
       $this->atualizacampos();
+
+    if ( $codsequencia!=null ) {
+      $this->codsequencia = $codsequencia;
+    }
+
      if($this->nomesequencia == null ){ 
        $this->erro_sql = " Campo Nome nao Informado.";
        $this->erro_campo = "nomesequencia";
@@ -128,7 +133,7 @@ class db_db_syssequencia {
        $this->erro_status = "0";
        return false;
      }
-       $this->codsequencia = $codsequencia; 
+      
      if(($this->codsequencia == null) || ($this->codsequencia == "") ){ 
        $this->erro_sql = " Campo codsequencia nao declarado.";
        $this->erro_banco = "Chave Primaria zerada.";
@@ -137,6 +142,12 @@ class db_db_syssequencia {
        $this->erro_status = "0";
        return false;
      }
+
+     if ( (INT)$this->codsequencia == 0 ) {
+        $this->codsequencia = db_stdlib::db_query("SELECT codsequencia FROM db_syssequencia ORDER BY codsequencia DESC LIMIT 1")->fetch()->codsequencia;
+        $this->codsequencia = $this->codsequencia+1;
+     }
+
      $sql = "insert into db_syssequencia(
                                        codsequencia 
                                       ,nomesequencia 
@@ -185,15 +196,15 @@ class db_db_syssequencia {
       
        $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
        $acount = db_stdlib::lastInsertId();
-       $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
+       $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
        $resac = db_stdlib::db_query("insert into db_acountkey values($acount,766,'$this->codsequencia','I')");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,766,'','".addslashes($linha->codsequencia)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,767,'','".addslashes($linha->nomesequencia)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,768,'','".addslashes($linha->incrseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,769,'','".addslashes($linha->minvalueseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,770,'','".addslashes($linha->maxvalueseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,771,'','".addslashes($linha->startseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,772,'','".addslashes($linha->cacheseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,766,'','".addslashes($linha->codsequencia)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,767,'','".addslashes($linha->nomesequencia)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,768,'','".addslashes($linha->incrseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,769,'','".addslashes($linha->minvalueseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,770,'','".addslashes($linha->maxvalueseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,771,'','".addslashes($linha->startseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,150,772,'','".addslashes($linha->cacheseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
      }
      return true;
    } 
@@ -302,22 +313,22 @@ class db_db_syssequencia {
        foreach ( $resaco as $linha) {
          $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
          $acount = db_stdlib::lastInsertId();
-         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
+         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
          $resac = db_stdlib::db_query("insert into db_acountkey values($acount,766,'$this->codsequencia','A')");
          if(isset($GLOBALS["codsequencia"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,766,'".addslashes($linha->codsequencia)."','$this->codsequencia',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,766,'".addslashes($linha->codsequencia)."','$this->codsequencia',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
          if(isset($GLOBALS["nomesequencia"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,767,'".addslashes($linha->nomesequencia)."','$this->nomesequencia',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,767,'".addslashes($linha->nomesequencia)."','$this->nomesequencia',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
          if(isset($GLOBALS["incrseq"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,768,'".addslashes($linha->incrseq)."','$this->incrseq',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,768,'".addslashes($linha->incrseq)."','$this->incrseq',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
          if(isset($GLOBALS["minvalueseq"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,769,'".addslashes($linha->minvalueseq)."','$this->minvalueseq',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,769,'".addslashes($linha->minvalueseq)."','$this->minvalueseq',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
          if(isset($GLOBALS["maxvalueseq"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,770,'".addslashes($linha->maxvalueseq)."','$this->maxvalueseq',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,770,'".addslashes($linha->maxvalueseq)."','$this->maxvalueseq',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
          if(isset($GLOBALS["startseq"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,771,'".addslashes($linha->startseq)."','$this->startseq',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,771,'".addslashes($linha->startseq)."','$this->startseq',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
          if(isset($GLOBALS["cacheseq"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,772,'".addslashes($linha->cacheseq)."','$this->cacheseq',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,150,772,'".addslashes($linha->cacheseq)."','$this->cacheseq',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
        }
      }
      $result = db_stdlib::db_query($sql);
@@ -363,15 +374,15 @@ class db_db_syssequencia {
        foreach ( $resaco as $linha) {
          $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
          $acount = db_stdlib::lastInsertId();
-         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_getsession("DB_acessado").")");
+         $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
          $resac = db_stdlib::db_query("insert into db_acountkey values($acount,766,'$codsequencia','E')");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,766,'','".addslashes($linha->codsequencia)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,767,'','".addslashes($linha->nomesequencia)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,768,'','".addslashes($linha->incrseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,769,'','".addslashes($linha->minvalueseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,770,'','".addslashes($linha->maxvalueseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,771,'','".addslashes($linha->startseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,772,'','".addslashes($linha->cacheseq)."',".db_getsession('DB_datausu').",".db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,766,'','".addslashes($linha->codsequencia)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,767,'','".addslashes($linha->nomesequencia)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,768,'','".addslashes($linha->incrseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,769,'','".addslashes($linha->minvalueseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,770,'','".addslashes($linha->maxvalueseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,771,'','".addslashes($linha->startseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,150,772,'','".addslashes($linha->cacheseq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
        }
      }
      $sql = " delete from db_syssequencia
@@ -442,5 +453,39 @@ class db_db_syssequencia {
       }
      return $result;
    }
+
+    function sql_query_file ( $codsequencia=null,$campos="*",$ordem=null,$dbwhere=""){ 
+     $sql = "select ";
+     if($campos != "*" ){
+       $campos_sql = explode("#",$campos);
+       $virgula = "";
+       for($i=0;$i<sizeof($campos_sql);$i++){
+         $sql .= $virgula.$campos_sql[$i];
+         $virgula = ",";
+       }
+     }else{
+       $sql .= $campos;
+     }
+     $sql .= " from db_syssequencia ";
+     $sql2 = "";
+     if($dbwhere==""){
+       if($codsequencia!=null ){
+         $sql2 .= " where db_syssequencia.codsequencia = $codsequencia "; 
+       } 
+     }else if($dbwhere != ""){
+       $sql2 = " where $dbwhere";
+     }
+     $sql .= $sql2;
+     if($ordem != null ){
+       $sql .= " order by ";
+       $campos_sql = explode("#",$ordem);
+       $virgula = "";
+       for($i=0;$i<sizeof($campos_sql);$i++){
+         $sql .= $virgula.$campos_sql[$i];
+         $virgula = ",";
+       }
+     }
+     return $sql;
+  }
 }
 ?>

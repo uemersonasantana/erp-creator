@@ -24,6 +24,11 @@ if (isset($_REQUEST["atualizar"])) {
     }
   }
 
+  //  Coloca valor na variável global para passar no filtro de insert da classe 'db_sysarqcamp'.
+  if ( !isset($codsequencia) ) {
+    $GLOBALS['codsequencia']  = 0;
+  }
+
   $db_sysarqcamp->excluir($dbh_tabela);
 
   for($i = 0;$i < $tam;$i++){
@@ -35,6 +40,7 @@ if (isset($_REQUEST["atualizar"])) {
         }
       }
     }
+
     $db_sysarqcamp->incluir($dbh_tabela, $campos[$i], ($i + 1), $codseq);
   }
   $db_funcoes->db_fim_transacao($erro);
