@@ -1168,13 +1168,14 @@ function db_text_blur($tab, $campo, $campoaux, $tamanho, $max, $db_nome = "", $d
 function db_label($tab, $label, $campo = "") {
 	$campo = ($campo == "") ? $label : $campo;
 	?>
-	<strong>
-		<label for="db_<?=$campo?>">
-			<a href="" class="rotulos" onClick="js_lista('dbforms/db_<?=$tab?>.php','db_<?=$campo?>' + '==' + document.form1.db_<?=$campo?>.value,'<?=$campo?>',05,50,780);return false">
+	<label for="db_<?=$campo?>">
+		<strong>
+
+			<a href="" class="rotulos" data-toggle="modal" data-target="#xlarge" onClick="js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo Services_Funcoes::url_acesso(); ?>files/pages/func_db_sysarquivo001.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');return false">
 				<?=ucwords($label)?>:
 			</a>
-		</label>
-	</strong>
+		</strong>
+	</label>
 	<?
 
 
@@ -1187,7 +1188,7 @@ function db_label($tab, $label, $campo = "") {
 // 2 Aceita apenas letras
 function db_text($campo, $tamanho, $max, $db_nome = "", $dbh_nome = "", $validacao = 0) {
 	?>
-	<input name="db_<?=$campo?>" onBlur="js_ValidaCamposText(this,<?=$validacao?>)" id="db_<?=$campo?>" <?=@$readonly?> value="<?=$db_nome?>" type="text" size="<?=$tamanho?>" maxlength="<?=$max?>" autocomplete="off">
+	<input name="db_<?=$campo?>" class="form-control" onBlur="js_ValidaCamposText(this,<?=$validacao?>)" id="db_<?=$campo?>" <?=@$readonly?> value="<?=$db_nome?>" type="text" size="<?=$tamanho?>" maxlength="<?=$max?>" autocomplete="off">
 	<input name="dbh_<?=$campo?>" type="hidden" value="<?=$dbh_nome?>">
 	<?
 
