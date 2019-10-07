@@ -58,8 +58,8 @@ class db_utils {
    */
   static function getDao( $sClasse, $lInstanciaClasse = true ){
 
-     if (!class_exists("db_{$sClasse}")){
-        require_once($_SERVER['DOCUMENT_ROOT']."/class/db_{$sClasse}.php");
+     if (!class_exists("cl_{$sClasse}")){
+        require_once($_SERVER['DOCUMENT_ROOT']."/class/cl_{$sClasse}.php");
      }
 
      if ( $lInstanciaClasse ) {
@@ -69,7 +69,7 @@ class db_utils {
          * $sNomeClasse = "db_{$sClasse}";
          * $objRet      = new  {$sNomeClasse};
          */
-        eval ("\$objRet = new \classes\db_{$sClasse};");
+        eval ("\$objRet = new \classes\cl_{$sClasse};");
         return $objRet;
      }
      return true;

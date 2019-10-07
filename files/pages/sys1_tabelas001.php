@@ -1,9 +1,9 @@
 <?php
 
 $db_funcoes         =  new dbforms\db_funcoes;
-$db_db_sysarquivo   =  new classes\db_db_sysarquivo;
-$db_db_sysarqmod    =  new classes\db_db_sysarqmod;
-$db_db_sysarqarq    =  new classes\db_db_sysarqarq;
+$cl_sysarquivo   =  new classes\cl_sysarquivo;
+$cl_sysarqmod    =  new classes\cl_sysarqmod;
+$cl_sysarqarq    =  new classes\cl_sysarqarq;
 
 $erro     = false;
 $db_opcao = 1;
@@ -26,10 +26,10 @@ if(isset($_REQUEST["incluir"])) {
   $db_opcao = 1;
 
   $db_funcoes->db_inicio_transacao();
-  $db_db_sysarquivo->incluir();
-  $db_db_sysarqmod->incluir($modulo,$db_db_sysarquivo->codarq);
+  $cl_sysarquivo->incluir();
+  $cl_sysarqmod->incluir($modulo,$cl_sysarquivo->codarq);
   if ( (INT)$tabelapai > 0 ) {
-    $db_db_sysarqarq->incluir($tabelapai,$db_db_sysarquivo->codarq);
+    $cl_sysarqarq->incluir($tabelapai,$cl_sysarquivo->codarq);
   }
   $db_funcoes->db_fim_transacao($erro);
 
@@ -38,18 +38,18 @@ if(isset($_REQUEST["incluir"])) {
   $db_opcao = 2;
 
   $db_funcoes->db_inicio_transacao();
-  $db_db_sysarquivo->alterar();
-  $db_db_sysarqmod->alterar($modulo,$db_db_sysarquivo->codarq);
-  $db_db_sysarqarq->alterar($tabelapai,$db_db_sysarquivo->codarq);
+  $cl_sysarquivo->alterar();
+  $cl_sysarqmod->alterar($modulo,$cl_sysarquivo->codarq);
+  $cl_sysarqarq->alterar($tabelapai,$cl_sysarquivo->codarq);
   $db_funcoes->db_fim_transacao($erro);
 
 ////////////////EXCLUIR//////////////
 } else if(isset($_REQUEST["excluir"])) {
   $db_opcao = 3;
   $db_funcoes->db_inicio_transacao();
-  $db_db_sysarqarq->excluir(null,$codarq);
-  $db_db_sysarqmod->excluir(null,$codarq);
-  $db_db_sysarquivo->excluir();
+  $cl_sysarqarq->excluir(null,$codarq);
+  $cl_sysarqmod->excluir(null,$codarq);
+  $cl_sysarquivo->excluir();
   $db_funcoes->db_fim_transacao($erro);
 }
 
@@ -58,11 +58,11 @@ if( isset($_REQUEST["incluir"])
       or isset($_REQUEST["alterar"])
       or isset($_REQUEST["excluir"])
   ) { 
-  if ( !$db_db_sysarquivo->erro_status ) {
+  if ( !$cl_sysarquivo->erro_status ) {
     $erro    = true;
-    $db_stdlib->db_msgbox($db_db_sysarquivo->erro_msg);
+    $db_stdlib->db_msgbox($cl_sysarquivo->erro_msg);
   } else {
-    $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina,$db_db_sysarquivo->erro_msg);
+    $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina,$cl_sysarquivo->erro_msg);
   }
 }
 
@@ -72,7 +72,7 @@ $cl_rotulo->label();
 <div class="card-content collapse show">
 
 <?php if ( $erro == true ) { ?>
-<div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $db_db_sysarquivo->erro_msg; ?></div>
+<div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $cl_sysarquivo->erro_msg; ?></div>
 <?php } 
 
 include 'forms/frm_db_sysarquivo001.php';

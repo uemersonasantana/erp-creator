@@ -317,10 +317,10 @@ if( $db_stdlib->db_verifica_ip_banco() != '1' ){
   exit;
 }
 
-$db_db_versao 	= new classes\db_db_versao;
-$rsVersao      	= $db_db_versao->sql_record($db_db_versao->sql_query(null,"db30_codversao,db30_codrelease","db30_codver desc limit 1"));
+$cl_versao 	= new classes\cl_versao;
+$rsVersao      	= $cl_versao->sql_record($cl_versao->sql_query(null,"db30_codversao,db30_codrelease","db30_codver desc limit 1"));
 
-if( $db_db_versao->numrows == 0 ){
+if( $cl_versao->numrows == 0 ){
 
   $db30_codversao  = "1";
   $db30_codrelease = "1";

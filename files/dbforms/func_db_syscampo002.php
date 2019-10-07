@@ -9,9 +9,9 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 $db_stdlib        = new libs\db_stdlib; 
 $db_funcoes       = new dbforms\db_funcoes;
 
-$db_db_syscampo  = new classes\db_db_syscampo;
-$db_db_syscampo->rotulocl->label("codcam");
-$db_db_syscampo->rotulocl->label("nomecam");
+$cl_syscampo  = new classes\cl_syscampo;
+$cl_syscampo->rotulocl->label("codcam");
+$cl_syscampo->rotulocl->label("nomecam");
 
 $Services_Skins   = new libs\Services_Skins;
 

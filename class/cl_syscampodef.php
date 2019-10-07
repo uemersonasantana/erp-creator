@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_syscampodef
+ * cl_syscampodef
  *
  * @package   configuracao
  */
@@ -11,7 +11,7 @@ use libs\db_stdlib;
 
 //MODULO: configuracoes
 //CLASSE DA ENTIDADE db_syscampodef
-class db_db_syscampodef {
+class cl_syscampodef {
    // cria variaveis de erro
    var $rotulo     = null;
    var $query_sql  = null;

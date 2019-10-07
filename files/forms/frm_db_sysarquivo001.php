@@ -109,7 +109,7 @@ document.form1.nomearq.focus();
 js_trocacordeselect();
 
 function js_pesquisa() {
-  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_sysarquivo001.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');
+  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/dbforms/func_db_sysarquivo001.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');
 }
 
 function js_retornopesquisa(chave) {

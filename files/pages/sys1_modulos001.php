@@ -1,7 +1,7 @@
 <?php
 
 $db_funcoes       = new dbforms\db_funcoes;
-$db_db_sysmodulo  = new classes\db_db_sysmodulo;
+$cl_sysmodulo  = new classes\cl_sysmodulo;
 
 $erro     = false;
 $db_opcao = 1;
@@ -24,21 +24,21 @@ if ( isset($retorno) ) {
 if( isset($_REQUEST["incluir"]) ) {
   $db_opcao = 1;
   $db_funcoes->db_inicio_transacao();
-  $db_db_sysmodulo->incluir();
+  $cl_sysmodulo->incluir();
   $db_funcoes->db_fim_transacao($erro);
 
 ////////////////ALTERAR////////////////  
 } else if( isset($_REQUEST["alterar"]) ) {
   $db_opcao = 2;
   $db_funcoes->db_inicio_transacao();
-  $db_db_sysmodulo->alterar();
+  $cl_sysmodulo->alterar();
   $db_funcoes->db_fim_transacao($erro);
 
 ////////////////EXCLUIR//////////////
 } else if( isset($_REQUEST["excluir"]) ) {
   $db_opcao = 3;
   $db_funcoes->db_inicio_transacao();
-  $db_db_sysmodulo->excluir();
+  $cl_sysmodulo->excluir();
   $db_funcoes->db_fim_transacao($erro);
 }
 
@@ -47,11 +47,11 @@ if( isset($_REQUEST["incluir"])
       or isset($_REQUEST["alterar"])
       or isset($_REQUEST["excluir"])
   ) { 
-  if ( !$db_db_sysmodulo->erro_status ) {
+  if ( !$cl_sysmodulo->erro_status ) {
     $erro    = true;
-    $db_stdlib->db_msgbox($db_db_sysmodulo->erro_msg);
+    $db_stdlib->db_msgbox($cl_sysmodulo->erro_msg);
   } else {
-    $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina,$db_db_sysmodulo->erro_msg);
+    $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina,$cl_sysmodulo->erro_msg);
   }
 }
 
@@ -61,7 +61,7 @@ $cl_modulo->label();
 <div class="card-content collapse show">
 
 <?php if ( $erro == true ) { ?>
-<div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $db_db_sysmodulo->erro_msg; ?></div>
+<div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $cl_sysmodulo->erro_msg; ?></div>
 <?php } 
 
 include 'forms/frm_db_sysmodulo001.php';

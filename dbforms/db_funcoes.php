@@ -1102,7 +1102,7 @@ function db_inputdata($nome, $dia = "", $mes = "", $ano = "", $dbcadastro = true
 
 		?>
 
-		<input value="D" type="<?=$sButtonType?>" id="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" name="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" onclick="<?=$onclickBT?>pegaPosMouse(event);show_calendar('<?=($nomevar==""?$nome:$nomevar)?>','<?=$shutdown_function?>', '<?php echo Services_Funcoes::url_acesso(); ?>files/pages/func_calendario.php')"  >
+		<input value="D" type="<?=$sButtonType?>" id="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" name="dtjs_<?=($nomevar==""?$nome:$nomevar)?>" onclick="<?=$onclickBT?>pegaPosMouse(event);show_calendar('<?=($nomevar==""?$nome:$nomevar)?>','<?=$shutdown_function?>', '<?php echo Services_Funcoes::url_acesso(); ?>files/dbforms/func_calendario.php')"  >
 
 		<div id="div_calendario"></div>
 		<?php
@@ -1171,7 +1171,7 @@ function db_label($tab, $label, $campo = "") {
 	<label for="db_<?=$campo?>">
 		<strong>
 
-			<a href="" class="rotulos" data-toggle="modal" data-target="#xlarge" onClick="js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo Services_Funcoes::url_acesso(); ?>files/pages/func_db_sysarquivo001.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');return false">
+			<a href="" class="rotulos" data-toggle="modal" data-target="#xlarge" onClick="js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo Services_Funcoes::url_acesso(); ?>files/dbforms/func_db_sysarquivo001.php?funcao_js=parent.js_retornopesquisa|0', '100%', '580px');return false">
 				<?=ucwords($label)?>:
 			</a>
 		</strong>

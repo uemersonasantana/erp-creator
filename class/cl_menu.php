@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_menu
+ * cl_menu
  *
  * @package   configuracao
  */
@@ -10,7 +10,7 @@ namespace classes;
 use libs\db_stdlib;
 
 //CLASSE DA ENTIDADE db_menu
-class db_db_menu { 
+class cl_menu { 
    // cria variaveis de erro 
    var $rotulo     = null; 
    var $query_sql  = null; 

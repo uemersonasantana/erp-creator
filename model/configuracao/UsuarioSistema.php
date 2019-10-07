@@ -112,7 +112,7 @@ class UsuarioSistema {
 
     if ( !empty($iIdUsuario) || !empty($sLoginUsuario)) {
 
-      $oDaoDBUsuarios = db_utils::getDao('db_usuarios');
+      $oDaoDBUsuarios = db_utils::getDao('usuarios');
       $sWhereUsuario  = "id_usuario = {$iIdUsuario}";
       if (!empty($sLoginUsuario)) {
         $sWhereUsuario = "login = '{$sLoginUsuario}'";
@@ -318,7 +318,7 @@ class UsuarioSistema {
    */
   public function salvar() {
 
-    $oDaoUsuarioSistema = db_utils::getDao('db_usuarios');
+    $oDaoUsuarioSistema = db_utils::getDao('usuarios');
     $oDaoUsuarioSistema->id_usuario    = $this->getIdUsuario();
     $oDaoUsuarioSistema->nome          = $this->getNome();
     $oDaoUsuarioSistema->login         = $this->getLogin();
@@ -404,7 +404,7 @@ class UsuarioSistema {
 
     if (count($this->aInstituicoes) == 0) {
 
-      $oDaoUsuarioInstituicao = db_utils::getDao('db_userinst');
+      $oDaoUsuarioInstituicao = db_utils::getDao('userinst');
       $sSqlBuscaInstituicao   = $oDaoUsuarioInstituicao->sql_query_file(null,
                                                                         null,
                                                                         "id_instit",
@@ -527,8 +527,8 @@ class UsuarioSistema {
     require_once(modification("libs/smtp.class.php"));
 
     $oSmtp          = new Smtp();
-    $oDaoUsuaCgm    = db_utils::getDao("db_usuacgm");
-    $oDaoDbUserinst = db_utils::getDao("db_userinst");
+    $oDaoUsuaCgm    = db_utils::getDao("usuacgm");
+    $oDaoDbUserinst = db_utils::getDao("userinst");
 
     $rsCgm          = $oDaoUsuaCgm->sql_record( $oDaoUsuaCgm->sql_query($this->iIdUsuario, "z01_email, z01_nasc, z01_nome", null) );
     $rsDbInstit     = $oDaoDbUserinst->sql_record( $oDaoDbUserinst->sql_instit( "email, prefeitura",

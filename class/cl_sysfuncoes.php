@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_sysfuncoes
+ * cl_sysfuncoes
  *
  * @package   configuracao
  */
@@ -11,7 +11,7 @@ use libs\db_stdlib;
 
 //MODULO: configuracoes
 //CLASSE DA ENTIDADE db_sysfuncoes
-class db_db_sysfuncoes { 
+class cl_sysfuncoes { 
    // cria variaveis de erro 
    var $rotulo     = null; 
    var $query_sql  = null; 

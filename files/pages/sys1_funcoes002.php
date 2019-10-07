@@ -1,7 +1,7 @@
 <?php
 
 $db_funcoes       = new dbforms\db_funcoes;
-$db_db_sysfuncoes = new classes\db_db_sysfuncoes;
+$cl_sysfuncoes = new classes\cl_sysfuncoes;
 
 $erro     = false;
 $db_opcao = 1;

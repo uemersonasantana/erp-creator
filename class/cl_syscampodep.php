@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_sysarqmod
+ * cl_syscampodep
  *
  * @package   configuracao
  */
@@ -10,38 +10,38 @@ namespace classes;
 use libs\db_stdlib;
 
 //MODULO: configuracoes
-//CLASSE DA ENTIDADE db_sysarqmod
-class db_db_sysarqmod { 
-  // cria variaveis de erro 
-  var $rotulo          = null; 
-  var $query_sql       = null; 
-  var $numrows         = 0; 
-  var $numrows_incluir = 0; 
-  var $numrows_alterar = 0; 
-  var $numrows_excluir = 0; 
-  var $erro_status     = null; 
-  var $erro_sql        = null; 
-  var $erro_banco      = null;  
-  var $erro_msg        = null;  
-  var $erro_campo      = null;  
-  var $pagina_retorno  = null; 
-  // cria variáveis do arquivo 
-  var $codmod          = 0; 
-  var $codarq          = 0; 
-  // cria propriedade com as variaveis do arquivo 
-  var $campos          = "
-                       codmod = int4 = Módulo 
-                       codarq = int4 = Codigo Arquivo 
-                       ";
+//CLASSE DA ENTIDADE db_syscampodep
+class cl_syscampodep { 
+   // cria variaveis de erro 
+   var $rotulo     = null; 
+   var $query_sql  = null; 
+   var $numrows    = 0; 
+   var $numrows_incluir = 0; 
+   var $numrows_alterar = 0; 
+   var $numrows_excluir = 0; 
+   var $erro_status= null; 
+   var $erro_sql   = null; 
+   var $erro_banco = null;  
+   var $erro_msg   = null;  
+   var $erro_campo = null;  
+   var $pagina_retorno = null; 
+   // cria variaveis do arquivo 
+   var $codcam = 0; 
+   var $codcampai = 0; 
+   // cria propriedade com as variaveis do arquivo 
+   var $campos = "
+                 codcam = int4 = Código 
+                 codcampai = int8 = Código Campo Pai 
+                 ";
    //funcao construtor da classe 
-   function db_db_sysarqmod() { 
+   function __construct() { 
      //classes dos rotulos dos campos
-     $this->rotulo          =   new \std\rotulo("db_sysarqmod"); 
+     $this->rotulo          =   new \std\rotulo("db_syscampodep"); 
      $this->pagina_retorno  =   basename($_SERVER["PHP_SELF"]);
    }
    //funcao erro 
    function erro($mostra,$retorna) { 
-     if(($this->erro_status == "0") || ($mostra == true && $this->erro_status != null )){
+     if(($this->erro_status == "0") or ($mostra == true and $this->erro_status != null )){
         echo "<script>alert(\"".$this->erro_msg."\");</script>";
         if($retorna==true){
            echo "<script>location.href='".$this->pagina_retorno."'</script>";
@@ -51,52 +51,59 @@ class db_db_sysarqmod {
    // funcao para atualizar campos
    function atualizacampos($exclusao=false) {
      if($exclusao==false){
-       $this->codmod = ($this->codmod == ""?@$GLOBALS["codmod"]:$this->codmod);
-       $this->codarq = ($this->codarq == ""?@$GLOBALS["codarq"]:$this->codarq);
+       $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
+       $this->codcampai = ($this->codcampai == ""?@$GLOBALS["codcampai"]:$this->codcampai);
      }else{
-       $this->codmod = ($this->codmod == ""?@$GLOBALS["codmod"]:$this->codmod);
-       $this->codarq = ($this->codarq == ""?@$GLOBALS["codarq"]:$this->codarq);
+       $this->codcam = ($this->codcam == ""?@$GLOBALS["codcam"]:$this->codcam);
      }
    }
    // funcao para inclusao
-   function incluir ($codmod,$codarq){ 
+   function incluir ($codcam=null,$codcampai=null){ 
       $this->atualizacampos();
-       $this->codmod = $codmod; 
-       $this->codarq = $codarq; 
-     if(($this->codmod == null) || ($this->codmod == "") ){ 
-       $this->erro_sql = " Campo codmod nao declarado.";
+
+      if( $codcam != null ) {
+        $this->codcam = $codcam;
+      } 
+      if( $codcampai != null) {
+        $this->codcampai = $codcampai;
+      }
+
+     if($this->codcampai == null ){ 
+       $this->erro_sql = " Campo Código Campo Pai nao Informado.";
+       $this->erro_campo = "codcampai";
+       $this->erro_banco = "";
+       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
+       $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
+       $this->erro_status = "0";
+       return false;
+     }
+       $this->codcam = $codcam; 
+     if(($this->codcam == null) or ($this->codcam == "") ){ 
+       $this->erro_sql = " Campo codcam nao declarado.";
        $this->erro_banco = "Chave Primaria zerada.";
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
        return false;
      }
-     if(($this->codarq == null) || ($this->codarq == "") ){ 
-       $this->erro_sql = " Campo codarq nao declarado.";
-       $this->erro_banco = "Chave Primaria zerada.";
-       $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
-       $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
-       $this->erro_status = "0";
-       return false;
-     }
-     $sql = "insert into db_sysarqmod(
-                                       codmod 
-                                      ,codarq 
+     $sql = "insert into db_syscampodep(
+                                       codcam 
+                                      ,codcampai 
                        )
                 values (
-                                $this->codmod 
-                               ,$this->codarq 
+                                $this->codcam 
+                               ,$this->codcampai 
                       )";
      $result = db_stdlib::db_query($sql); 
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
        if( strpos(strtolower($this->erro_banco),"duplicate key") != 0 ){
-         $this->erro_sql   = "Modulo e Arquivos ($this->codmod."-".$this->codarq) nao Incluído. Inclusao Abortada.";
+         $this->erro_sql   = "Campos Dependentes ($this->codcam) nao Incluído. Inclusao Abortada.";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
-         $this->erro_banco = "Modulo e Arquivos já Cadastrado";
+         $this->erro_banco = "Campos Dependentes já Cadastrado";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        }else{
-         $this->erro_sql   = "Modulo e Arquivos ($this->codmod."-".$this->codarq) nao Incluído. Inclusao Abortada.";
+         $this->erro_sql   = "Campos Dependentes ($this->codcam) nao Incluído. Inclusao Abortada.";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        }
@@ -106,43 +113,35 @@ class db_db_sysarqmod {
      }
      $this->erro_banco = "";
      $this->erro_sql = "Inclusao efetuada com Sucesso\\n";
-         $this->erro_sql .= "Valores : ".$this->codmod."-".$this->codarq;
+         $this->erro_sql .= "Valores : ".$this->codcam;
      $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
      $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
      $this->erro_status = "1";
      $this->numrows_incluir= $result->rowCount();
-     $resaco = $this->sql_record($this->sql_query_file($this->codmod,$this->codarq));
-     if(($resaco!=false)||($this->numrows!=0)){
-        $linha = $resaco->fetch();
+     $resaco = $this->sql_record($this->sql_query_file($this->codcam));
+     if(($resaco!=false)or($this->numrows!=0)){
+      $linha = $resaco->fetch();
+
        $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
        $acount = db_stdlib::lastInsertId();
        $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
-       $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$this->codmod','I')");
-       $resac = db_stdlib::db_query("insert into db_acountkey values($acount,759,'$this->codarq','I')");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,142,748,'','".addslashes($linha->codmod)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-       $resac = db_stdlib::db_query("insert into db_acount values($acount,142,759,'','".addslashes($linha->codarq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acountkey values($acount,752,'$this->codcam','I')");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,397,752,'','".addslashes($linha->codcam)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+       $resac = db_stdlib::db_query("insert into db_acount values($acount,397,2437,'','".addslashes($linha->codcampai)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
      }
      return true;
    } 
    // funcao para alteracao
-   function alterar ($codmod=null,$codarq=null) { 
+   function alterar($codcam=null) { 
       $this->atualizacampos();
-
-      if( $codmod != null ) {
-        $this->codmod = $codmod;
-      } 
-      if( $codarq != null) {
-        $this->codarq = $codarq;
-      }
-
-     $sql = " update db_sysarqmod set ";
+     $sql = " update db_syscampodep set ";
      $virgula = "";
-     if(trim($this->codmod)!="" || isset($GLOBALS["codmod"])){ 
-       $sql  .= $virgula." codmod = $this->codmod ";
+     if(trim($this->codcam)!="" or isset($GLOBALS["codcam"])){ 
+       $sql  .= $virgula." codcam = $this->codcam ";
        $virgula = ",";
-       if(trim($this->codmod) == null ){ 
-         $this->erro_sql = " Campo Módulo nao Informado.";
-         $this->erro_campo = "codmod";
+       if(trim($this->codcam) == null ){ 
+         $this->erro_sql = " Campo Código nao Informado.";
+         $this->erro_campo = "codcam";
          $this->erro_banco = "";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
@@ -150,12 +149,12 @@ class db_db_sysarqmod {
          return false;
        }
      }
-     if(trim($this->codarq)!="" || isset($GLOBALS["codarq"])){ 
-       $sql  .= $virgula." codarq = $this->codarq ";
+     if(trim($this->codcampai)!="" or isset($GLOBALS["codcampai"])){ 
+       $sql  .= $virgula." codcampai = $this->codcampai ";
        $virgula = ",";
-       if(trim($this->codarq) == null ){ 
-         $this->erro_sql = " Campo Codigo Arquivo nao Informado.";
-         $this->erro_campo = "codarq";
+       if(trim($this->codcampai) == null ){ 
+         $this->erro_sql = " Campo Código Campo Pai nao Informado.";
+         $this->erro_campo = "codcampai";
          $this->erro_banco = "";
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
@@ -164,35 +163,27 @@ class db_db_sysarqmod {
        }
      }
      $sql .= " where ";
-     
-     if($codarq!=null){
-       $sql .= " codarq = $this->codarq";
+     if($codcam!=null){
+       $sql .= " codcam = $this->codcam";
      }
-      
-     if($codmod!=null){
-       //$sql .= " and codmod = $this->codmod";
-     }
-
-     $resaco = $this->sql_record($this->sql_query_file(null,$this->codarq));
+     $resaco = $this->sql_record($this->sql_query_file($this->codcam));
      if($this->numrows>0){
        foreach ( $resaco as $linha) {
          $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
          $acount = db_stdlib::lastInsertId();
          $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
-         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$this->codmod','A')");
-         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,759,'$this->codarq','A')");
-         if(isset($GLOBALS["codmod"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,142,748,'".addslashes($linha->codmod)."','$this->codmod',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         if(isset($GLOBALS["codarq"]))
-           $resac = db_stdlib::db_query("insert into db_acount values($acount,142,759,'".addslashes($linha->codarq)."','$this->codarq',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,752,'$this->codcam','A')");
+         if(isset($GLOBALS["codcam"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,397,752,'".addslashes($linha->codcam)."','$this->codcam',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         if(isset($GLOBALS["codcampai"]))
+           $resac = db_stdlib::db_query("insert into db_acount values($acount,397,2437,'".addslashes($linha->codcampai)."','$this->codcampai',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
        }
      }
-     
      $result = db_stdlib::db_query($sql);
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
-       $this->erro_sql   = "Modulo e Arquivos nao Alterado. Alteracao Abortada.\\n";
-         $this->erro_sql .= "Valores : ".$this->codmod."-".$this->codarq;
+       $this->erro_sql   = "Campos Dependentes nao Alterado. Alteracao Abortada.\\n";
+         $this->erro_sql .= "Valores : ".$this->codcam;
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
@@ -201,8 +192,8 @@ class db_db_sysarqmod {
      }else{
        if($result->rowCount()==0){
          $this->erro_banco = "";
-         $this->erro_sql = "Modulo e Arquivos nao foi Alterado. Alteracao Executada.\\n";
-         $this->erro_sql .= "Valores : ".$this->codmod."-".$this->codarq;
+         $this->erro_sql = "Campos Dependentes nao foi Alterado. Alteracao Executada.\\n";
+         $this->erro_sql .= "Valores : ".$this->codcam;
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
@@ -211,7 +202,7 @@ class db_db_sysarqmod {
        }else{
          $this->erro_banco = "";
          $this->erro_sql = "Alteração efetuada com Sucesso\\n";
-         $this->erro_sql .= "Valores : ".$this->codmod."-".$this->codarq;
+         $this->erro_sql .= "Valores : ".$this->codcam;
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
@@ -221,48 +212,31 @@ class db_db_sysarqmod {
      } 
    } 
    // funcao para exclusao 
-   function excluir ($codmod=null,$codarq=null,$dbwhere=null) { 
-    $this->atualizacampos();
-
-    if ( $codmod != null ) {
-      $this->codmod = $codmod;
-    }
-
-    if ( $codarq != null ) {
-      $this->codarq = $codarq;
-    }
-    
-     if($dbwhere==null || $dbwhere==""){
-       $resaco = $this->sql_record($this->sql_query_file($codmod,$codarq));
+   function excluir ($codcam=null,$dbwhere=null) { 
+     if($dbwhere==null or $dbwhere==""){
+       $resaco = $this->sql_record($this->sql_query_file($codcam));
      }else{ 
-       $resaco = $this->sql_record($this->sql_query_file(null,null,"*",null,$dbwhere));
+       $resaco = $this->sql_record($this->sql_query_file(null,"*",null,$dbwhere));
      }
-     if(($resaco!=false)||($this->numrows!=0)){
+     if(($resaco!=false)or($this->numrows!=0)){
        foreach ( $resaco as $linha) {
          $resac = db_stdlib::db_query("select nextval('db_acount_id_acount_seq') as acount");
          $acount = db_stdlib::lastInsertId();
          $resac = db_stdlib::db_query("insert into db_acountacesso values($acount,".db_stdlib::db_getsession("DB_acessado").")");
-         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,748,'$codmod','E')");
-         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,759,'$codarq','E')");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,142,748,'','".addslashes($linha->codmod)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
-         $resac = db_stdlib::db_query("insert into db_acount values($acount,142,759,'','".addslashes($linha->codarq)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acountkey values($acount,752,'$codcam','E')");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,397,752,'','".addslashes($linha->codcam)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
+         $resac = db_stdlib::db_query("insert into db_acount values($acount,397,2437,'','".addslashes($linha->codcampai)."',".db_stdlib::db_getsession('DB_datausu').",".db_stdlib::db_getsession('DB_id_usuario').")");
        }
      }
-     $sql = " delete from db_sysarqmod
+     $sql = " delete from db_syscampodep
                     where ";
      $sql2 = "";
-     if($dbwhere==null || $dbwhere ==""){
-        if($codmod != ""){
+     if($dbwhere==null or $dbwhere ==""){
+        if($codcam != ""){
           if($sql2!=""){
             $sql2 .= " and ";
           }
-          $sql2 .= " codmod = $codmod ";
-        }
-        if($codarq != ""){
-          if($sql2!=""){
-            $sql2 .= " and ";
-          }
-          $sql2 .= " codarq = $codarq ";
+          $sql2 .= " codcam = $codcam ";
         }
      }else{
        $sql2 = $dbwhere;
@@ -270,8 +244,8 @@ class db_db_sysarqmod {
      $result = db_stdlib::db_query($sql.$sql2);
      if($result==false){ 
        $this->erro_banco = str_replace("\n","",@pg_last_error());
-       $this->erro_sql   = "Modulo e Arquivos nao Excluído. Exclusão Abortada.\\n";
-       $this->erro_sql .= "Valores : ".$codmod."-".$codarq;
+       $this->erro_sql   = "Campos Dependentes nao Excluído. Exclusão Abortada.\\n";
+       $this->erro_sql .= "Valores : ".$codcam;
        $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
        $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
        $this->erro_status = "0";
@@ -280,8 +254,8 @@ class db_db_sysarqmod {
      }else{
        if($result->rowCount()==0){
          $this->erro_banco = "";
-         $this->erro_sql = "Modulo e Arquivos nao Encontrado. Exclusão não Efetuada.\\n";
-         $this->erro_sql .= "Valores : ".$codmod."-".$codarq;
+         $this->erro_sql = "Campos Dependentes nao Encontrado. Exclusão não Efetuada.\\n";
+         $this->erro_sql .= "Valores : ".$codcam;
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
@@ -290,7 +264,7 @@ class db_db_sysarqmod {
        }else{
          $this->erro_banco = "";
          $this->erro_sql = "Exclusão efetuada com Sucesso\\n";
-         $this->erro_sql .= "Valores : ".$codmod."-".$codarq;
+         $this->erro_sql .= "Valores : ".$codcam;
          $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
          $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
          $this->erro_status = "1";
@@ -314,7 +288,7 @@ class db_db_sysarqmod {
      $this->numrows = $result->rowCount();
       if($this->numrows==0){
         $this->erro_banco = "";
-        $this->erro_sql   = "Record Vazio na Tabela:db_sysarqmod";
+        $this->erro_sql   = "Record Vazio na Tabela:db_syscampodep";
         $this->erro_msg   = "Usuário: \\n\\n ".$this->erro_sql." \\n\\n";
         $this->erro_msg   .=  str_replace('"',"",str_replace("'","",  "Administrador: \\n\\n ".$this->erro_banco." \\n"));
         $this->erro_status = "0";
@@ -322,7 +296,7 @@ class db_db_sysarqmod {
       }
      return $result;
    }
-   function sql_query ( $codmod=null,$codarq=null,$campos="*",$ordem=null,$dbwhere=""){ 
+   function sql_query ( $codcam=null,$campos="*",$ordem=null,$dbwhere=""){ 
      $sql = "select ";
      if($campos != "*" ){
        $campos_sql = explode("#",$campos);
@@ -334,21 +308,13 @@ class db_db_sysarqmod {
      }else{
        $sql .= $campos;
      }
-     $sql .= " from db_sysarqmod ";
-     $sql .= "      inner join db_sysarquivo  on  db_sysarquivo.codarq = db_sysarqmod.codarq";
-     $sql .= "      inner join db_sysmodulo  on  db_sysmodulo.codmod = db_sysarqmod.codmod";
+     $sql .= " from db_syscampodep ";
+     $sql .= "      inner join db_syscampo  on  db_syscampo.codcam = db_syscampodep.codcam";
+     //$sql .= "      inner join db_syscampo  on  db_syscampo.codcam = db_syscampodep.codcam and  db_syscampo.codcam = db_syscampodep.codcampai";
      $sql2 = "";
      if($dbwhere==""){
-       if($codmod!=null ){
-         $sql2 .= " where db_sysarqmod.codmod = $codmod "; 
-       } 
-       if($codarq!=null ){
-         if($sql2!=""){
-            $sql2 .= " and ";
-         }else{
-            $sql2 .= " where ";
-         } 
-         $sql2 .= " db_sysarqmod.codarq = $codarq "; 
+       if($codcam!=null ){
+         $sql2 .= " where db_syscampodep.codcam = $codcam "; 
        } 
      }else if($dbwhere != ""){
        $sql2 = " where $dbwhere";
@@ -365,7 +331,7 @@ class db_db_sysarqmod {
      }
      return $sql;
   }
-   function sql_query_file ( $codmod=null,$codarq=null,$campos="*",$ordem=null,$dbwhere=""){ 
+   function sql_query_file ( $codcam=null,$campos="*",$ordem=null,$dbwhere=""){ 
      $sql = "select ";
      if($campos != "*" ){
        $campos_sql = explode("#",$campos);
@@ -377,19 +343,11 @@ class db_db_sysarqmod {
      }else{
        $sql .= $campos;
      }
-     $sql .= " from db_sysarqmod ";
+     $sql .= " from db_syscampodep ";
      $sql2 = "";
      if($dbwhere==""){
-       if($codmod!=null ){
-         $sql2 .= " where db_sysarqmod.codmod = $codmod "; 
-       } 
-       if($codarq!=null ){
-         if($sql2!=""){
-            $sql2 .= " and ";
-         }else{
-            $sql2 .= " where ";
-         } 
-         $sql2 .= " db_sysarqmod.codarq = $codarq "; 
+       if($codcam!=null ){
+         $sql2 .= " where db_syscampodep.codcam = $codcam "; 
        } 
      }else if($dbwhere != ""){
        $sql2 = " where $dbwhere";

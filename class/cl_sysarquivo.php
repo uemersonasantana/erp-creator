@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_sysarquivo
+ * cl_sysarquivo
  *
  * @package   configuracao
  */
@@ -10,7 +10,7 @@ namespace classes;
 use libs\db_stdlib;
 
 //CLASSE DA ENTIDADE db_sysarquivo
-class db_db_sysarquivo {
+class cl_sysarquivo {
    // cria variaveis de erro
    var $rotulo     = null;
    var $rotulo2    = null;

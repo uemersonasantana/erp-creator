@@ -1,7 +1,7 @@
 <?php
 
 $db_funcoes         =  new dbforms\db_funcoes;
-$db_sysarqcamp      =  new classes\db_db_sysarqcamp;
+$db_sysarqcamp      =  new classes\cl_sysarqcamp;
 
 $erro     = false;
 $db_opcao = 1;

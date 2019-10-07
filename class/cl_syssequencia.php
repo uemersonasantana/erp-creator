@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_syssequencia
+ * cl_syssequencia
  *
  * @package   configuracao
  */
@@ -10,7 +10,7 @@ namespace classes;
 use libs\db_stdlib;
 
 //CLASSE DA ENTIDADE db_syssequencia
-class db_db_syssequencia { 
+class cl_syssequencia { 
    // cria variaveis de erro 
    var $rotulo     = null; 
    var $query_sql  = null; 

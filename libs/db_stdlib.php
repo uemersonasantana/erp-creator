@@ -1473,7 +1473,7 @@ function db_lovrot($query, $numlinhas, $arquivo = "", $filtro = "%", $aonde = "_
            */
           $sValorPesquisa    = $_POST["codigo_pesquisa"];
           $sWhere            = "nomecam = '{$_POST['campo_filtrado']}'";
-          $oDaoDbSysCampo    = new \classes\db_db_syscampo();
+          $oDaoDbSysCampo    = new \classes\cl_syscampo();
           $sSqlDaoDbSysCampo = $oDaoDbSysCampo->sql_query_file( null, 'conteudo', null, $sWhere );
           $rsDaoDbSysCampo   = self::db_query( $sSqlDaoDbSysCampo );
 

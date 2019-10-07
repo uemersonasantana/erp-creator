@@ -180,7 +180,7 @@ function js_procurar() {
   	return false;
   }
   
-  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/pages/func_db_syscampo002.php?campo='+document.form1.procuracampo.value, '100%', '370px');
+  js_OpenJanelaIframe_Novo('#modal1_conteudo','<?php echo $Services_Funcoes->url_acesso(); ?>files/dbforms/func_db_syscampo002.php?campo='+document.form1.procuracampo.value, '100%', '370px');
 
   //jan = window.open('sys1_campos003.php?campo=' + document.form1.procuracampo.value,'','width=220,height=310,location=0');
   //jan.moveTo(450,150);

@@ -10,7 +10,7 @@ namespace classes;
 use libs\db_stdlib;
 
 //CLASSE DA ENTIDADE db_usuarios
-class db_db_usuarios {
+class cl_usuarios {
    // cria variaveis de erro
    var $rotulo     = null;
    var $query_sql  = null;

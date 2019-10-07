@@ -9,9 +9,9 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 $db_stdlib        = new libs\db_stdlib; 
 $db_funcoes       = new dbforms\db_funcoes;
 
-$db_db_systriggers  = new classes\db_db_systriggers;
-$db_db_systriggers->rotulo->label("codtrigger");
-$db_db_systriggers->rotulo->label("nometrigger");
+$cl_systriggers  = new classes\cl_systriggers;
+$cl_systriggers->rotulo->label("codtrigger");
+$cl_systriggers->rotulo->label("nometrigger");
 
 $Services_Skins   = new libs\Services_Skins;
 
@@ -76,18 +76,18 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
         <?php 
         if( !isset($pesquisa_chave) ) {
           if( isset($campos)==false ) {
-              if( file_exists($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_systriggers.php" ) == true ) {
-                include($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_systriggers.php");
+              if( file_exists($_SERVER['DOCUMENT_ROOT']."/files/dbinputs/db_func_db_systriggers.php" ) == true ) {
+                include($_SERVER['DOCUMENT_ROOT']."/files/dbinputs/db_func_db_systriggers.php");
               } else {
                 $campos = "db_systriggers.*";
               }
           }
           if( isset($chave_codtrigger) and (trim($chave_codtrigger) != "" ) ){
-             $sql = $db_db_systriggers->sql_query($chave_codtrigger,$campos,"codtrigger");
+             $sql = $cl_systriggers->sql_query($chave_codtrigger,$campos,"codtrigger");
           } else if ( isset($chave_nometrigger) and (trim($chave_nometrigger) != "" ) ){
-             $sql = $db_db_systriggers->sql_query("",$campos,"nometrigger"," nometrigger like '$chave_nometrigger%' ");
+             $sql = $cl_systriggers->sql_query("",$campos,"nometrigger"," nometrigger like '$chave_nometrigger%' ");
           } else {
-             $sql = $db_db_systriggers->sql_query("",$campos,"codtrigger","");
+             $sql = $cl_systriggers->sql_query("",$campos,"codtrigger","");
           }
           $repassa = array();
           if(isset($chave_nometrigger)){
@@ -97,8 +97,8 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
           $db_stdlib->db_lovrot($sql,15,"()","",$funcao_js,"","NoMe",$repassa);
         } else {
           if ( $pesquisa_chave != null and $pesquisa_chave != "" ) {
-            $result = $db_db_systriggers->sql_record($db_db_systriggers->sql_query($pesquisa_chave));
-            if ( $db_db_systriggers->numrows !=0 ) {
+            $result = $cl_systriggers->sql_record($cl_systriggers->sql_query($pesquisa_chave));
+            if ( $cl_systriggers->numrows !=0 ) {
               $db_stdlib->db_fieldsmemory($result,0);
               echo "<script>".$funcao_js."('$nometrigger',false);</script>";
             }else{

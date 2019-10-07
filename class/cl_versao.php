@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_menu
+ * cl_menu
  *
  * @package   configuracao
  */
@@ -11,7 +11,7 @@ use libs\db_stdlib;
 
 //MODULO: configuracoes
 //CLASSE DA ENTIDADE db_versao
-class db_db_versao { 
+class cl_versao { 
    // cria variaveis de erro 
    var $rotulo     = null; 
    var $query_sql  = null; 

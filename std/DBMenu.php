@@ -120,7 +120,7 @@ class DBMenu {
     $this->iInstituicao = $iInstituicao;
 
     $this->iDataUsu = date("Y");
-    $this->oDaoMenu = db_utils::getDao("db_menu", true);
+    $this->oDaoMenu = db_utils::getDao("menu", true);
   }
 
   /**

@@ -9,9 +9,9 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 $db_stdlib        = new libs\db_stdlib; 
 $db_funcoes       = new dbforms\db_funcoes;
 
-$db_db_sysfuncoes  = new classes\db_db_sysfuncoes;
-$db_db_sysfuncoes->rotulo->label("codfuncao");
-$db_db_sysfuncoes->rotulo->label("nomefuncao");
+$cl_sysfuncoes  = new classes\cl_sysfuncoes;
+$cl_sysfuncoes->rotulo->label("codfuncao");
+$cl_sysfuncoes->rotulo->label("nomefuncao");
 
 $Services_Skins   = new libs\Services_Skins;
 
@@ -76,18 +76,18 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
         <?php 
         if( !isset($pesquisa_chave) ) {
           if( isset($campos)==false ) {
-              if( file_exists($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_sysfuncoes.php" ) == true ) {
-                include($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_sysfuncoes.php");
+              if( file_exists($_SERVER['DOCUMENT_ROOT']."/files/dbinputs/db_func_db_sysfuncoes.php" ) == true ) {
+                include($_SERVER['DOCUMENT_ROOT']."/files/dbinputs/db_func_db_sysfuncoes.php");
               } else {
                 $campos = "db_sysfuncoes.*";
               }
           }
           if( isset($chave_codfuncao) and (trim($chave_codfuncao) != "" ) ){
-             $sql = $db_db_sysfuncoes->sql_query($chave_codfuncao,$campos,"codfuncao");
+             $sql = $cl_sysfuncoes->sql_query($chave_codfuncao,$campos,"codfuncao");
           } else if ( isset($chave_nomefuncao) and (trim($chave_nomefuncao) != "" ) ){
-             $sql = $db_db_sysfuncoes->sql_query("",$campos,"nomefuncao"," nomefuncao like '$chave_nomefuncao%' ");
+             $sql = $cl_sysfuncoes->sql_query("",$campos,"nomefuncao"," nomefuncao like '$chave_nomefuncao%' ");
           } else {
-             $sql = $db_db_sysfuncoes->sql_query("",$campos,"codfuncao","");
+             $sql = $cl_sysfuncoes->sql_query("",$campos,"codfuncao","");
           }
           $repassa = array();
           if(isset($chave_nomefuncao)){
@@ -97,8 +97,8 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
           $db_stdlib->db_lovrot($sql,15,"()","",$funcao_js,"","NoMe",$repassa);
         } else {
           if ( $pesquisa_chave != null and $pesquisa_chave != "" ) {
-            $result = $db_db_sysfuncoes->sql_record($db_db_sysfuncoes->sql_query($pesquisa_chave));
-            if ( $db_db_sysfuncoes->numrows !=0 ) {
+            $result = $cl_sysfuncoes->sql_record($cl_sysfuncoes->sql_query($pesquisa_chave));
+            if ( $cl_sysfuncoes->numrows !=0 ) {
               $db_stdlib->db_fieldsmemory($result,0);
               echo "<script>".$funcao_js."('$nomefuncao',false);</script>";
             }else{

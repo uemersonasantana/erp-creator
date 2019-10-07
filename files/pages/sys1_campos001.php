@@ -1,9 +1,9 @@
 <?php
 
 $db_funcoes         =  new dbforms\db_funcoes;
-$db_db_syscampo     =  new classes\db_db_syscampo;
-$db_db_sycampodep   =  new classes\db_db_syscampodep;
-$db_db_syscampodef  =  new classes\db_db_syscampodef;
+$cl_syscampo     =  new classes\cl_syscampo;
+$cl_sycampodep   =  new classes\cl_syscampodep;
+$cl_syscampodef  =  new classes\cl_syscampodef;
 
 $erro     = false;
 $db_opcao = 1;
@@ -40,16 +40,16 @@ if(isset($_REQUEST["incluir"])) {
   $db_opcao = 1;
 
   $db_funcoes->db_inicio_transacao();
-  $db_db_syscampo->incluir();
+  $cl_syscampo->incluir();
   if ( $codcampai > 0 ) {
-    $db_db_sycampodep->incluir($db_db_syscampo->codcam,$codcampai);
+    $cl_sycampodep->incluir($cl_syscampo->codcam,$codcampai);
   }
   if ( isset($itensdef) ) {
     $numArray = sizeof($itensdef);
     for( $i = 0;$i < $numArray;$i++ ) {
       $aux = explode("#&",$itensdef[$i]);
 
-      $db_db_syscampodef->incluir($codcam, $aux[0], ( !empty($aux[1]) ? $aux[1] : ' ' ) );
+      $cl_syscampodef->incluir($codcam, $aux[0], ( !empty($aux[1]) ? $aux[1] : ' ' ) );
     }
   }
   $db_funcoes->db_fim_transacao($erro);
@@ -59,20 +59,20 @@ if(isset($_REQUEST["incluir"])) {
   $db_opcao = 2;
 
   $db_funcoes->db_inicio_transacao();
-  $db_db_syscampo->alterar();
+  $cl_syscampo->alterar();
 
-  $db_db_sycampodep->excluir($codcam);
+  $cl_sycampodep->excluir($codcam);
   if ( $codcampai > 0 ) {
-    $db_db_sycampodep->incluir($codcam,$codcampai);
+    $cl_sycampodep->incluir($codcam,$codcampai);
   }
-  $db_db_syscampodef->excluir($codcam);
+  $cl_syscampodef->excluir($codcam);
 
   if ( isset($itensdef) ) {
     $numArray = sizeof($itensdef);
     for( $i = 0;$i < $numArray;$i++ ) {
       $aux = explode("#&",$itensdef[$i]);
 
-      $db_db_syscampodef->incluir($codcam, $aux[0], ( !empty($aux[1]) ? $aux[1] : ' ' ) );
+      $cl_syscampodef->incluir($codcam, $aux[0], ( !empty($aux[1]) ? $aux[1] : ' ' ) );
     }
   } 
   $db_funcoes->db_fim_transacao($erro);
@@ -82,9 +82,9 @@ if(isset($_REQUEST["incluir"])) {
   $db_opcao = 3;
 
   $db_funcoes->db_inicio_transacao();
-  $db_db_sycampodep->excluir($codcam);
-  $db_db_syscampodef->excluir($codcam);
-  $db_db_syscampo->excluir($codcam);
+  $cl_sycampodep->excluir($codcam);
+  $cl_syscampodef->excluir($codcam);
+  $cl_syscampo->excluir($codcam);
   $db_funcoes->db_fim_transacao($erro);
 }
 
@@ -93,11 +93,11 @@ if( isset($_REQUEST["incluir"])
       or isset($_REQUEST["alterar"])
       or isset($_REQUEST["excluir"])
   ) { 
-  if ( !$db_db_syscampo->erro_status ) {
+  if ( !$cl_syscampo->erro_status ) {
     $erro    = true;
-    $db_stdlib->db_msgbox($db_db_syscampo->erro_msg);
+    $db_stdlib->db_msgbox($cl_syscampo->erro_msg);
   } else {
-    $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina,$db_db_syscampo->erro_msg);
+    $db_stdlib->db_redireciona($Services_Funcoes->url_acesso_in().$pagina,$cl_syscampo->erro_msg);
   }
 }
 
@@ -107,7 +107,7 @@ $cl_rotulo->label();
 <div class="card-content collapse show">
 
 <?php if ( $erro == true ) { ?>
-<div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $db_db_syscampo->erro_msg; ?></div>
+<div class="alert alert-danger mb-2" role="alert"><strong>Atenção!</strong> <?php echo $cl_syscampo->erro_msg; ?></div>
 <?php } 
 
 include 'forms/frm_db_syscampo001.php';

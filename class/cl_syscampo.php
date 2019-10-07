@@ -1,6 +1,6 @@
 <?php
 /**
- * db_db_syscampo
+ * cl_syscampo
  *
  * @package   configuracao
  */
@@ -11,7 +11,7 @@ use libs\db_stdlib;
 
 //MODULO: configuracoes
 //CLASSE DA ENTIDADE db_syscampo
-class db_db_syscampo { 
+class cl_syscampo { 
    // cria variaveis de erro 
    var $rotulocl     = null; 
    var $query_sql  = null; 

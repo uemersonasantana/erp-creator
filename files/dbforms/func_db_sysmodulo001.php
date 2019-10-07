@@ -9,9 +9,9 @@ require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 $db_stdlib        = new libs\db_stdlib; 
 $db_funcoes       = new dbforms\db_funcoes;
 
-$db_db_sysmodulo  = new classes\db_db_sysmodulo;
-$db_db_sysmodulo->rotulo->label("codmod");
-$db_db_sysmodulo->rotulo->label("nomemod");
+$cl_sysmodulo  = new classes\cl_sysmodulo;
+$cl_sysmodulo->rotulo->label("codmod");
+$cl_sysmodulo->rotulo->label("nomemod");
 
 $Services_Skins   = new libs\Services_Skins;
 
@@ -77,18 +77,18 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
         <?php 
         if( !isset($pesquisa_chave) ) {
           if( isset($campos)==false ) {
-              if( file_exists($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_sysmodulo.php" ) == true ) {
-                include($_SERVER['DOCUMENT_ROOT']."/functions/db_func_db_sysmodulo.php");
+              if( file_exists($_SERVER['DOCUMENT_ROOT']."/files/dbinputs/db_func_db_sysmodulo.php" ) == true ) {
+                include($_SERVER['DOCUMENT_ROOT']."/files/dbinputs/db_func_db_sysmodulo.php");
               } else {
                 $campos = "db_sysmodulo.*";
               }
           }
           if( isset($chave_codmod) and (trim($chave_codmod) != "" ) ){
-             $sql = $db_db_sysmodulo->sql_query($chave_codmod,$campos,"codmod");
+             $sql = $cl_sysmodulo->sql_query($chave_codmod,$campos,"codmod");
           } else if ( isset($chave_nomemod) and (trim($chave_nomemod) != "" ) ){
-             $sql = $db_db_sysmodulo->sql_query("",$campos,"nomemod"," nomemod like '$chave_nomemod%' ");
+             $sql = $cl_sysmodulo->sql_query("",$campos,"nomemod"," nomemod like '$chave_nomemod%' ");
           } else {
-             $sql = $db_db_sysmodulo->sql_query("",$campos,"codmod","");
+             $sql = $cl_sysmodulo->sql_query("",$campos,"codmod","");
           }
           $repassa = array();
           if(isset($chave_nomemod)){
@@ -98,8 +98,8 @@ include $Services_Skins->getPathFile('dashboard','html_start.php');
           $db_stdlib->db_lovrot($sql,15,"()","",$funcao_js,"","NoMe",$repassa);
         } else {
           if ( $pesquisa_chave != null and $pesquisa_chave != "" ) {
-            $result = $db_db_sysmodulo->sql_record($db_db_sysmodulo->sql_query($pesquisa_chave));
-            if ( $db_db_sysmodulo->numrows !=0 ) {
+            $result = $cl_sysmodulo->sql_record($cl_sysmodulo->sql_query($pesquisa_chave));
+            if ( $cl_sysmodulo->numrows !=0 ) {
               $db_stdlib->db_fieldsmemory($result,0);
               echo "<script>".$funcao_js."('$nomemod',false);</script>";
             }else{
